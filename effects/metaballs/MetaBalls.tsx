@@ -26,7 +26,7 @@ uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform vec3 u_balls[12];  // x, y, radius (all in pixels)
-uniform int u_count;
+uniform float u_count;
 uniform vec3 u_color1;
 uniform vec3 u_color2;
 uniform vec3 u_color3;
@@ -39,7 +39,7 @@ void main() {
   // Metaball field: sum of radius^2 / dist^2
   float field = 0.0;
   for (int i = 0; i < 12; i++) {
-    if (i >= u_count) break;
+    if (float(i) >= u_count) break;
     vec2 ballPos = u_balls[i].xy;
     float r = u_balls[i].z;
     vec2 d = px - ballPos;
@@ -60,7 +60,7 @@ void main() {
   vec3 col = vec3(0.0);
   float totalWeight = 0.0;
   for (int i = 0; i < 12; i++) {
-    if (i >= u_count) break;
+    if (float(i) >= u_count) break;
     vec2 ballPos = u_balls[i].xy;
     float r = u_balls[i].z;
     vec2 d = px - ballPos;

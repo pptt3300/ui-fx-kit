@@ -24,7 +24,7 @@ precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
-uniform int u_strandCount;
+uniform float u_strandCount;
 uniform float u_amplitude;
 uniform vec3 u_colors[5];
 uniform float u_mouseReactive;
@@ -55,13 +55,13 @@ void main() {
   vec3 color = vec3(0.0);
   float totalAlpha = 0.0;
 
-  int count = u_strandCount < 1 ? 1 : (u_strandCount > 5 ? 5 : u_strandCount);
+  float count = u_strandCount < 1.0 ? 1.0 : (u_strandCount > 5.0 ? 5.0 : u_strandCount);
 
   for (int i = 0; i < 5; i++) {
-    if (i >= count) break;
-
     float fi = float(i);
-    float t = fi / float(count - 1 < 1 ? 1 : count - 1);
+    if (fi >= count) break;
+
+    float t = fi / max(count - 1.0, 1.0);
 
     float yBase = 0.1 + t * 0.8;
     float freq = 2.5 + fi * 0.8;

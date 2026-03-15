@@ -15,7 +15,7 @@ precision mediump float;
 uniform float u_time;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
-uniform int u_rayCount;
+uniform float u_rayCount;
 uniform vec3 u_color;
 uniform float u_mouseReactive;
 
@@ -56,7 +56,7 @@ void main() {
 
   // Angular modulation: create discrete rays
   float rays = 0.0;
-  float count = float(u_rayCount);
+  float count = u_rayCount;
   for (int i = 0; i < 24; i++) {
     if (float(i) >= count) break;
     float rayAngle = (float(i) / count) * 6.28318 + u_time * 0.05;
