@@ -1,0 +1,9 @@
+{
+  "name": "Metallic Paint",
+  "description": "Anisotropic BRDF metallic surface shader with mouse-driven viewing angle and brush-direction highlights.",
+  "tags": ["shader", "webgl", "metallic", "material", "anisotropic"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useWebGL", "useMousePosition"],
+  "files": ["MetallicPaint.tsx"]
+}
