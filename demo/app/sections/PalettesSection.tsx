@@ -1,56 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
-function CodeTabs({ tabs }: { tabs: Record<string, string> }) {
-  const names = Object.keys(tabs);
-  const [active, setActive] = useState(names[0]);
-  const [copied, setCopied] = useState(false);
+const GradientMesh = dynamic(() => import("@effects/gradient-mesh/GradientMesh"), { ssr: false });
 
-  const copy = () => {
-    navigator.clipboard.writeText(tabs[active]);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+type Pal = { particles: number[][]; background: number[][]; glow: number[]; primary: number[]; secondary: number[]; accent: number[]; surface: number[]; text: number[]; muted: number[] };
 
-  return (
-    <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden">
-      <div className="flex items-center justify-between border-b border-white/5 px-4 py-2">
-        <div className="flex gap-1">
-          {names.map((name) => (
-            <button
-              key={name}
-              onClick={() => setActive(name)}
-              className="text-[11px] font-mono px-3 py-1.5 rounded-md transition-colors"
-              style={{
-                background: active === name ? "rgba(99,102,241,0.15)" : "transparent",
-                color: active === name ? "rgb(165,180,252)" : "rgba(255,255,255,0.3)",
-              }}
-            >
-              {name}
-            </button>
-          ))}
-        </div>
-        <button
-          onClick={copy}
-          className="text-[11px] font-mono px-3 py-1 rounded-lg transition-colors"
-          style={{
-            background: copied ? "rgba(34,211,153,0.15)" : "rgba(255,255,255,0.06)",
-            color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.4)",
-            border: `1px solid ${copied ? "rgba(34,211,153,0.3)" : "rgba(255,255,255,0.08)"}`,
-          }}
-        >
-          {copied ? "Copied!" : "Copy"}
-        </button>
-      </div>
-      <pre className="text-xs text-white/60 font-mono leading-relaxed p-4 overflow-x-auto">
-        {tabs[active]}
-      </pre>
-    </div>
-  );
-}
-
-const PALETTES: Record<string, { particles: number[][]; background: number[][]; glow: number[]; primary: number[]; secondary: number[]; accent: number[]; surface: number[]; text: number[]; muted: number[] }> = {
+const PALETTES: Record<string, Pal> = {
   default: { particles: [[99,102,241],[139,92,246],[34,211,238]], background: [[34,197,94],[139,92,246]], glow: [99,102,241], primary: [99,102,241], secondary: [139,92,246], accent: [34,211,238], surface: [15,15,25], text: [240,240,255], muted: [128,128,168] },
   neon: { particles: [[255,45,149],[0,245,212],[191,255,0]], background: [[255,0,128],[0,200,255]], glow: [255,45,149], primary: [255,45,149], secondary: [0,245,212], accent: [191,255,0], surface: [10,5,15], text: [255,255,255], muted: [180,120,200] },
   pastel: { particles: [[196,181,253],[251,191,214],[167,243,208]], background: [[221,214,254],[254,202,202]], glow: [196,181,253], primary: [196,181,253], secondary: [251,191,214], accent: [167,243,208], surface: [250,250,255], text: [60,50,80], muted: [160,150,180] },
@@ -68,187 +25,29 @@ function rgb(c: number[]) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
-function PaletteCard({ name, palette }: { name: string; palette: typeof PALETTES["default"] }) {
-  const colors = [palette.primary, palette.secondary, palette.accent, palette.glow, ...palette.particles];
-
-  return (
-    <div
-      className="rounded-2xl p-4 border border-white/10 transition-transform hover:scale-[1.03]"
-      style={{ background: rgb(palette.surface) }}
-    >
-      <div className="flex gap-1.5 mb-3">
-        {colors.slice(0, 6).map((c, i) => (
-          <div
-            key={i}
-            className="w-6 h-6 rounded-full"
-            style={{ background: rgb(c), boxShadow: `0 0 8px ${rgb(c)}40` }}
-          />
-        ))}
-      </div>
-      <p className="text-sm font-semibold mb-0.5" style={{ color: rgb(palette.text) }}>
-        {name}
-      </p>
-      <p className="text-[10px] font-mono" style={{ color: rgb(palette.muted) }}>
-        {colors.slice(0, 3).map(c => `rgb(${c.join(",")})`).join(" · ")}
-      </p>
-    </div>
-  );
-}
-
-function PalettePreview({ palette }: { palette: typeof PALETTES["default"] }) {
-  return (
-    <div className="flex gap-3 items-center">
-      {/* Simulated effect preview using palette colors */}
-      <div
-        className="w-32 h-32 rounded-2xl relative overflow-hidden flex-shrink-0"
-        style={{ background: rgb(palette.surface) }}
-      >
-        {/* Floating gradient blobs */}
-        <div
-          className="absolute w-16 h-16 rounded-full blur-xl opacity-60 top-2 left-2"
-          style={{ background: rgb(palette.primary) }}
-        />
-        <div
-          className="absolute w-12 h-12 rounded-full blur-xl opacity-50 bottom-4 right-2"
-          style={{ background: rgb(palette.secondary) }}
-        />
-        <div
-          className="absolute w-8 h-8 rounded-full blur-lg opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ background: rgb(palette.accent) }}
-        />
-        {/* Particles */}
-        {palette.particles.slice(0, 5).map((c, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 rounded-full"
-            style={{
-              background: rgb(c),
-              top: `${20 + i * 15}%`,
-              left: `${15 + i * 18}%`,
-              boxShadow: `0 0 4px ${rgb(c)}`,
-            }}
-          />
-        ))}
-      </div>
-      <div>
-        <div className="flex gap-1 mb-2">
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-mono" style={{ background: `${rgb(palette.primary)}20`, color: rgb(palette.primary) }}>
-            primary
-          </span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-mono" style={{ background: `${rgb(palette.accent)}20`, color: rgb(palette.accent) }}>
-            accent
-          </span>
-        </div>
-        <p className="text-white/30 text-xs leading-relaxed">
-          Use these colors as props:<br />
-          <code className="text-white/50">colors={`{[${palette.primary.join(",")}]}`}</code>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function CopyButton({ text, label }: { text: string; label: string }) {
+function CopyValue({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);
-
-  const copy = () => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
   return (
     <button
-      onClick={copy}
-      className="group flex items-center gap-2 hover:bg-white/5 rounded-lg px-2 py-1 -mx-2 transition-colors"
-      title="Click to copy"
+      onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1200); }}
+      className="text-[10px] font-mono px-2 py-0.5 rounded transition-colors"
+      style={{
+        background: copied ? "rgba(34,211,153,0.15)" : "rgba(255,255,255,0.05)",
+        color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.35)",
+      }}
+      title={`Copy ${value}`}
     >
-      <span className="text-[10px] text-white/30 font-mono">{label}</span>
-      <span className="text-[10px] text-white/50 font-mono group-hover:text-white/80 transition-colors">
-        {copied ? "Copied!" : ""}
-      </span>
-    </button>
-  );
-}
-
-function ColorSwatch({ color, name }: { color: number[]; name: string }) {
-  const [copied, setCopied] = useState(false);
-  const value = `[${color.join(", ")}]`;
-
-  return (
-    <button
-      onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
-      className="group text-left hover:bg-white/5 rounded-lg p-2 -m-1 transition-colors cursor-pointer"
-      title={`Click to copy ${value}`}
-    >
-      <div className="flex items-center gap-2 mb-0.5">
-        <div className="w-5 h-5 rounded flex-shrink-0" style={{ background: rgb(color) }} />
-        <span className="text-[10px] text-white/30 font-mono">{name}</span>
-      </div>
-      <span className="text-[10px] font-mono transition-colors" style={{ color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.2)" }}>
-        {copied ? "Copied!" : value}
-      </span>
-    </button>
-  );
-}
-
-function ColorArraySwatch({ colors, name }: { colors: number[][]; name: string }) {
-  const [copied, setCopied] = useState(false);
-  const value = `[${colors.map(c => `[${c.join(",")}]`).join(", ")}]`;
-
-  return (
-    <button
-      onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
-      className="group text-left hover:bg-white/5 rounded-lg p-2 -m-1 transition-colors cursor-pointer"
-      title={`Click to copy ${name}`}
-    >
-      <span className="text-[10px] text-white/30 font-mono block mb-1">{name}</span>
-      <div className="flex gap-1 mb-1">
-        {colors.map((c, i) => (
-          <div key={i} className="w-5 h-5 rounded" style={{ background: rgb(c) }} />
-        ))}
-      </div>
-      <span className="text-[10px] font-mono transition-colors" style={{ color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.15)" }}>
-        {copied ? "Copied!" : "click to copy"}
-      </span>
+      {copied ? "Copied!" : label}
     </button>
   );
 }
 
 export default function PalettesSection() {
   const [selected, setSelected] = useState<string>("default");
-  const paletteNames = Object.keys(PALETTES);
   const pal = PALETTES[selected];
+  const [codeCopied, setCodeCopied] = useState(false);
 
-  // Generate copyable code snippets for different use cases
-  const snippetBg = `// Background effect with "${selected}" palette
-<GradientMesh
-  colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]}
-  speed={0.3}
-/>`;
-
-  const snippetText = `// Text effect with "${selected}" palette
-<GlitchText
-  text="Hello World"
-  color={[${pal.primary.join(", ")}]}
-/>`;
-
-  const snippetFull = `// Full page with "${selected}" palette colors
-<div style={{ background: "rgb(${pal.surface.join(",")})" }}>
-  {/* Background */}
-  <GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />
-
-  {/* Content */}
-  <h1 style={{ color: "rgb(${pal.text.join(",")})" }}>
-    My App
-  </h1>
-
-  {/* Accent elements */}
-  <button style={{ background: "rgb(${pal.primary.join(",")})" }}>
-    Get Started
-  </button>
-</div>`;
-
+  const codeSnippet = `<GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />`;
 
   return (
     <section id="palettes" className="py-24 px-6 bg-zinc-950">
@@ -256,56 +55,152 @@ export default function PalettesSection() {
         <h2 className="text-sm font-mono text-indigo-400 mb-2 tracking-widest uppercase">
           Color Palettes
         </h2>
-        <p className="text-white/50 mb-2 max-w-lg text-sm">
-          13 curated color palettes. Pick a vibe, copy the colors, pass them as props.
+        <p className="text-white/50 mb-8 max-w-xl text-sm">
+          Pick a palette, see it applied live below. Then copy the colors into your effect props.
         </p>
-        <div className="flex gap-6 mb-12 text-[11px] text-white/30 font-mono">
-          <span><span className="text-indigo-400">1.</span> Pick a palette</span>
-          <span><span className="text-indigo-400">2.</span> Click any color to copy</span>
-          <span><span className="text-indigo-400">3.</span> Paste as effect props</span>
+
+        {/* Palette picker strip */}
+        <div className="flex gap-2 flex-wrap mb-10">
+          {Object.keys(PALETTES).map((name) => {
+            const p = PALETTES[name];
+            const isActive = selected === name;
+            return (
+              <button
+                key={name}
+                onClick={() => setSelected(name)}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl border transition-all"
+                style={{
+                  background: isActive ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.02)",
+                  borderColor: isActive ? rgb(p.primary) : "rgba(255,255,255,0.08)",
+                  boxShadow: isActive ? `0 0 12px ${rgb(p.primary)}30` : "none",
+                }}
+              >
+                <div className="flex gap-0.5">
+                  {[p.primary, p.secondary, p.accent].map((c, i) => (
+                    <div key={i} className="w-3 h-3 rounded-full" style={{ background: rgb(c) }} />
+                  ))}
+                </div>
+                <span className="text-xs font-medium" style={{ color: isActive ? "white" : "rgba(255,255,255,0.4)" }}>
+                  {name}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-          {paletteNames.map((name) => (
-            <button
-              key={name}
-              onClick={() => setSelected(name)}
-              className={`text-left transition-all ${selected === name ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-zinc-950 rounded-2xl" : ""}`}
-            >
-              <PaletteCard name={name} palette={PALETTES[name]} />
-            </button>
-          ))}
-        </div>
+        {/* Live preview grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
-        {/* Selected palette detail */}
-        <div className="rounded-2xl border border-white/10 p-8 bg-white/[0.02]">
-          <div className="flex items-center gap-4 mb-6">
-            <h3 className="text-xl font-bold text-white capitalize">{selected}</h3>
-            <div className="h-px flex-1 bg-white/10" />
-            <span className="text-xs text-white/20 font-mono">click any value to copy</span>
+          {/* Background preview */}
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <div className="h-64 relative" style={{ background: rgb(pal.surface) }}>
+              <GradientMesh
+                key={selected}
+                colors={pal.particles as [number, number, number][]}
+                speed={0.4}
+                className="absolute inset-0 w-full h-full"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-lg font-bold" style={{ color: rgb(pal.text), textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
+                  Background
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
+              <span className="text-[11px] text-white/40 font-mono">GradientMesh + particles colors</span>
+              <CopyValue value={`colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]}`} label="Copy props" />
+            </div>
           </div>
 
-          {/* Color grid — all clickable */}
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-8">
-            <ColorSwatch color={pal.primary} name="primary" />
-            <ColorSwatch color={pal.secondary} name="secondary" />
-            <ColorSwatch color={pal.accent} name="accent" />
-            <ColorSwatch color={pal.glow} name="glow" />
-            <ColorSwatch color={pal.surface} name="surface" />
-            <ColorSwatch color={pal.text} name="text" />
-            <ColorSwatch color={pal.muted} name="muted" />
-            <ColorArraySwatch colors={pal.particles} name="particles" />
-            <ColorArraySwatch colors={pal.background} name="background" />
+          {/* Card / UI preview */}
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <div className="h-64 p-6 flex flex-col justify-between" style={{ background: rgb(pal.surface) }}>
+              <div>
+                <h3 className="text-xl font-bold mb-1" style={{ color: rgb(pal.text) }}>Card Title</h3>
+                <p className="text-sm" style={{ color: rgb(pal.muted) }}>A description using the muted color from this palette.</p>
+              </div>
+              <div className="flex gap-3">
+                <button className="px-4 py-2 rounded-lg text-sm font-semibold transition-transform hover:scale-105" style={{ background: rgb(pal.primary), color: rgb(pal.surface) }}>
+                  Primary
+                </button>
+                <button className="px-4 py-2 rounded-lg text-sm font-semibold border transition-transform hover:scale-105" style={{ borderColor: rgb(pal.accent), color: rgb(pal.accent) }}>
+                  Accent
+                </button>
+                <div className="flex items-center gap-2 ml-auto">
+                  <div className="w-3 h-3 rounded-full" style={{ background: rgb(pal.glow), boxShadow: `0 0 8px ${rgb(pal.glow)}` }} />
+                  <span className="text-xs" style={{ color: rgb(pal.muted) }}>glow</span>
+                </div>
+              </div>
+            </div>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
+              <span className="text-[11px] text-white/40 font-mono">UI colors: primary, accent, surface, text</span>
+              <CopyValue value={`primary={[${pal.primary.join(",")}]} accent={[${pal.accent.join(",")}]}`} label="Copy props" />
+            </div>
           </div>
 
-          {/* Code examples with tabs */}
-          <CodeTabs
-            tabs={{
-              "Background": snippetBg,
-              "Text": snippetText,
-              "Full Page": snippetFull,
-            }}
-          />
+          {/* Text preview */}
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <div className="h-64 flex items-center justify-center" style={{ background: rgb(pal.surface) }}>
+              <div className="text-center">
+                <p className="text-4xl font-black mb-2 tracking-tight" style={{ color: rgb(pal.primary) }}>
+                  Heading
+                </p>
+                <p className="text-lg" style={{
+                  background: `linear-gradient(135deg, ${rgb(pal.primary)}, ${rgb(pal.secondary)}, ${rgb(pal.accent)})`,
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  fontWeight: 700,
+                }}>
+                  Gradient Text
+                </p>
+                <p className="text-sm mt-2" style={{ color: rgb(pal.muted) }}>
+                  Body text in muted
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
+              <span className="text-[11px] text-white/40 font-mono">Text colors: primary → secondary → accent gradient</span>
+              <CopyValue value={`color={[${pal.primary.join(",")}]}`} label="Copy color" />
+            </div>
+          </div>
+
+          {/* Full color table */}
+          <div className="rounded-2xl overflow-hidden border border-white/10">
+            <div className="h-64 p-5 overflow-y-auto" style={{ background: "rgba(0,0,0,0.2)" }}>
+              <p className="text-[10px] text-white/30 font-mono uppercase tracking-wider mb-3">All colors — click to copy</p>
+              <div className="space-y-2">
+                {Object.entries(pal).map(([key, value]) => {
+                  const isArray = Array.isArray(value[0]);
+                  const copyStr = isArray
+                    ? `[${(value as number[][]).map(c => `[${c.join(",")}]`).join(", ")}]`
+                    : `[${(value as number[]).join(", ")}]`;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => { navigator.clipboard.writeText(copyStr); }}
+                      className="flex items-center gap-3 w-full text-left hover:bg-white/5 rounded-lg px-2 py-1 -mx-2 transition-colors group"
+                    >
+                      <div className="flex gap-1 flex-shrink-0">
+                        {isArray
+                          ? (value as number[][]).map((c, i) => <div key={i} className="w-4 h-4 rounded" style={{ background: rgb(c) }} />)
+                          : <div className="w-4 h-4 rounded" style={{ background: rgb(value as number[]) }} />
+                        }
+                      </div>
+                      <span className="text-[11px] text-white/40 font-mono w-20 flex-shrink-0">{key}</span>
+                      <span className="text-[10px] text-white/15 font-mono group-hover:text-white/40 truncate flex-1 transition-colors">{copyStr}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
+              <span className="text-[11px] text-white/40 font-mono">9 colors per palette</span>
+              <CopyValue
+                value={codeSnippet}
+                label="Copy usage"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
