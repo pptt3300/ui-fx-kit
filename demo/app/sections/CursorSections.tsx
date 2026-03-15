@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import EffectSection from "@demo/components/EffectSection";
+import { useI18n } from "@demo/lib/i18n";
 
 const CursorGlow = dynamic(() => import("@effects/cursor-glow/CursorGlow"), { ssr: false });
 const BlobCursor = dynamic(() => import("@effects/blob-cursor/BlobCursor"), { ssr: false });
@@ -15,6 +16,7 @@ const GhostCursor = dynamic(() => import("@effects/ghost-cursor/GhostCursor"), {
 function MountWhenVisible({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const el = ref.current;
@@ -31,7 +33,7 @@ function MountWhenVisible({ children }: { children: React.ReactNode }) {
     <div ref={ref} className="relative w-full h-full bg-zinc-950 min-h-screen flex items-center justify-center">
       {visible && children}
       <p className="text-white/20 text-sm font-mono pointer-events-none select-none">
-        {visible ? "move your cursor" : "scroll here to activate"}
+        {visible ? t("effect.moveCursor") : t("effect.scrollHere")}
       </p>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useI18n } from "@demo/lib/i18n";
 
 const GradientMesh = dynamic(() => import("@effects/gradient-mesh/GradientMesh"), { ssr: false });
 
@@ -27,6 +28,7 @@ function rgb(c: number[]) {
 
 function CopyValue({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);
+  const { t } = useI18n();
   return (
     <button
       onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1200); }}
@@ -37,7 +39,7 @@ function CopyValue({ value, label }: { value: string; label: string }) {
       }}
       title={`Copy ${value}`}
     >
-      {copied ? "Copied!" : label}
+      {copied ? t("palette.copied") : label}
     </button>
   );
 }
@@ -46,6 +48,7 @@ export default function PalettesSection() {
   const [selected, setSelected] = useState<string>("default");
   const pal = PALETTES[selected];
   const [codeCopied, setCodeCopied] = useState(false);
+  const { t } = useI18n();
 
   const codeSnippet = `<GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />`;
 
@@ -53,10 +56,10 @@ export default function PalettesSection() {
     <section id="palettes" className="py-24 px-6 bg-zinc-950">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-sm font-mono text-indigo-400 mb-2 tracking-widest uppercase">
-          Color Palettes
+          {t("palette.title")}
         </h2>
         <p className="text-white/50 mb-8 max-w-xl text-sm">
-          Pick a palette, see it applied live below. Then copy the colors into your effect props.
+          {t("palette.desc")}
         </p>
 
         {/* Palette picker strip */}
@@ -102,13 +105,13 @@ export default function PalettesSection() {
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <p className="text-lg font-bold" style={{ color: rgb(pal.text), textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
-                  Background
+                  {t("palette.bgPreview")}
                 </p>
               </div>
             </div>
             <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
-              <span className="text-[11px] text-white/40 font-mono">GradientMesh + particles colors</span>
-              <CopyValue value={`colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]}`} label="Copy props" />
+              <span className="text-[11px] text-white/40 font-mono">{t("palette.bgLabel")}</span>
+              <CopyValue value={`colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]}`} label={t("palette.copy")} />
             </div>
           </div>
 
@@ -116,8 +119,8 @@ export default function PalettesSection() {
           <div className="rounded-2xl overflow-hidden border border-white/10">
             <div className="h-64 p-6 flex flex-col justify-between" style={{ background: rgb(pal.surface) }}>
               <div>
-                <h3 className="text-xl font-bold mb-1" style={{ color: rgb(pal.text) }}>Card Title</h3>
-                <p className="text-sm" style={{ color: rgb(pal.muted) }}>A description using the muted color from this palette.</p>
+                <h3 className="text-xl font-bold mb-1" style={{ color: rgb(pal.text) }}>{t("palette.cardTitle")}</h3>
+                <p className="text-sm" style={{ color: rgb(pal.muted) }}>{t("palette.cardDesc")}</p>
               </div>
               <div className="flex gap-3">
                 <button className="px-4 py-2 rounded-lg text-sm font-semibold transition-transform hover:scale-105" style={{ background: rgb(pal.primary), color: rgb(pal.surface) }}>
@@ -133,8 +136,8 @@ export default function PalettesSection() {
               </div>
             </div>
             <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
-              <span className="text-[11px] text-white/40 font-mono">UI colors: primary, accent, surface, text</span>
-              <CopyValue value={`primary={[${pal.primary.join(",")}]} accent={[${pal.accent.join(",")}]}`} label="Copy props" />
+              <span className="text-[11px] text-white/40 font-mono">{t("palette.uiLabel")}</span>
+              <CopyValue value={`primary={[${pal.primary.join(",")}]} accent={[${pal.accent.join(",")}]}`} label={t("palette.copy")} />
             </div>
           </div>
 
@@ -143,7 +146,7 @@ export default function PalettesSection() {
             <div className="h-64 flex items-center justify-center" style={{ background: rgb(pal.surface) }}>
               <div className="text-center">
                 <p className="text-4xl font-black mb-2 tracking-tight" style={{ color: rgb(pal.primary) }}>
-                  Heading
+                  {t("palette.heading")}
                 </p>
                 <p className="text-lg" style={{
                   background: `linear-gradient(135deg, ${rgb(pal.primary)}, ${rgb(pal.secondary)}, ${rgb(pal.accent)})`,
@@ -151,23 +154,23 @@ export default function PalettesSection() {
                   WebkitTextFillColor: "transparent",
                   fontWeight: 700,
                 }}>
-                  Gradient Text
+                  {t("palette.gradientText")}
                 </p>
                 <p className="text-sm mt-2" style={{ color: rgb(pal.muted) }}>
-                  Body text in muted
+                  {t("palette.bodyText")}
                 </p>
               </div>
             </div>
             <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
-              <span className="text-[11px] text-white/40 font-mono">Text colors: primary → secondary → accent gradient</span>
-              <CopyValue value={`color={[${pal.primary.join(",")}]}`} label="Copy color" />
+              <span className="text-[11px] text-white/40 font-mono">{t("palette.textLabel")}</span>
+              <CopyValue value={`color={[${pal.primary.join(",")}]}`} label={t("palette.copyColor")} />
             </div>
           </div>
 
           {/* Full color table */}
           <div className="rounded-2xl overflow-hidden border border-white/10">
             <div className="h-64 p-5 overflow-y-auto" style={{ background: "rgba(0,0,0,0.2)" }}>
-              <p className="text-[10px] text-white/30 font-mono uppercase tracking-wider mb-3">All colors — click to copy</p>
+              <p className="text-[10px] text-white/30 font-mono uppercase tracking-wider mb-3">{t("palette.allColors")}</p>
               <div className="space-y-2">
                 {Object.entries(pal).map(([key, value]) => {
                   const isArray = Array.isArray(value[0]);
@@ -194,10 +197,10 @@ export default function PalettesSection() {
               </div>
             </div>
             <div className="px-4 py-3 flex items-center justify-between" style={{ background: "rgba(0,0,0,0.3)" }}>
-              <span className="text-[11px] text-white/40 font-mono">9 colors per palette</span>
+              <span className="text-[11px] text-white/40 font-mono">{t("palette.colorsPerPalette")}</span>
               <CopyValue
                 value={codeSnippet}
-                label="Copy usage"
+                label={t("palette.copyUsage")}
               />
             </div>
           </div>

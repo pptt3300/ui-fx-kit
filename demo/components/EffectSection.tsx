@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import CodePanel from "./CodePanel";
+import { useI18n } from "@demo/lib/i18n";
 
 interface EffectSectionProps {
   id: string;
@@ -70,6 +71,8 @@ export default function EffectSection({
     };
   }, [id]);
 
+  const { t } = useI18n();
+
   const categoryClass =
     CATEGORY_COLORS[category] ??
     "bg-white/10 text-white/60 border-white/20";
@@ -124,7 +127,7 @@ export default function EffectSection({
             }}
           >
             {"</>"}
-            {" View Code"}
+            {" "}{t("effect.viewCode")}
           </button>
         )}
       </section>

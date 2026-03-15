@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Navigation from "@demo/components/Navigation";
 import HeroSection from "./sections/HeroSection";
 import { SECTION_REGISTRY } from "./sections/index";
+import { I18nProvider, useI18n } from "@demo/lib/i18n";
+import LangSwitcher from "@demo/components/LangSwitcher";
 
 import {
   AuroraBgSection,
@@ -90,16 +92,18 @@ import {
 import PalettesSection from "./sections/PalettesSection";
 
 function CategoryDivider({ name, count }: { name: string; count: number }) {
+  const { t } = useI18n();
   return (
     <div className="py-20 px-8 flex items-center gap-6">
       <h2 className="text-4xl font-bold text-white/90">{name}</h2>
       <div className="h-px flex-1 bg-gradient-to-r from-white/20 to-transparent" />
-      <span className="text-sm text-white/40 font-mono">{count} effects</span>
+      <span className="text-sm text-white/40 font-mono">{count} {t("cat.effects")}</span>
     </div>
   );
 }
 
-export default function Home() {
+function HomeInner() {
+  const { t } = useI18n();
   const [activeId, setActiveId] = useState("");
 
   useEffect(() => {
@@ -122,13 +126,14 @@ export default function Home() {
         activeId={activeId}
         onSelect={handleNavSelect}
       />
+      <LangSwitcher />
 
       {/* Main content — offset from left nav on desktop */}
       <main className="lg:pl-[60px]">
         <HeroSection />
 
         {/* Background */}
-        <CategoryDivider name="Background" count={14} />
+        <CategoryDivider name={t("cat.background")} count={14} />
         <AuroraBgSection />
         <ConstellationBgSection />
         <GradientMeshSection />
@@ -145,7 +150,7 @@ export default function Home() {
         <LiquidChromeSection />
 
         {/* Text */}
-        <CategoryDivider name="Text" count={10} />
+        <CategoryDivider name={t("cat.text")} count={10} />
         <TypewriterTextSection />
         <TextRevealSection />
         <ScrambleTextSection />
@@ -158,7 +163,7 @@ export default function Home() {
         <CircularTextSection />
 
         {/* Card */}
-        <CategoryDivider name="Card" count={9} />
+        <CategoryDivider name={t("cat.card")} count={9} />
         <SpotlightCardsSection />
         <PhysicsCardsSection />
         <HolographicCardSection />
@@ -170,7 +175,7 @@ export default function Home() {
         <ReflectiveCardSection />
 
         {/* Cursor */}
-        <CategoryDivider name="Cursor" count={6} />
+        <CategoryDivider name={t("cat.cursor")} count={6} />
         <CursorGlowSection />
         <BlobCursorSection />
         <SplashCursorSection />
@@ -179,7 +184,7 @@ export default function Home() {
         <GhostCursorSection />
 
         {/* Shader */}
-        <CategoryDivider name="Shader" count={8} />
+        <CategoryDivider name={t("cat.shader")} count={8} />
         <LiquidGlassSection />
         <HeroSceneSection />
         <MetallicPaintSection />
@@ -190,7 +195,7 @@ export default function Home() {
         <NoiseGrainSection />
 
         {/* Interactive */}
-        <CategoryDivider name="Interactive" count={17} />
+        <CategoryDivider name={t("cat.interactive")} count={17} />
         <MagneticButtonSection />
         <SpotlightInputSection />
         <InteractiveDotGridSection />
@@ -213,5 +218,13 @@ export default function Home() {
         <PalettesSection />
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <I18nProvider>
+      <HomeInner />
+    </I18nProvider>
   );
 }
