@@ -1,0 +1,9 @@
+{
+  "name": "Liquid Chrome",
+  "description": "Metallic chrome surface simulation via WebGL with FBM-based normal mapping, environment reflection, and mouse ripple distortion.",
+  "tags": ["background", "webgl", "chrome", "metallic", "reflection", "mouse-reactive"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useWebGL"],
+  "files": ["LiquidChrome.tsx"]
+}
