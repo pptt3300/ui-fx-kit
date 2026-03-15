@@ -1,0 +1,9 @@
+/* Blinking cursor animation */
+@keyframes fx-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.fx-cursor-blink {
+  animation: fx-cursor-blink 0.8s ease-in-out infinite;
+}

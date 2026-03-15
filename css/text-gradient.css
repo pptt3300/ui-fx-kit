@@ -1,0 +1,22 @@
+/* Animated gradient text — indigo → violet → cyan */
+.fx-text-gradient {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #22d3ee, #6366f1);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fx-gradient-shift 4s ease infinite;
+}
+
+/* Static (no animation) variant */
+.fx-text-gradient-static {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes fx-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}

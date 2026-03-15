@@ -1,0 +1,52 @@
+[
+  {
+    "name": "useMousePosition",
+    "description": "Track mouse position relative to an element or the window. Supports ref mode (no re-renders, for rAF) and state mode (reactive, for CSS).",
+    "tags": ["mouse", "interactive", "tracking"]
+  },
+  {
+    "name": "useSpring",
+    "description": "Zero-dependency spring physics for a single numeric value. Ideal for Canvas animation loops where framer-motion isn't available.",
+    "tags": ["physics", "animation", "spring"]
+  },
+  {
+    "name": "useTilt3D",
+    "description": "3D perspective tilt that follows cursor with spring physics. Applies transforms directly to the DOM element (no re-renders).",
+    "tags": ["3d", "mouse", "interactive", "physics"]
+  },
+  {
+    "name": "useMagnetic",
+    "description": "Magnetic attraction effect — element follows cursor with spring physics. Great for buttons and interactive elements.",
+    "tags": ["mouse", "interactive", "physics", "spring"]
+  },
+  {
+    "name": "useCanvasSetup",
+    "description": "DPI-aware canvas setup with automatic resize handling and rAF loop management.",
+    "tags": ["canvas", "setup", "animation"]
+  },
+  {
+    "name": "useParticles",
+    "description": "Generic particle system manager with spawn, update, emit, and rendering helpers. Supports max count culling.",
+    "tags": ["canvas", "particles", "animation", "physics"]
+  },
+  {
+    "name": "useProximity",
+    "description": "Pure computation: distance-based force field between two points. Not a React hook — just math. Returns distance, proximity, force, angle.",
+    "tags": ["math", "physics", "proximity"]
+  },
+  {
+    "name": "useScrollProgress",
+    "description": "Track scroll progress and velocity. Supports element-level (IntersectionObserver) and page-level scroll tracking.",
+    "tags": ["scroll", "tracking", "animation"]
+  },
+  {
+    "name": "useSpotlight",
+    "description": "Cursor-tracking spotlight effect that returns CSS gradient strings. Supports radial, border glow, and conic border modes.",
+    "tags": ["mouse", "interactive", "css", "gradient"]
+  },
+  {
+    "name": "useTypewriter",
+    "description": "Pure state machine for typewriter text effect. Cycles through phrases with typing, pausing, and deleting phases.",
+    "tags": ["text", "animation", "typewriter"]
+  }
+]

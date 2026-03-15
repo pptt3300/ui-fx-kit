@@ -1,0 +1,17 @@
+{
+  "name": "ui-fx-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal UI effects library with MCP server for Claude Code integration",
+  "type": "module",
+  "scripts": {
+    "mcp": "node mcp-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "typescript": "^5.9.3"
+  }
+}

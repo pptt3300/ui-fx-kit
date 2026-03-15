@@ -1,0 +1,8 @@
+{
+  "name": "Interactive Dot Grid",
+  "description": "Grid of dots that reacts to cursor proximity. Dots are displaced with quadratic easing, connecting lines form between affected dots.",
+  "tags": ["canvas", "grid", "interactive", "mouse"],
+  "framework": "react",
+  "dependencies": [],
+  "files": ["InteractiveDotGrid.tsx"]
+}

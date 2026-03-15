@@ -1,0 +1,8 @@
+{
+  "name": "Scroll Text Reveal",
+  "description": "Text that progressively reveals as you scroll. Word-by-word fade+deblur and character-by-character color transition driven by scroll position.",
+  "tags": ["scroll", "text", "reveal", "animation"],
+  "framework": "react",
+  "dependencies": ["framer-motion"],
+  "files": ["TextReveal.tsx"]
+}

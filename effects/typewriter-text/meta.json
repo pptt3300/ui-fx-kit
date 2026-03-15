@@ -1,0 +1,8 @@
+{
+  "name": "Typewriter Text",
+  "description": "Text that types out character by character with randomized speed, then deletes and cycles to next phrase. Gradient colored text with blinking cursor. Single phrase mode stays put after typing.",
+  "tags": ["text", "typewriter", "animation", "cursor"],
+  "framework": "react",
+  "dependencies": [],
+  "files": ["TypewriterText.tsx"]
+}

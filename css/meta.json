@@ -1,0 +1,32 @@
+[
+  {
+    "id": "glass-card",
+    "name": "Frosted Glass Card",
+    "description": "Frosted glass card with backdrop blur and saturation. Includes border and shadow styling.",
+    "tags": ["glass", "card", "blur", "backdrop"]
+  },
+  {
+    "id": "cursor-blink",
+    "name": "Cursor Blink",
+    "description": "Blinking cursor animation keyframes and utility class. Pairs with useTypewriter.",
+    "tags": ["cursor", "animation", "typewriter"]
+  },
+  {
+    "id": "glow-shadow",
+    "name": "Glow Shadow",
+    "description": "Colored glow shadows with hover animation. Indigo/violet color scheme with hover intensity boost.",
+    "tags": ["glow", "shadow", "hover", "animation"]
+  },
+  {
+    "id": "noise-overlay",
+    "name": "Noise Overlay",
+    "description": "Film grain noise overlay using SVG turbulence filter. Add class to any container for texture.",
+    "tags": ["noise", "texture", "overlay", "grain"]
+  },
+  {
+    "id": "text-gradient",
+    "name": "Text Gradient",
+    "description": "Animated gradient text — indigo to violet to cyan. Uses background-clip for text coloring with animated background position.",
+    "tags": ["text", "gradient", "animation", "color"]
+  }
+]
