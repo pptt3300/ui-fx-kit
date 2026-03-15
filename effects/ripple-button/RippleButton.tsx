@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import type { RGB } from "../presets/colors";
+import type { RGB } from "../../presets/colors";
 
 interface Ripple {
   id: number;

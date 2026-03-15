@@ -1,4 +1,4 @@
-import { useTilt3D, useMousePosition } from "../hooks";
+import { useTilt3D, useMousePosition } from "../../hooks";
 import "../../css/iridescent.css";
 
 interface ReflectiveCardProps {

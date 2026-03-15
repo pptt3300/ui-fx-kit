@@ -1,6 +1,6 @@
 import "../../css/split-flap.css";
-import { useSplitFlap } from "../hooks";
-import type { FlapChar } from "../hooks";
+import { useSplitFlap } from "../../hooks";
+import type { FlapChar } from "../../hooks";
 
 interface SplitFlapProps {
   text: string;

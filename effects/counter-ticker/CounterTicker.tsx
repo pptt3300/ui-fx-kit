@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSpring, useInView } from "../hooks";
+import { useSpring, useInView } from "../../hooks";
 
 type FormatType = "integer" | "decimal" | "currency" | "percent";
 

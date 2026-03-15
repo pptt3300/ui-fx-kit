@@ -1,4 +1,4 @@
-import { useTilt3D, useMousePosition } from "../hooks";
+import { useTilt3D, useMousePosition } from "../../hooks";
 
 interface ParallaxDepthCardProps {
   layers: React.ReactNode[];

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSpring } from "../hooks";
+import { useSpring } from "../../hooks";
 
 interface FlipCardProps {
   front: React.ReactNode;

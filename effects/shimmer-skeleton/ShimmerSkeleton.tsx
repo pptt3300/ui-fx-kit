@@ -1,4 +1,4 @@
-import { useMousePosition, proximity } from "../hooks";
+import { useMousePosition, proximity } from "../../hooks";
 import "../../css/shimmer.css";
 
 type ShapeType = "line" | "circle" | "rect";

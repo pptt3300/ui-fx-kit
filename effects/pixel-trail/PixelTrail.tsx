@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useCanvasSetup, useMousePosition } from "../hooks";
-import type { RGB } from "../presets/colors";
+import { useCanvasSetup, useMousePosition } from "../../hooks";
+import type { RGB } from "../../presets/colors";
 
 interface TrailPixel {
   x: number;

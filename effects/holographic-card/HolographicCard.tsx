@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTilt3D, useMousePosition, useCanvasSetup, useParticles } from "../hooks";
+import { useTilt3D, useMousePosition, useCanvasSetup, useParticles } from "../../hooks";
 import "../../css/holographic.css";
 
 interface HolographicCardProps {

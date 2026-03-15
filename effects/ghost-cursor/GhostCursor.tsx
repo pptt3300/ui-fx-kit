@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useMousePosition, useSpring } from "../hooks";
-import type { RGB } from "../presets/colors";
+import { useMousePosition, useSpring } from "../../hooks";
+import type { RGB } from "../../presets/colors";
 
 interface GhostCursorProps {
   count?: number;

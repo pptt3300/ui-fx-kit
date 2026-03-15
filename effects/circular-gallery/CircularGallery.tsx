@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { useGesture, useSpring } from "../hooks";
+import { useGesture, useSpring } from "../../hooks";
 
 interface CircularGalleryProps {
   items: React.ReactNode[];

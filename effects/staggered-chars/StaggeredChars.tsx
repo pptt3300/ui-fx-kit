@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "../../css/stagger-presets.css";
-import { useStagger, useInView } from "../hooks";
+import { useStagger, useInView } from "../../hooks";
 
 type Variant = "wave" | "bounce" | "rotate" | "fade" | "scale";
 type Pattern = "linear" | "center-out" | "edges-in" | "random";

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useMousePosition } from "../hooks";
+import { useMousePosition } from "../../hooks";
 
 interface TrailImage {
   id: number;

@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useRef } from "react";
-import { useWebGL, useMousePosition } from "../hooks";
+import { useWebGL, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets";
 
 interface MetaBallsProps {

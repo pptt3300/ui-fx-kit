@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
-import { useWebGL, useMousePosition } from "../hooks";
-import type { RGB } from "../presets";
+import { useWebGL, useMousePosition } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface SilkWavesProps {
   strandCount?: number;

@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { useCanvasSetup, useMousePosition } from "../hooks";
+import { useCanvasSetup, useMousePosition } from "../../hooks";
 
 type GrainColor = "mono" | "color";
 

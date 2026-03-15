@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useStagger, useInView } from "../hooks";
+import { useStagger, useInView } from "../../hooks";
 import "../../css/stagger-presets.css";
 
 type Variant = "slide-up" | "scale-in" | "blur-in" | "flip-in";

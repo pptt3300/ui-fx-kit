@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useMousePosition, proximity } from "../hooks";
-import type { RGB } from "../presets/colors";
+import { useMousePosition, proximity } from "../../hooks";
+import type { RGB } from "../../presets/colors";
 
 interface DockMagnifyProps {
   items: Array<{ icon: React.ReactNode; label?: string }>;

@@ -1,4 +1,4 @@
-import { useMorphText } from "../hooks";
+import { useMorphText } from "../../hooks";
 
 interface MorphingTextProps {
   texts: string[];

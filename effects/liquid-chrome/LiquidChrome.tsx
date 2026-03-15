@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { useWebGL } from "../hooks";
+import { useWebGL } from "../../hooks";
 
 interface LiquidChromeProps {
   speed?: number;

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useWebGL, useMousePosition } from "../hooks";
-import type { RGB } from "../presets/colors";
+import { useWebGL, useMousePosition } from "../../hooks";
+import type { RGB } from "../../presets/colors";
 
 interface BlobCursorProps {
   radius?: number;

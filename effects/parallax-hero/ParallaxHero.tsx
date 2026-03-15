@@ -1,4 +1,4 @@
-import { useScrollProgress } from "../hooks";
+import { useScrollProgress } from "../../hooks";
 
 interface ParallaxHeroProps {
   layers: Array<{ content: React.ReactNode; speed: number }>;

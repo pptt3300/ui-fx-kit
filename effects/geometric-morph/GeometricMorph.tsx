@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useSpring, usePerlinNoise, useMousePosition } from "../hooks";
-import type { RGB } from "../presets";
+import { useSpring, usePerlinNoise, useMousePosition } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface GeometricMorphProps {
   shapes?: string[];

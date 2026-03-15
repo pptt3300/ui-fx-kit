@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useCanvasSetup } from "../hooks";
-import type { RGB } from "../presets";
+import { useCanvasSetup } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface LightningBoltsProps {
   interval?: number;

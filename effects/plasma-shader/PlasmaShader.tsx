@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from "react";
-import { useWebGL } from "../hooks";
-import type { RGB } from "../presets";
+import { useWebGL } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface PlasmaShaderProps {
   speed?: number;

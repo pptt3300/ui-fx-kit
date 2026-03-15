@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useCanvasSetup, useParticles, usePerlinNoise } from "../hooks";
-import type { RGB } from "../presets";
+import { useCanvasSetup, useParticles, usePerlinNoise } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface NoiseFlowFieldProps {
   count?: number;

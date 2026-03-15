@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useCanvasSetup, useParticles } from "../hooks";
-import type { RGB } from "../presets/colors";
+import { useCanvasSetup, useParticles } from "../../hooks";
+import type { RGB } from "../../presets/colors";
 
 interface ConfettiParticle {
   x: number;

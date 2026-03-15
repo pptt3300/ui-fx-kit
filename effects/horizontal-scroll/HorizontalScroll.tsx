@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useScrollProgress } from "../hooks";
+import { useScrollProgress } from "../../hooks";
 
 interface HorizontalScrollProps {
   items: React.ReactNode[];

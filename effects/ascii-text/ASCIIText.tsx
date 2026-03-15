@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useCanvasSetup, useMousePosition } from "../hooks";
+import { useCanvasSetup, useMousePosition } from "../../hooks";
 
 interface RGB {
   r: number;

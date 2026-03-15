@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useMousePosition, useSpring } from "../hooks";
+import { useMousePosition, useSpring } from "../../hooks";
 import "../../css/sticker-peel.css";
 
 type Corner = "bottom-right" | "bottom-left" | "top-right" | "top-left";

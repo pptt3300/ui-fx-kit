@@ -1,4 +1,4 @@
-import { useTilt3D, useStagger, useInView } from "../hooks";
+import { useTilt3D, useStagger, useInView } from "../../hooks";
 
 interface BentoItem {
   content: React.ReactNode;

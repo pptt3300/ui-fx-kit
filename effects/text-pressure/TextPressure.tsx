@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useMousePosition, proximity } from "../hooks";
+import { useMousePosition, proximity } from "../../hooks";
 
 interface TextPressureProps {
   text: string;

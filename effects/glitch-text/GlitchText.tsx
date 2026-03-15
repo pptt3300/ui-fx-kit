@@ -1,5 +1,5 @@
 import "../../css/glitch-effect.css";
-import { useMousePosition } from "../hooks";
+import { useMousePosition } from "../../hooks";
 
 interface GlitchTextProps {
   text: string;

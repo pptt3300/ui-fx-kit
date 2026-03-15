@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useScramble, useInView } from "../hooks";
+import { useScramble, useInView } from "../../hooks";
 
 interface ScrambleTextProps {
   text: string;

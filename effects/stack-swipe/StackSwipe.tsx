@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { useGesture, useSpring } from "../hooks";
+import { useGesture, useSpring } from "../../hooks";
 
 interface StackSwipeProps {
   items: React.ReactNode[];

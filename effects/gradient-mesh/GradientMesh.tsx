@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { useGradientMesh } from "../hooks";
-import { useThemeColors } from "../presets";
-import type { RGB } from "../presets";
+import { useGradientMesh } from "../../hooks";
+import { useThemeColors } from "../../presets";
+import type { RGB } from "../../presets";
 
 interface GradientMeshProps {
   count?: number;
