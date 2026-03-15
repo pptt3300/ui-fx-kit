@@ -9,14 +9,18 @@
 ### 方式一：CLI 命令行（推荐）
 
 ```bash
-# 添加一个效果到你的项目 — 无需安装
+# 直接用 npx（无需安装）
 npx ui-fx-kit add holographic-card --target ./src
 
+# 或者全局安装，后续使用更快
+npm install -g ui-fx-kit
+ui-fx-kit add holographic-card --target ./src
+
 # 一次添加多个效果
-npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
+ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
 ```
 
-CLI 会自动复制效果源码 + 依赖的 hooks + CSS 到你的项目。你拥有代码，可以自由修改。
+CLI 会自动复制效果源码 + 依赖的 hooks + CSS 到你的项目。你拥有代码，无运行时依赖，可以自由修改。
 
 ### 方式二：MCP 服务器（Claude Code 用户）
 

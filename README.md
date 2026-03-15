@@ -9,14 +9,18 @@
 ### Option 1: CLI (recommended)
 
 ```bash
-# Add an effect to your project — no install needed
+# Use directly with npx (no install needed)
 npx ui-fx-kit add holographic-card --target ./src
 
+# Or install globally for faster repeated use
+npm install -g ui-fx-kit
+ui-fx-kit add holographic-card --target ./src
+
 # Add multiple effects at once
-npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
+ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
 ```
 
-The CLI automatically copies the effect source code + hook dependencies + CSS into your project. You own the code.
+The CLI copies effect source code + hook dependencies + CSS into your project. You own the code, no runtime dependency on ui-fx-kit.
 
 ### Option 2: MCP Server (for Claude Code users)
 
