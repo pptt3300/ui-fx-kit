@@ -9,17 +9,14 @@
 ### Option 1: CLI (recommended)
 
 ```bash
-# Clone the toolkit
-git clone https://github.com/pptt3300/ui-fx-kit.git
-
-# Add an effect to your project
-node ui-fx-kit/bin/cli.js add holographic-card --target ./src
+# Add an effect to your project — no install needed
+npx ui-fx-kit add holographic-card --target ./src
 
 # Add multiple effects at once
-node ui-fx-kit/bin/cli.js add gradient-mesh silk-waves cursor-glow --target ./src
+npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
 ```
 
-The CLI automatically copies the effect + its hook dependencies + CSS. No npm install needed for the toolkit itself.
+The CLI automatically copies the effect source code + hook dependencies + CSS into your project. You own the code.
 
 ### Option 2: MCP Server (for Claude Code users)
 
@@ -59,16 +56,16 @@ cp ui-fx-kit/css/holographic.css your-project/src/css/
 
 ```bash
 # List all 64 effects
-node ui-fx-kit/bin/cli.js list
+npx ui-fx-kit list
 
 # Filter by category
-node ui-fx-kit/bin/cli.js list background
+npx ui-fx-kit list background
 
 # See effect details before adding
-node ui-fx-kit/bin/cli.js info silk-waves
+npx ui-fx-kit info silk-waves
 
 # Add to your project
-node ui-fx-kit/bin/cli.js add silk-waves --target ./src
+npx ui-fx-kit add silk-waves --target ./src
 ```
 
 ## What's Inside

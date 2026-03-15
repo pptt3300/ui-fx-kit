@@ -177,15 +177,15 @@ export default function CodePanel({
             >
               <p className="text-xs font-semibold text-indigo-300 mb-1">Use with Claude Code</p>
               <p className="text-[11px] text-white/40 mb-3 leading-relaxed">
-                Install this effect directly from your terminal via MCP.
+                Add this effect to your project with one command.
               </p>
               <div
                 className="rounded p-2.5 font-mono text-[11px] text-white/70 leading-relaxed"
                 style={{ background: "rgba(0,0,0,0.4)" }}
               >
                 <span className="text-white/30">$</span>{" "}
-                <span className="text-emerald-400">install</span>{" "}
-                <span className="text-white/60">ui-fx-kit/{effectId}</span>
+                <span className="text-emerald-400">npx</span>{" "}
+                <span className="text-white/60">ui-fx-kit add {effectId} --target ./src</span>
               </div>
             </div>
           </motion.aside>

@@ -9,17 +9,14 @@
 ### 方式一：CLI 命令行（推荐）
 
 ```bash
-# 克隆工具包
-git clone https://github.com/pptt3300/ui-fx-kit.git
-
-# 给你的项目添加一个效果
-node ui-fx-kit/bin/cli.js add holographic-card --target ./src
+# 添加一个效果到你的项目 — 无需安装
+npx ui-fx-kit add holographic-card --target ./src
 
 # 一次添加多个效果
-node ui-fx-kit/bin/cli.js add gradient-mesh silk-waves cursor-glow --target ./src
+npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
 ```
 
-CLI 会自动复制效果组件 + 依赖的 hooks + CSS 到你的项目。工具包本身不需要 npm install。
+CLI 会自动复制效果源码 + 依赖的 hooks + CSS 到你的项目。你拥有代码，可以自由修改。
 
 ### 方式二：MCP 服务器（Claude Code 用户）
 
@@ -59,16 +56,16 @@ cp ui-fx-kit/css/holographic.css 你的项目/src/css/
 
 ```bash
 # 列出全部 64 个效果
-node ui-fx-kit/bin/cli.js list
+npx ui-fx-kit list
 
 # 按分类筛选
-node ui-fx-kit/bin/cli.js list background
+npx ui-fx-kit list background
 
 # 查看效果详情
-node ui-fx-kit/bin/cli.js info silk-waves
+npx ui-fx-kit info silk-waves
 
 # 添加到项目
-node ui-fx-kit/bin/cli.js add silk-waves --target ./src
+npx ui-fx-kit add silk-waves --target ./src
 ```
 
 ## 包含内容

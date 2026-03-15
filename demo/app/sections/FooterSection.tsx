@@ -302,7 +302,7 @@ export default function FooterSection() {
                     whiteSpace: "pre",
                   }}
                 >
-                  {`{\n  "mcpServers": {\n    "ui-fx-kit": {\n      "command": "npx",\n      "args": ["ui-fx-kit-mcp"]\n    }\n  }\n}`}
+                  {`{\n  "mcpServers": {\n    "ui-fx-kit": {\n      "command": "node",\n      "args": ["node_modules/ui-fx-kit/mcp-server.js"]\n    }\n  }\n}`}
                 </div>
               </div>
 
