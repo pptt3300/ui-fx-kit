@@ -1,0 +1,9 @@
+{
+  "name": "Pixel Trail",
+  "description": "Retro pixel cursor trail that snaps to a grid and fades out with configurable colors.",
+  "tags": ["cursor", "canvas", "pixel", "retro", "trail", "global"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "files": ["PixelTrail.tsx"]
+}
