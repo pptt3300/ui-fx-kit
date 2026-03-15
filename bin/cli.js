@@ -270,6 +270,8 @@ async function cmdAdd(effectId, targetDir) {
   // 9. Summary
   console.log(`\n${GREEN}${BOLD}Done!${RESET}\n`);
 
+  console.log(`${BOLD}Files written to:${RESET} ${CYAN}${resolve(effectsTarget)}${RESET}\n`);
+
   if (uniqueDeps.length > 0) {
     console.log(`${YELLOW}Install required dependencies:${RESET}`);
     console.log(`  npm install ${uniqueDeps.join(" ")}\n`);
@@ -277,6 +279,7 @@ async function cmdAdd(effectId, targetDir) {
 
   console.log(`${BOLD}Usage:${RESET}`);
   const componentName = meta.name.replace(/\s+/g, "");
+  const importPath = resolve(effectsTarget, effectFiles[0]?.replace(".tsx", "") || "");
   console.log(`  import ${componentName} from "./effects/${effectId}/${effectFiles[0]?.replace(".tsx", "")}";`);
   console.log(`  <${componentName} />\n`);
 }
@@ -359,18 +362,24 @@ if (wantsHelp || command === "help" || !command) {
 } else if (command === "list" || command === "ls") {
   await cmdList(positional[1]);
 } else if (command === "add") {
-  if (!positional[1]) {
-    console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit add <effect-name> [--target dir]\n`);
+  const effectNames = positional.slice(1);
+  if (effectNames.length === 0) {
+    console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit add <effect-name> [effect2 ...] [--target dir]\n`);
+    console.log(`${DIM}Examples:${RESET}`);
+    console.log(`  npx ui-fx-kit add holographic-card`);
+    console.log(`  npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src\n`);
     process.exit(1);
   }
-  const targetDir = flags.target || positional[2] || ".";
-  // Validate target doesn't look like a flag
+  const targetDir = flags.target || ".";
   if (targetDir.startsWith("-")) {
     console.error(`\n${RED}Error:${RESET} Invalid target directory "${targetDir}".`);
-    console.log(`Use: npx ui-fx-kit add ${positional[1]} --target ./src\n`);
+    console.log(`Use: npx ui-fx-kit add ${effectNames[0]} --target ./src\n`);
     process.exit(1);
   }
-  await cmdAdd(positional[1], targetDir);
+  for (const name of effectNames) {
+    await cmdAdd(name, targetDir);
+    if (effectNames.length > 1) console.log(`${DIM}${"─".repeat(50)}${RESET}\n`);
+  }
 } else if (command === "info") {
   if (!positional[1]) {
     console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit info <effect-name>\n`);
