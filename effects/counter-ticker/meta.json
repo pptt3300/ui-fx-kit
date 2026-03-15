@@ -1,0 +1,9 @@
+{
+  "name": "Counter Ticker",
+  "description": "Slot-machine style number counter — each digit column rolls to its target value on scroll-into-view.",
+  "tags": ["scroll", "counter", "number", "animation", "loading"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useSpring", "useInView"],
+  "files": ["CounterTicker.tsx"]
+}
