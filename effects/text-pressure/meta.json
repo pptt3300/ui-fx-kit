@@ -1,0 +1,9 @@
+{
+  "name": "Text Pressure",
+  "description": "Variable font weight effect driven by mouse proximity. Characters closer to the cursor become bolder and slightly larger via font-variation-settings.",
+  "tags": ["text", "variable-font", "mouse", "interactive", "proximity"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useMousePosition", "proximity"],
+  "files": ["TextPressure.tsx"]
+}
