@@ -135,4 +135,4 @@ Effects import from `hooks/` and `css/`. The CLI resolves these dependencies aut
 
 ## License
 
-Apache-2.0
+MIT

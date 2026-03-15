@@ -133,4 +133,4 @@ mcp-server.js → Claude Code 用的 MCP 服务器
 
 ## 许可证
 
-Apache-2.0
+MIT

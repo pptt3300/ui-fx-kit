@@ -38,7 +38,7 @@
     "glassmorphism"
   ],
   "author": "Patricia Zhang",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pptt3300/ui-fx-kit.git"
