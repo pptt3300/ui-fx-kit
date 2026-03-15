@@ -14,16 +14,9 @@ const NoiseGrain = dynamic(() => import("@effects/noise-grain/NoiseGrain"), { ss
 
 export function LiquidGlassSection() {
   return (
-    <EffectSection
-      id="liquid-glass"
-      title="Liquid Glass"
-      description="Frosted glass cards with animated blob background and spring hover lift."
-      category="Shader"
-    >
-      <div className="w-full h-full min-h-screen">
-        <LiquidGlass />
-      </div>
-    </EffectSection>
+    <section id="liquid-glass" className="relative min-h-screen flex items-center">
+      <LiquidGlass />
+    </section>
   );
 }
 
