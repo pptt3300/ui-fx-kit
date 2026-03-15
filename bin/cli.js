@@ -93,10 +93,15 @@ async function ensureDir(dir) {
   if (!existsSync(dir)) await mkdir(dir, { recursive: true });
 }
 
-async function copyWithLog(src, dest, label) {
+async function copyWithLog(src, dest, label, { force = false } = {}) {
   await ensureDir(dirname(dest));
+  if (!force && existsSync(dest)) {
+    console.log(`  ${DIM}~${RESET} ${label} ${DIM}(exists, skipped)${RESET}`);
+    return false;
+  }
   await copyFile(src, dest);
   console.log(`  ${GREEN}+${RESET} ${label}`);
+  return true;
 }
 
 // ── Commands ────────────────────────────────────────────
@@ -170,15 +175,14 @@ async function cmdAdd(effectId, targetDir) {
   const cssTarget = join(target, "css");
   const presetsTarget = join(target, "presets");
 
-  // 3. Copy effect files
+  // 3. Copy effect files (always overwrite — user explicitly asked for this effect)
   console.log(`${BOLD}Effect:${RESET}`);
   for (const file of effectFiles) {
-    await copyWithLog(join(effectDir, file), join(effectsTarget, file), `effects/${effectId}/${file}`);
+    await copyWithLog(join(effectDir, file), join(effectsTarget, file), `effects/${effectId}/${file}`, { force: true });
   }
-  // Copy meta.json too
-  await copyWithLog(join(effectDir, "meta.json"), join(effectsTarget, "meta.json"), `effects/${effectId}/meta.json`);
+  await copyWithLog(join(effectDir, "meta.json"), join(effectsTarget, "meta.json"), `effects/${effectId}/meta.json`, { force: true });
 
-  // 4. Copy hooks
+  // 4. Copy hooks (skip if already exists — don't overwrite user modifications)
   if (allHooks.size > 0) {
     console.log(`\n${BOLD}Hooks:${RESET}`);
     for (const hook of allHooks) {
@@ -188,17 +192,30 @@ async function cmdAdd(effectId, targetDir) {
         await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`);
       }
     }
-    // Create a minimal index.ts that re-exports only needed hooks
-    const indexLines = Array.from(allHooks).map(h => {
-      const file = h === "proximity" ? "useProximity" : h;
-      return `export { ${h} } from "./${file}";`;
-    });
-    const indexContent = indexLines.join("\n") + "\n";
+    // Merge hooks/index.ts — add new exports without removing existing ones
     const indexPath = join(hooksTarget, "index.ts");
     await ensureDir(hooksTarget);
     const { writeFile } = await import("fs/promises");
-    await writeFile(indexPath, indexContent);
-    console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(re-exports)${RESET}`);
+
+    let existingExports = new Set();
+    if (existsSync(indexPath)) {
+      const existing = await readFile(indexPath, "utf-8");
+      const matches = existing.matchAll(/export\s+\{\s*(\w+)\s*\}/g);
+      for (const m of matches) existingExports.add(m[1]);
+    }
+
+    const newHooks = Array.from(allHooks).filter(h => !existingExports.has(h));
+    if (newHooks.length > 0 || !existsSync(indexPath)) {
+      const allExports = new Set([...existingExports, ...allHooks]);
+      const indexLines = Array.from(allExports).map(h => {
+        const file = h === "proximity" ? "useProximity" : h;
+        return `export { ${h} } from "./${file}";`;
+      });
+      await writeFile(indexPath, indexLines.join("\n") + "\n");
+      console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(${newHooks.length > 0 ? "merged " + newHooks.length + " new exports" : "created"})${RESET}`);
+    } else {
+      console.log(`  ${DIM}~${RESET} hooks/index.ts ${DIM}(no new exports needed)${RESET}`);
+    }
   }
 
   // 5. Copy CSS
