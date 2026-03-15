@@ -14,7 +14,7 @@ const NoiseGrain = dynamic(() => import("@effects/noise-grain/NoiseGrain"), { ss
 
 export function LiquidGlassSection() {
   return (
-    <section id="liquid-glass" className="relative min-h-screen flex items-center">
+    <section id="liquid-glass" className="relative w-full">
       <LiquidGlass />
     </section>
   );
