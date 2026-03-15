@@ -1,38 +1,32 @@
 {
   "name": "ui-fx-kit",
   "version": "1.0.0",
-  "private": true,
-  "description": "Personal UI effects library with MCP server for Claude Code integration",
+  "description": "64 composable React UI effects. Hooks, CSS, Components. CLI + MCP powered.",
   "type": "module",
+  "bin": {
+    "ui-fx-kit": "./bin/cli.js"
+  },
   "scripts": {
     "mcp": "node mcp-server.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
-    "framer-motion": "^12.36.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "three": "^0.183.2"
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
     "typescript": "^5.9.3"
   },
-  "main": "mcp-server.js",
-  "directories": {
-    "doc": "docs"
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
+  "keywords": ["react", "ui", "effects", "animation", "webgl", "shader", "mcp", "particles", "cursor"],
+  "author": "Patricia Cheung",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pptt3300/ui-fx-kit.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pptt3300/ui-fx-kit/issues"
   },
   "homepage": "https://github.com/pptt3300/ui-fx-kit#readme"
 }
