@@ -1,10 +1,31 @@
 /* === Staggered Entrance Presets === */
+
+/* Base: hidden until activated */
 .fx-stagger-item { opacity: 0; will-change: transform, opacity; }
 .fx-stagger-item.fx-active { animation-fill-mode: forwards; animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
 
+/* Wave: bounce up */
 @keyframes fx-stagger-wave { 0% { opacity: 0; transform: translateY(20px); } 60% { opacity: 1; transform: translateY(-8px); } 100% { opacity: 1; transform: translateY(0); } }
+
+/* Bounce: scale pop */
 @keyframes fx-stagger-bounce { 0% { opacity: 0; transform: scale(0); } 60% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+
+/* Slide up */
+.fx-stagger-slide-up { transform: translateY(30px); }
 @keyframes fx-stagger-slide-up { to { opacity: 1; transform: translateY(0); } }
+.fx-stagger-slide-up.fx-active { animation-name: fx-stagger-slide-up; }
+
+/* Scale in */
+.fx-stagger-scale { transform: scale(0.85); }
 @keyframes fx-stagger-scale { to { opacity: 1; transform: scale(1); } }
+.fx-stagger-scale.fx-active { animation-name: fx-stagger-scale; }
+
+/* Blur in */
+.fx-stagger-blur { filter: blur(8px); }
 @keyframes fx-stagger-blur { to { opacity: 1; filter: blur(0); } }
+.fx-stagger-blur.fx-active { animation-name: fx-stagger-blur; }
+
+/* Flip in */
+.fx-stagger-flip { transform: rotateX(-80deg); transform-origin: top center; perspective: 800px; }
 @keyframes fx-stagger-flip { to { opacity: 1; transform: rotateX(0); } }
+.fx-stagger-flip.fx-active { animation-name: fx-stagger-flip; }
