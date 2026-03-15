@@ -100,9 +100,94 @@ function PalettePreview({ palette }: { palette: typeof PALETTES["default"] }) {
   );
 }
 
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <button
+      onClick={copy}
+      className="group flex items-center gap-2 hover:bg-white/5 rounded-lg px-2 py-1 -mx-2 transition-colors"
+      title="Click to copy"
+    >
+      <span className="text-[10px] text-white/30 font-mono">{label}</span>
+      <span className="text-[10px] text-white/50 font-mono group-hover:text-white/80 transition-colors">
+        {copied ? "Copied!" : ""}
+      </span>
+    </button>
+  );
+}
+
+function ColorSwatch({ color, name }: { color: number[]; name: string }) {
+  const [copied, setCopied] = useState(false);
+  const value = `[${color.join(", ")}]`;
+
+  return (
+    <button
+      onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+      className="group text-left hover:bg-white/5 rounded-lg p-2 -m-1 transition-colors cursor-pointer"
+      title={`Click to copy ${value}`}
+    >
+      <div className="flex items-center gap-2 mb-0.5">
+        <div className="w-5 h-5 rounded flex-shrink-0" style={{ background: rgb(color) }} />
+        <span className="text-[10px] text-white/30 font-mono">{name}</span>
+      </div>
+      <span className="text-[10px] font-mono transition-colors" style={{ color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.2)" }}>
+        {copied ? "Copied!" : value}
+      </span>
+    </button>
+  );
+}
+
+function ColorArraySwatch({ colors, name }: { colors: number[][]; name: string }) {
+  const [copied, setCopied] = useState(false);
+  const value = `[${colors.map(c => `[${c.join(",")}]`).join(", ")}]`;
+
+  return (
+    <button
+      onClick={() => { navigator.clipboard.writeText(value); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
+      className="group text-left hover:bg-white/5 rounded-lg p-2 -m-1 transition-colors cursor-pointer"
+      title={`Click to copy ${name}`}
+    >
+      <span className="text-[10px] text-white/30 font-mono block mb-1">{name}</span>
+      <div className="flex gap-1 mb-1">
+        {colors.map((c, i) => (
+          <div key={i} className="w-5 h-5 rounded" style={{ background: rgb(c) }} />
+        ))}
+      </div>
+      <span className="text-[10px] font-mono transition-colors" style={{ color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.15)" }}>
+        {copied ? "Copied!" : "click to copy"}
+      </span>
+    </button>
+  );
+}
+
 export default function PalettesSection() {
   const [selected, setSelected] = useState<string>("default");
+  const [codeCopied, setCodeCopied] = useState(false);
   const paletteNames = Object.keys(PALETTES);
+  const pal = PALETTES[selected];
+
+  // Generate copyable code snippet
+  const codeSnippet = `<GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />
+
+<MatrixRain color={[${pal.glow.join(", ")}]} />
+
+<HolographicCard>
+  {/* primary: [${pal.primary.join(",")}] */}
+  {/* accent: [${pal.accent.join(",")}] */}
+</HolographicCard>`;
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(codeSnippet);
+    setCodeCopied(true);
+    setTimeout(() => setCodeCopied(false), 2000);
+  };
 
   return (
     <section id="palettes" className="py-24 px-6 bg-zinc-950">
@@ -111,10 +196,7 @@ export default function PalettesSection() {
           Color Palettes
         </h2>
         <p className="text-white/50 mb-4 max-w-lg text-sm">
-          13 curated color palettes. Pick one and pass its colors as props to any effect.
-        </p>
-        <p className="text-white/30 mb-12 max-w-lg text-xs font-mono">
-          Not a runtime theme — just a reference. Copy the RGB values you like.
+          13 curated color palettes. Click any color value to copy it.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
@@ -134,35 +216,41 @@ export default function PalettesSection() {
           <div className="flex items-center gap-4 mb-6">
             <h3 className="text-xl font-bold text-white capitalize">{selected}</h3>
             <div className="h-px flex-1 bg-white/10" />
+            <span className="text-xs text-white/20 font-mono">click any value to copy</span>
           </div>
-          <PalettePreview palette={PALETTES[selected]} />
 
-          {/* Full color table */}
-          <div className="mt-6 grid grid-cols-3 sm:grid-cols-5 gap-3">
-            {Object.entries(PALETTES[selected]).map(([key, value]) => {
-              if (Array.isArray(value[0])) {
-                // Array of colors (particles, background)
-                return (
-                  <div key={key}>
-                    <p className="text-[10px] text-white/30 font-mono mb-1">{key}</p>
-                    <div className="flex gap-1">
-                      {(value as number[][]).map((c, i) => (
-                        <div key={i} className="w-5 h-5 rounded" style={{ background: rgb(c) }} title={`[${c.join(",")}]`} />
-                      ))}
-                    </div>
-                  </div>
-                );
-              }
-              return (
-                <div key={key}>
-                  <p className="text-[10px] text-white/30 font-mono mb-1">{key}</p>
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded" style={{ background: rgb(value as number[]) }} />
-                    <span className="text-[10px] text-white/20 font-mono">[{(value as number[]).join(",")}]</span>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Color grid — all clickable */}
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-8">
+            <ColorSwatch color={pal.primary} name="primary" />
+            <ColorSwatch color={pal.secondary} name="secondary" />
+            <ColorSwatch color={pal.accent} name="accent" />
+            <ColorSwatch color={pal.glow} name="glow" />
+            <ColorSwatch color={pal.surface} name="surface" />
+            <ColorSwatch color={pal.text} name="text" />
+            <ColorSwatch color={pal.muted} name="muted" />
+            <ColorArraySwatch colors={pal.particles} name="particles" />
+            <ColorArraySwatch colors={pal.background} name="background" />
+          </div>
+
+          {/* Copyable code example */}
+          <div className="relative rounded-xl bg-black/40 border border-white/10 p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] text-white/30 font-mono uppercase tracking-wider">Usage example</span>
+              <button
+                onClick={copyCode}
+                className="text-[11px] font-mono px-3 py-1 rounded-lg transition-colors"
+                style={{
+                  background: codeCopied ? "rgba(34,211,153,0.15)" : "rgba(255,255,255,0.06)",
+                  color: codeCopied ? "rgb(34,211,153)" : "rgba(255,255,255,0.4)",
+                  border: `1px solid ${codeCopied ? "rgba(34,211,153,0.3)" : "rgba(255,255,255,0.08)"}`,
+                }}
+              >
+                {codeCopied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+            <pre className="text-xs text-white/60 font-mono leading-relaxed overflow-x-auto">
+              {codeSnippet}
+            </pre>
           </div>
         </div>
       </div>
