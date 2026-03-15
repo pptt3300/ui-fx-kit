@@ -258,11 +258,11 @@ server.tool(
 
 server.tool(
   "get_preset",
-  "Get preset source code (color palette, spring configs, theme, or palettes)",
+  "Get preset source code (color utilities, spring configs, or curated palettes)",
   {
     name: z
-      .enum(["colors", "springs", "theme", "palettes"])
-      .describe("Preset name: 'colors', 'springs', 'theme', or 'palettes'"),
+      .enum(["colors", "springs", "palettes"])
+      .describe("Preset name: 'colors', 'springs', or 'palettes'"),
   },
   async ({ name }) => {
     // Try .ts first, then .tsx
@@ -289,7 +289,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Preset "${name}" not found. Available presets: colors, springs, theme, palettes.`,
+            text: `Preset "${name}" not found. Available presets: colors, springs, palettes.`,
           },
         ],
       };

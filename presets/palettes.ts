@@ -1,4 +1,17 @@
-import type { PaletteColors } from "./theme";
+import type { RGB } from "./colors";
+
+/** Per-effect-type color mapping within a palette */
+export interface PaletteColors {
+  particles: RGB[];
+  background: RGB[];
+  glow: RGB;
+  primary: RGB;
+  secondary: RGB;
+  accent: RGB;
+  surface: RGB;
+  text: RGB;
+  muted: RGB;
+}
 
 /** All curated palette definitions */
 export const PALETTES: Record<string, PaletteColors> = {

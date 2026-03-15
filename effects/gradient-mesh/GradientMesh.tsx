@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useGradientMesh } from "../../hooks";
-import { useThemeColors } from "../../presets";
-import type { RGB } from "../../presets";
+import type { RGB } from "../../presets/colors";
 
 interface GradientMeshProps {
   count?: number;
@@ -16,8 +15,7 @@ export default function GradientMesh({
   speed = 0.3,
   className,
 }: GradientMeshProps) {
-  const themeColors = useThemeColors("background");
-  const resolvedColors = colors ?? themeColors ?? undefined;
+  const resolvedColors = colors ?? undefined;
 
   const mesh = useGradientMesh({ count, colors: resolvedColors, speed });
   const divRef = useRef<HTMLDivElement>(null);
