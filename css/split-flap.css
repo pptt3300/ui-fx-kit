@@ -1,0 +1,14 @@
+/* === Split-Flap Display === */
+.fx-flap-char {
+  display: inline-block; position: relative; width: 1em; height: 1.4em;
+  perspective: 200px; background: #1a1a1a; border-radius: 3px; margin: 0 1px; overflow: hidden;
+}
+.fx-flap-char-inner {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: monospace; font-weight: 700; color: #e0e0e0; backface-visibility: hidden;
+}
+.fx-flap-top, .fx-flap-bottom { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.fx-flap-top { top: 0; border-bottom: 1px solid rgba(0,0,0,0.3); }
+.fx-flap-bottom { bottom: 0; }
+.fx-flap-flip { animation: fx-flap-flip 0.15s ease-in forwards; transform-origin: bottom center; }
+@keyframes fx-flap-flip { 0% { transform: rotateX(0deg); } 100% { transform: rotateX(-90deg); } }

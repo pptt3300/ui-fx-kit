@@ -1,0 +1,14 @@
+/* === Sticker Peel Effect === */
+.fx-sticker { position: relative; overflow: hidden; transition: transform 0.3s ease; }
+.fx-sticker::before {
+  content: ""; position: absolute; bottom: 0; right: 0; width: 0; height: 0;
+  background: linear-gradient(225deg, transparent 50%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.15) 56%, rgba(255,255,255,0.9) 56%);
+  transition: width 0.4s cubic-bezier(0.16,1,0.3,1), height 0.4s cubic-bezier(0.16,1,0.3,1); z-index: 10;
+}
+.fx-sticker:hover::before { width: 60px; height: 60px; }
+.fx-sticker::after {
+  content: ""; position: absolute; bottom: 0; right: 0; width: 0; height: 0;
+  box-shadow: -3px -3px 8px rgba(0,0,0,0.15);
+  transition: width 0.4s cubic-bezier(0.16,1,0.3,1), height 0.4s cubic-bezier(0.16,1,0.3,1); z-index: 9;
+}
+.fx-sticker:hover::after { width: 55px; height: 55px; }

@@ -1,0 +1,14 @@
+/* === Shimmer Skeleton Loading === */
+.fx-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 60%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%; animation: fx-shimmer-sweep 1.5s ease-in-out infinite;
+}
+.fx-shimmer-dark { background-color: #1a1a2e; }
+.fx-shimmer-light {
+  background-color: #e2e8f0;
+  background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 40%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 60%, rgba(0,0,0,0) 100%);
+  background-size: 200% 100%; animation: fx-shimmer-sweep 1.5s ease-in-out infinite;
+}
+.fx-shimmer-line { height: 1em; border-radius: 4px; margin-bottom: 0.5em; }
+.fx-shimmer-circle { border-radius: 50%; }
+@keyframes fx-shimmer-sweep { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
