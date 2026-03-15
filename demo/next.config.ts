@@ -4,8 +4,10 @@ import path from "path";
 const rootDir = path.resolve(__dirname, "..");
 
 const nextConfig: NextConfig = {
+  output: "export",
+  basePath: process.env.NODE_ENV === "production" ? "/ui-fx-kit" : "",
+  images: { unoptimized: true },
   typescript: {
-    // Effects are type-checked via root tsconfig, not demo's
     ignoreBuildErrors: true,
   },
   turbopack: {
