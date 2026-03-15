@@ -1,0 +1,9 @@
+{
+  "name": "Ghost Cursor",
+  "description": "Spring-chained DOM ghost trail where each circle lazily follows the previous one.",
+  "tags": ["cursor", "dom", "spring", "trail", "global"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useMousePosition", "useSpring"],
+  "files": ["GhostCursor.tsx"]
+}
