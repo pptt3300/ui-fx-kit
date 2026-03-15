@@ -7,3 +7,4 @@ demo/.next/
 demo/node_modules/
 *.env
 *.env.local
+docs/
