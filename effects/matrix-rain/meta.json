@@ -1,0 +1,9 @@
+{
+  "name": "Matrix Rain",
+  "description": "Classic matrix rain effect with falling character columns. Supports katakana, latin, binary, or custom charsets with configurable speed, density, and color.",
+  "tags": ["background", "canvas", "matrix", "characters", "ambient"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useCanvasSetup"],
+  "files": ["MatrixRain.tsx"]
+}
