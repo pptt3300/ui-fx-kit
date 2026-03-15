@@ -1,6 +1,6 @@
 {
   "name": "ui-fx-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "64 composable React UI effects. Hooks, CSS, Components. CLI + MCP powered.",
   "type": "module",
   "bin": {
