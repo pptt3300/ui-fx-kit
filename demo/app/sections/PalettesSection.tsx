@@ -2,6 +2,54 @@
 
 import { useState } from "react";
 
+function CodeTabs({ tabs }: { tabs: Record<string, string> }) {
+  const names = Object.keys(tabs);
+  const [active, setActive] = useState(names[0]);
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText(tabs[active]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  return (
+    <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden">
+      <div className="flex items-center justify-between border-b border-white/5 px-4 py-2">
+        <div className="flex gap-1">
+          {names.map((name) => (
+            <button
+              key={name}
+              onClick={() => setActive(name)}
+              className="text-[11px] font-mono px-3 py-1.5 rounded-md transition-colors"
+              style={{
+                background: active === name ? "rgba(99,102,241,0.15)" : "transparent",
+                color: active === name ? "rgb(165,180,252)" : "rgba(255,255,255,0.3)",
+              }}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={copy}
+          className="text-[11px] font-mono px-3 py-1 rounded-lg transition-colors"
+          style={{
+            background: copied ? "rgba(34,211,153,0.15)" : "rgba(255,255,255,0.06)",
+            color: copied ? "rgb(34,211,153)" : "rgba(255,255,255,0.4)",
+            border: `1px solid ${copied ? "rgba(34,211,153,0.3)" : "rgba(255,255,255,0.08)"}`,
+          }}
+        >
+          {copied ? "Copied!" : "Copy"}
+        </button>
+      </div>
+      <pre className="text-xs text-white/60 font-mono leading-relaxed p-4 overflow-x-auto">
+        {tabs[active]}
+      </pre>
+    </div>
+  );
+}
+
 const PALETTES: Record<string, { particles: number[][]; background: number[][]; glow: number[]; primary: number[]; secondary: number[]; accent: number[]; surface: number[]; text: number[]; muted: number[] }> = {
   default: { particles: [[99,102,241],[139,92,246],[34,211,238]], background: [[34,197,94],[139,92,246]], glow: [99,102,241], primary: [99,102,241], secondary: [139,92,246], accent: [34,211,238], surface: [15,15,25], text: [240,240,255], muted: [128,128,168] },
   neon: { particles: [[255,45,149],[0,245,212],[191,255,0]], background: [[255,0,128],[0,200,255]], glow: [255,45,149], primary: [255,45,149], secondary: [0,245,212], accent: [191,255,0], surface: [10,5,15], text: [255,255,255], muted: [180,120,200] },
@@ -169,25 +217,38 @@ function ColorArraySwatch({ colors, name }: { colors: number[][]; name: string }
 
 export default function PalettesSection() {
   const [selected, setSelected] = useState<string>("default");
-  const [codeCopied, setCodeCopied] = useState(false);
   const paletteNames = Object.keys(PALETTES);
   const pal = PALETTES[selected];
 
-  // Generate copyable code snippet
-  const codeSnippet = `<GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />
+  // Generate copyable code snippets for different use cases
+  const snippetBg = `// Background effect with "${selected}" palette
+<GradientMesh
+  colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]}
+  speed={0.3}
+/>`;
 
-<MatrixRain color={[${pal.glow.join(", ")}]} />
+  const snippetText = `// Text effect with "${selected}" palette
+<GlitchText
+  text="Hello World"
+  color={[${pal.primary.join(", ")}]}
+/>`;
 
-<HolographicCard>
-  {/* primary: [${pal.primary.join(",")}] */}
-  {/* accent: [${pal.accent.join(",")}] */}
-</HolographicCard>`;
+  const snippetFull = `// Full page with "${selected}" palette colors
+<div style={{ background: "rgb(${pal.surface.join(",")})" }}>
+  {/* Background */}
+  <GradientMesh colors={[${pal.particles.map(c => `[${c.join(",")}]`).join(", ")}]} />
 
-  const copyCode = () => {
-    navigator.clipboard.writeText(codeSnippet);
-    setCodeCopied(true);
-    setTimeout(() => setCodeCopied(false), 2000);
-  };
+  {/* Content */}
+  <h1 style={{ color: "rgb(${pal.text.join(",")})" }}>
+    My App
+  </h1>
+
+  {/* Accent elements */}
+  <button style={{ background: "rgb(${pal.primary.join(",")})" }}>
+    Get Started
+  </button>
+</div>`;
+
 
   return (
     <section id="palettes" className="py-24 px-6 bg-zinc-950">
@@ -195,9 +256,14 @@ export default function PalettesSection() {
         <h2 className="text-sm font-mono text-indigo-400 mb-2 tracking-widest uppercase">
           Color Palettes
         </h2>
-        <p className="text-white/50 mb-4 max-w-lg text-sm">
-          13 curated color palettes. Click any color value to copy it.
+        <p className="text-white/50 mb-2 max-w-lg text-sm">
+          13 curated color palettes. Pick a vibe, copy the colors, pass them as props.
         </p>
+        <div className="flex gap-6 mb-12 text-[11px] text-white/30 font-mono">
+          <span><span className="text-indigo-400">1.</span> Pick a palette</span>
+          <span><span className="text-indigo-400">2.</span> Click any color to copy</span>
+          <span><span className="text-indigo-400">3.</span> Paste as effect props</span>
+        </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
           {paletteNames.map((name) => (
@@ -232,26 +298,14 @@ export default function PalettesSection() {
             <ColorArraySwatch colors={pal.background} name="background" />
           </div>
 
-          {/* Copyable code example */}
-          <div className="relative rounded-xl bg-black/40 border border-white/10 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] text-white/30 font-mono uppercase tracking-wider">Usage example</span>
-              <button
-                onClick={copyCode}
-                className="text-[11px] font-mono px-3 py-1 rounded-lg transition-colors"
-                style={{
-                  background: codeCopied ? "rgba(34,211,153,0.15)" : "rgba(255,255,255,0.06)",
-                  color: codeCopied ? "rgb(34,211,153)" : "rgba(255,255,255,0.4)",
-                  border: `1px solid ${codeCopied ? "rgba(34,211,153,0.3)" : "rgba(255,255,255,0.08)"}`,
-                }}
-              >
-                {codeCopied ? "Copied!" : "Copy"}
-              </button>
-            </div>
-            <pre className="text-xs text-white/60 font-mono leading-relaxed overflow-x-auto">
-              {codeSnippet}
-            </pre>
-          </div>
+          {/* Code examples with tabs */}
+          <CodeTabs
+            tabs={{
+              "Background": snippetBg,
+              "Text": snippetText,
+              "Full Page": snippetFull,
+            }}
+          />
         </div>
       </div>
     </section>
