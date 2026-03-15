@@ -285,59 +285,83 @@ async function cmdInfo(effectId) {
   console.log();
 }
 
-// ── Main ────────────────────────────────────────────────
+// ── Arg parsing ─────────────────────────────────────────
 
-const args = process.argv.slice(2);
-const command = args[0];
+function parseArgs(argv) {
+  const raw = argv.slice(2);
+  const positional = [];
+  const flags = {};
+  let wantsHelp = false;
 
-switch (command) {
-  case "list":
-  case "ls":
-    await cmdList(args[1]);
-    break;
-
-  case "add":
-    if (!args[1]) {
-      console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit add <effect-name> [target-dir]\n`);
-      process.exit(1);
+  for (let i = 0; i < raw.length; i++) {
+    const arg = raw[i];
+    if (arg === "--help" || arg === "-h") {
+      wantsHelp = true;
+    } else if (arg.startsWith("--")) {
+      const key = arg.slice(2);
+      const next = raw[i + 1];
+      if (next && !next.startsWith("-")) {
+        flags[key] = next;
+        i++;
+      } else {
+        flags[key] = true;
+      }
+    } else if (arg.startsWith("-")) {
+      // skip unknown short flags
+    } else {
+      positional.push(arg);
     }
-    await cmdAdd(args[1], args[2]);
-    break;
+  }
 
-  case "info":
-    if (!args[1]) {
-      console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit info <effect-name>\n`);
-      process.exit(1);
-    }
-    await cmdInfo(args[1]);
-    break;
+  return { positional, flags, wantsHelp };
+}
 
-  case "help":
-  case "--help":
-  case "-h":
-  case undefined:
-    console.log(`
+const { positional, flags, wantsHelp } = parseArgs(process.argv);
+const command = positional[0];
+
+function showHelp() {
+  console.log(`
 ${BOLD}ui-fx-kit${RESET} — 64 composable React UI effects
 
 ${BOLD}Commands:${RESET}
-  ${CYAN}list${RESET} [tag]          List all effects (optionally filter by tag)
-  ${CYAN}add${RESET} <name> [dir]    Add an effect to your project (copies source + deps)
-  ${CYAN}info${RESET} <name>         Show effect details and dependencies
+  ${CYAN}list${RESET} [tag]                    List all effects (optionally filter by tag)
+  ${CYAN}add${RESET} <name> [--target dir]     Add an effect to your project
+  ${CYAN}info${RESET} <name>                   Show effect details and dependencies
 
 ${BOLD}Examples:${RESET}
   npx ui-fx-kit list
   npx ui-fx-kit list background
   npx ui-fx-kit add holographic-card
-  npx ui-fx-kit add gradient-mesh ./src
+  npx ui-fx-kit add gradient-mesh --target ./src
   npx ui-fx-kit info silk-waves
-
-${BOLD}MCP Server:${RESET}
-  node ${join(LIB_ROOT, "mcp-server.js")}
 `);
-    break;
+}
 
-  default:
-    console.error(`\n${RED}Unknown command:${RESET} ${command}`);
-    console.log(`Run ${CYAN}npx ui-fx-kit --help${RESET} for usage.\n`);
+if (wantsHelp || command === "help" || !command) {
+  showHelp();
+} else if (command === "list" || command === "ls") {
+  await cmdList(positional[1]);
+} else if (command === "add") {
+  if (!positional[1]) {
+    console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit add <effect-name> [--target dir]\n`);
     process.exit(1);
+  }
+  const targetDir = flags.target || positional[2] || ".";
+  // Validate target doesn't look like a flag
+  if (targetDir.startsWith("-")) {
+    console.error(`\n${RED}Error:${RESET} Invalid target directory "${targetDir}".`);
+    console.log(`Use: npx ui-fx-kit add ${positional[1]} --target ./src\n`);
+    process.exit(1);
+  }
+  await cmdAdd(positional[1], targetDir);
+} else if (command === "info") {
+  if (!positional[1]) {
+    console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit info <effect-name>\n`);
+    process.exit(1);
+  }
+  await cmdInfo(positional[1]);
+} else {
+  console.error(`\n${RED}Unknown command:${RESET} ${command}`);
+  console.log(`Run ${CYAN}npx ui-fx-kit --help${RESET} for usage.\n`);
+  process.exit(1);
 }
