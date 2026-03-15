@@ -26,3 +26,30 @@ export type { UseScrollProgressOptions, ScrollState } from "./useScrollProgress"
 
 export { useTypewriter } from "./useTypewriter";
 export type { UseTypewriterOptions, TypewriterState } from "./useTypewriter";
+
+export { useInView } from "./useInView";
+export type { UseInViewOptions } from "./useInView";
+
+export { useStagger } from "./useStagger";
+export type { UseStaggerOptions, StaggerItem, StaggerPattern } from "./useStagger";
+
+export { useGesture } from "./useGesture";
+export type { UseGestureOptions, GestureState } from "./useGesture";
+
+export { useScramble } from "./useScramble";
+export type { UseScrambleOptions } from "./useScramble";
+
+export { useSplitFlap } from "./useSplitFlap";
+export type { UseSplitFlapOptions, FlapChar } from "./useSplitFlap";
+
+export { useMorphText } from "./useMorphText";
+export type { UseMorphTextOptions, MorphTextState } from "./useMorphText";
+
+export { usePerlinNoise } from "./usePerlinNoise";
+export type { UsePerlinNoiseOptions } from "./usePerlinNoise";
+
+export { useGradientMesh } from "./useGradientMesh";
+export type { UseGradientMeshOptions, GradientBlob } from "./useGradientMesh";
+
+export { useWebGL } from "./useWebGL";
+export type { UseWebGLOptions, WebGLState } from "./useWebGL";
