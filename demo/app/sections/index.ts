@@ -80,4 +80,6 @@ export const SECTION_REGISTRY: SectionDef[] = [
   { id: "shimmer-skeleton", label: "Shimmer Skeleton", category: "Interactive" },
   { id: "page-transition", label: "Page Transition", category: "Interactive" },
   { id: "stagger-list", label: "Stagger List", category: "Interactive" },
+  // Palettes
+  { id: "palettes", label: "Color Palettes", category: "Palettes" },
 ];

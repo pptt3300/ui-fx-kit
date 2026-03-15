@@ -24,6 +24,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Interactive: "bg-orange-500/20 text-orange-300 border-orange-500/30",
   Scroll: "bg-blue-500/20 text-blue-300 border-blue-500/30",
   Loading: "bg-red-500/20 text-red-300 border-red-500/30",
+  Palettes: "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30",
 };
 
 export default function EffectSection({
