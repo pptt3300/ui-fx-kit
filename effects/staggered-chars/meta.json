@@ -1,0 +1,9 @@
+{
+  "name": "Staggered Characters",
+  "description": "Each character enters with a staggered delay. Supports wave, bounce, rotate, fade, and scale variants with linear, center-out, edges-in, or random patterns.",
+  "tags": ["text", "stagger", "animation", "entrance"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useStagger", "useInView"],
+  "files": ["StaggeredChars.tsx"]
+}

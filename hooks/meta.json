@@ -48,5 +48,50 @@
     "name": "useTypewriter",
     "description": "Pure state machine for typewriter text effect. Cycles through phrases with typing, pausing, and deleting phases.",
     "tags": ["text", "animation", "typewriter"]
+  },
+  {
+    "name": "useInView",
+    "description": "Intersection Observer wrapper for triggering effects on scroll-into-view. Binary in/out detection with once option.",
+    "tags": ["scroll", "tracking", "intersection"]
+  },
+  {
+    "name": "useStagger",
+    "description": "Staggered animation orchestrator. Computes delays for N items with linear, center-out, edges-in, or random distribution patterns.",
+    "tags": ["animation", "stagger", "orchestration"]
+  },
+  {
+    "name": "useGesture",
+    "description": "Unified drag/swipe gesture handling via pointer events. Tracks position, velocity, and supports axis locking.",
+    "tags": ["gesture", "interactive", "drag", "swipe"]
+  },
+  {
+    "name": "useScramble",
+    "description": "Text decode state machine — characters scramble through random glyphs before settling on target text.",
+    "tags": ["text", "animation", "decode"]
+  },
+  {
+    "name": "useSplitFlap",
+    "description": "Split-flap display state machine. Each column cycles through charset with mechanical flip animation timing.",
+    "tags": ["text", "animation", "split-flap"]
+  },
+  {
+    "name": "useMorphText",
+    "description": "Text morph cycle — blur-fade transitions between an array of words with configurable hold and morph durations.",
+    "tags": ["text", "animation", "morph"]
+  },
+  {
+    "name": "usePerlinNoise",
+    "description": "Perlin noise generator with seeded permutation table. Returns noise2D and fbm functions for flow fields and organic motion.",
+    "tags": ["math", "noise", "generative", "physics"]
+  },
+  {
+    "name": "useGradientMesh",
+    "description": "Animated gradient mesh with drifting radial blobs. Returns tick() for animation and toCSS() for rendering as CSS gradients.",
+    "tags": ["gradient", "animation", "background", "css"]
+  },
+  {
+    "name": "useWebGL",
+    "description": "Zero-dependency WebGL context, shader compilation, uniform management, and fullscreen quad render loop. Foundation for all shader effects.",
+    "tags": ["webgl", "shader", "canvas", "gpu"]
   }
 ]

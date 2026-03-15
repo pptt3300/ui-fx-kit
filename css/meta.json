@@ -28,5 +28,13 @@
     "name": "Text Gradient",
     "description": "Animated gradient text — indigo to violet to cyan. Uses background-clip for text coloring with animated background position.",
     "tags": ["text", "gradient", "animation", "color"]
-  }
+  },
+  {"id":"glitch-effect","name":"Glitch Effect","description":"RGB channel split + clip-path slicing for cyberpunk glitch text effect.","tags":["glitch","text","animation","cyberpunk"]},
+  {"id":"holographic","name":"Holographic Overlay","description":"Rainbow refraction gradient + noise sparkle overlay for trading card holographic effect.","tags":["holographic","card","rainbow","overlay"]},
+  {"id":"shimmer","name":"Shimmer Loading","description":"Animated gradient sweep for skeleton loading placeholders. Dark and light variants.","tags":["shimmer","loading","skeleton","animation"]},
+  {"id":"neon-glow","name":"Neon Glow & Scan Line","description":"Neon text/box glow with pulse animation and optional CRT scan line overlay.","tags":["neon","glow","scanline","cyberpunk"]},
+  {"id":"split-flap","name":"Split-Flap Character","description":"3D flip keyframes and structure for split-flap airport board character display.","tags":["split-flap","3d","text","animation"]},
+  {"id":"stagger-presets","name":"Stagger Entrance Presets","description":"Pre-built staggered entrance animations: slide-up, scale-in, blur-in, flip-in.","tags":["stagger","entrance","animation","presets"]},
+  {"id":"iridescent","name":"Iridescent Gradient","description":"Thin-film interference rainbow gradient with hue-rotate animation. Text and surface variants.","tags":["iridescent","rainbow","gradient","animation"]},
+  {"id":"sticker-peel","name":"Sticker Peel","description":"Corner peel effect with paper fold shadow on hover. Reveals content underneath.","tags":["sticker","peel","hover","3d"]}
 ]

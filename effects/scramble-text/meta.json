@@ -1,0 +1,9 @@
+{
+  "name": "Scramble Text",
+  "description": "Text decodes from random characters one position at a time. Supports mount, hover, and scroll-into-view triggers.",
+  "tags": ["text", "scramble", "decode", "animation"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useScramble", "useInView"],
+  "files": ["ScrambleText.tsx"]
+}

@@ -258,21 +258,29 @@ server.tool(
 
 server.tool(
   "get_preset",
-  "Get preset source code (color palette or spring configs)",
+  "Get preset source code (color palette, spring configs, theme, or palettes)",
   {
     name: z
-      .enum(["colors", "springs"])
-      .describe("Preset name: 'colors' or 'springs'"),
+      .enum(["colors", "springs", "theme", "palettes"])
+      .describe("Preset name: 'colors', 'springs', 'theme', or 'palettes'"),
   },
   async ({ name }) => {
-    const filePath = join(PRESETS_DIR, `${name}.ts`);
+    // Try .ts first, then .tsx
+    let filePath = join(PRESETS_DIR, `${name}.ts`);
+    let ext = "ts";
+    try {
+      await readFile(filePath, "utf-8");
+    } catch {
+      filePath = join(PRESETS_DIR, `${name}.tsx`);
+      ext = "tsx";
+    }
     try {
       const code = await readFile(filePath, "utf-8");
       return {
         content: [
           {
             type: "text",
-            text: `# presets/${name}.ts\n\n\`\`\`ts\n${code}\n\`\`\``,
+            text: `# presets/${name}.${ext}\n\n\`\`\`${ext}\n${code}\n\`\`\``,
           },
         ],
       };
@@ -281,7 +289,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: `Preset "${name}" not found. Available presets: colors, springs.`,
+            text: `Preset "${name}" not found. Available presets: colors, springs, theme, palettes.`,
           },
         ],
       };

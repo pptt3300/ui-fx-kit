@@ -1,0 +1,25 @@
+/* === Neon Glow + Scan Line === */
+.fx-neon {
+  --neon-color: 99, 102, 241;
+  text-shadow: 0 0 7px rgba(var(--neon-color),0.8), 0 0 10px rgba(var(--neon-color),0.6), 0 0 21px rgba(var(--neon-color),0.4), 0 0 42px rgba(var(--neon-color),0.2);
+  animation: fx-neon-pulse 2s ease-in-out infinite alternate;
+}
+.fx-neon-box {
+  --neon-color: 99, 102, 241;
+  box-shadow: 0 0 5px rgba(var(--neon-color),0.5), 0 0 10px rgba(var(--neon-color),0.3), 0 0 20px rgba(var(--neon-color),0.15), inset 0 0 5px rgba(var(--neon-color),0.1);
+  animation: fx-neon-pulse-box 2s ease-in-out infinite alternate;
+}
+.fx-scanline { position: relative; overflow: hidden; }
+.fx-scanline::after {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none; z-index: 10;
+}
+@keyframes fx-neon-pulse {
+  from { text-shadow: 0 0 7px rgba(var(--neon-color),0.8), 0 0 10px rgba(var(--neon-color),0.6), 0 0 21px rgba(var(--neon-color),0.4), 0 0 42px rgba(var(--neon-color),0.2); }
+  to { text-shadow: 0 0 10px rgba(var(--neon-color),1), 0 0 20px rgba(var(--neon-color),0.8), 0 0 40px rgba(var(--neon-color),0.6), 0 0 80px rgba(var(--neon-color),0.3); }
+}
+@keyframes fx-neon-pulse-box {
+  from { box-shadow: 0 0 5px rgba(var(--neon-color),0.5), 0 0 10px rgba(var(--neon-color),0.3), 0 0 20px rgba(var(--neon-color),0.15), inset 0 0 5px rgba(var(--neon-color),0.1); }
+  to { box-shadow: 0 0 10px rgba(var(--neon-color),0.8), 0 0 20px rgba(var(--neon-color),0.5), 0 0 40px rgba(var(--neon-color),0.25), inset 0 0 10px rgba(var(--neon-color),0.15); }
+}

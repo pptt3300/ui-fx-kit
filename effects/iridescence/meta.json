@@ -1,0 +1,9 @@
+{
+  "name": "Iridescence",
+  "description": "Thin-film interference shader producing soap-bubble rainbow color shifts driven by mouse viewing angle.",
+  "tags": ["shader", "webgl", "iridescence", "thin-film", "rainbow", "overlay"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useWebGL", "useMousePosition"],
+  "files": ["Iridescence.tsx"]
+}

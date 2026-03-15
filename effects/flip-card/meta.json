@@ -1,0 +1,9 @@
+{
+  "name": "3D Flip Card",
+  "description": "Card that flips between front and back faces with spring-physics rotation, supporting hover or click triggers and horizontal/vertical directions.",
+  "tags": ["card", "flip", "3d", "spring", "animation"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useSpring"],
+  "files": ["FlipCard.tsx"]
+}

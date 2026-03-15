@@ -1,0 +1,9 @@
+{
+  "name": "Parallax Depth Card",
+  "description": "Multi-layer card where each layer shifts by a different amount based on mouse position, creating a parallax depth illusion with optional 3D tilt.",
+  "tags": ["card", "parallax", "depth", "mouse", "3d", "tilt", "layers"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useTilt3D", "useMousePosition"],
+  "files": ["ParallaxDepthCard.tsx"]
+}

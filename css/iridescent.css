@@ -1,0 +1,13 @@
+/* === Iridescent / Thin-Film Interference === */
+.fx-iridescent {
+  --iri-angle: 0deg;
+  background: linear-gradient(var(--iri-angle), #ff6b6b 0%, #feca57 15%, #48dbfb 30%, #ff9ff3 45%, #54a0ff 60%, #5f27cd 75%, #ff6b6b 90%, #feca57 100%);
+  background-size: 300% 300%; animation: fx-iri-shift 6s linear infinite;
+  -webkit-background-clip: padding-box; background-clip: padding-box;
+}
+.fx-iridescent-text {
+  background: linear-gradient(var(--iri-angle, 90deg), #ff6b6b, #feca57, #48dbfb, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b);
+  background-size: 300% 100%; -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; animation: fx-iri-shift 4s linear infinite;
+}
+@keyframes fx-iri-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }

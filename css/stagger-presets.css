@@ -1,0 +1,15 @@
+/* === Staggered Entrance Presets === */
+.fx-stagger-item { opacity: 0; will-change: transform, opacity; }
+.fx-stagger-item.fx-active { animation-fill-mode: forwards; animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+.fx-stagger-slide-up { transform: translateY(30px); }
+.fx-stagger-slide-up.fx-active { animation-name: fx-stagger-slide-up; }
+@keyframes fx-stagger-slide-up { to { opacity: 1; transform: translateY(0); } }
+.fx-stagger-scale { transform: scale(0.85); }
+.fx-stagger-scale.fx-active { animation-name: fx-stagger-scale; }
+@keyframes fx-stagger-scale { to { opacity: 1; transform: scale(1); } }
+.fx-stagger-blur { filter: blur(8px); }
+.fx-stagger-blur.fx-active { animation-name: fx-stagger-blur; }
+@keyframes fx-stagger-blur { to { opacity: 1; filter: blur(0); } }
+.fx-stagger-flip { transform: rotateX(-80deg); transform-origin: top center; perspective: 800px; }
+.fx-stagger-flip.fx-active { animation-name: fx-stagger-flip; }
+@keyframes fx-stagger-flip { to { opacity: 1; transform: rotateX(0); } }

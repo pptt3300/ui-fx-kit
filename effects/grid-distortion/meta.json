@@ -1,0 +1,9 @@
+{
+  "name": "Grid Distortion",
+  "description": "Elastic grid of lines that repels away from the cursor using spring physics, with opacity modulated by displacement.",
+  "tags": ["background", "canvas", "grid", "mouse-reactive", "spring", "interactive"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "files": ["GridDistortion.tsx"]
+}
