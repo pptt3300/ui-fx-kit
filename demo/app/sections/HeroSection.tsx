@@ -80,7 +80,7 @@ export default function HeroSection() {
         {/* CTA buttons */}
         <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-4 mb-20">
           <a
-            href="https://github.com/patriciacheung/ui-fx-kit"
+            href="https://github.com/pptt3300/ui-fx-kit"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all"
