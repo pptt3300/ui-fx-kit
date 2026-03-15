@@ -128,7 +128,11 @@ export default function LiquidEther({
     let animId = 0;
     const tick = () => {
       const pos = position.current;
-      setUniform("u_mouse", [pos.x, pos.y]);
+      const canvas = canvasRef.current;
+      const dpr = window.devicePixelRatio || 1;
+      const mx = pos.x < 0 ? (canvas ? canvas.width * 0.5 : 0) : pos.x * dpr;
+      const my = pos.y < 0 ? (canvas ? canvas.height * 0.5 : 0) : pos.y * dpr;
+      setUniform("u_mouse", [mx, my]);
       animId = requestAnimationFrame(tick);
     };
     animId = requestAnimationFrame(tick);

@@ -80,7 +80,10 @@ export default function Iridescence({
       const canvas = canvasRef.current;
       if (canvas) {
         const rect = canvas.getBoundingClientRect();
-        setUniform("u_mouse", [pos.x - rect.left, pos.y - rect.top]);
+        const dpr = window.devicePixelRatio || 1;
+        const mx = pos.x < 0 ? canvas.width * 0.5 : (pos.x - rect.left) * dpr;
+        const my = pos.y < 0 ? canvas.height * 0.5 : (pos.y - rect.top) * dpr;
+        setUniform("u_mouse", [mx, my]);
       }
       animId = requestAnimationFrame(tick);
     };

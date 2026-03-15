@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import Navigation from "@demo/components/Navigation";
+import ThemeSwitcher from "@demo/components/ThemeSwitcher";
 import HeroSection from "./sections/HeroSection";
 import { SECTION_REGISTRY } from "./sections/index";
+
+const ThemeProvider = dynamic(
+  () => import("@presets/theme").then((m) => ({ default: m.ThemeProvider })),
+  { ssr: false },
+);
 
 import {
   AuroraBgSection,
@@ -99,6 +106,7 @@ function CategoryDivider({ name, count }: { name: string; count: number }) {
 
 export default function Home() {
   const [activeId, setActiveId] = useState("");
+  const [palette, setPalette] = useState("default");
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -114,12 +122,14 @@ export default function Home() {
   };
 
   return (
+    <ThemeProvider palette={palette}>
     <div className="bg-zinc-950 min-h-screen">
       <Navigation
         items={SECTION_REGISTRY}
         activeId={activeId}
         onSelect={handleNavSelect}
       />
+      <ThemeSwitcher current={palette} onChange={setPalette} />
 
       {/* Main content — offset from left nav on desktop */}
       <main className="lg:pl-[60px]">
@@ -208,5 +218,6 @@ export default function Home() {
         <StaggerListSection />
       </main>
     </div>
+    </ThemeProvider>
   );
 }

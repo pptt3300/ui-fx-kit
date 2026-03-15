@@ -113,7 +113,8 @@ export default function LightRays({
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (mouseReactive) {
-        setUniform("u_mouse", [e.clientX, e.clientY]);
+        const dpr = window.devicePixelRatio || 1;
+        setUniform("u_mouse", [e.clientX * dpr, e.clientY * dpr]);
       }
     };
     window.addEventListener("mousemove", handler);

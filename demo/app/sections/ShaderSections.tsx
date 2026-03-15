@@ -29,16 +29,20 @@ export function LiquidGlassSection() {
 
 export function HeroSceneSection() {
   return (
-    <EffectSection
-      id="3d-hero"
-      title="3D Hero"
-      description="Three.js 3D scene with floating geometry, lighting, and mouse interaction."
-      category="Shader"
-    >
-      <div className="w-full h-full min-h-screen">
+    <section id="3d-hero" className="relative h-screen w-full overflow-hidden">
+      <div className="absolute top-4 left-4 z-20">
+        <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+          Shader
+        </span>
+      </div>
+      <div className="absolute inset-0 [&_section]:!h-full [&_section]:!min-h-0 [&_.absolute.bottom-0]:!hidden">
         <HeroScene />
       </div>
-    </EffectSection>
+      <div className="absolute bottom-8 left-6 z-20 max-w-sm">
+        <h2 className="text-2xl font-bold text-white mb-1">3D Hero</h2>
+        <p className="text-sm text-white/50">Three.js scene with floating geometry, particles, and mouse interaction.</p>
+      </div>
+    </section>
   );
 }
 

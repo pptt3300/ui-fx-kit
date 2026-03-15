@@ -25,7 +25,6 @@ const nextConfig: NextConfig = {
       "@css": path.join(rootDir, "css"),
       "@presets": path.join(rootDir, "presets"),
     };
-    // Allow resolving modules from project root (for effects' relative imports)
     config.resolve.modules = [
       ...(config.resolve.modules || []),
       rootDir,

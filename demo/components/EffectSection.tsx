@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useState as useCodeState } from "react";
 import CodePanel from "./CodePanel";
 
 interface EffectSectionProps {
@@ -37,30 +36,38 @@ export default function EffectSection({
   showCode = true,
 }: EffectSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [codePanelOpen, setCodePanelOpen] = useCodeState(false);
+  const [codePanelOpen, setCodePanelOpen] = useState(false);
 
+  // Mount effect when near viewport (1 screen ahead), unmount when far away
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Dispatch custom event so parent can track active section
-          window.dispatchEvent(
-            new CustomEvent("fx-section-visible", { detail: { id } })
-          );
-        } else {
-          setIsVisible(false);
-        }
-      },
-      { threshold: 0.5 }
+    const mountObserver = new IntersectionObserver(
+      ([entry]) => setMounted(entry.isIntersecting),
+      { rootMargin: "100% 0px 100% 0px" }, // 1 viewport above and below
     );
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    const visibleObserver = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting) {
+          window.dispatchEvent(
+            new CustomEvent("fx-section-visible", { detail: { id } }),
+          );
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    mountObserver.observe(el);
+    visibleObserver.observe(el);
+    return () => {
+      mountObserver.disconnect();
+      visibleObserver.disconnect();
+    };
   }, [id]);
 
   const categoryClass =
@@ -74,10 +81,16 @@ export default function EffectSection({
         ref={sectionRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Effect content fills the section */}
-        <div className="absolute inset-0">{children}</div>
+        {/* Effect content — only mounted when near viewport */}
+        <div className="absolute inset-0">
+          {mounted ? children : (
+            <div className="w-full h-full bg-zinc-950 flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-white/10 border-t-white/40 rounded-full animate-spin" />
+            </div>
+          )}
+        </div>
 
-        {/* Category badge — top-left */}
+        {/* Category badge */}
         <div className="absolute top-5 left-5 z-10">
           <span
             className={`text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${categoryClass}`}
@@ -86,7 +99,7 @@ export default function EffectSection({
           </span>
         </div>
 
-        {/* Title + description — bottom-left */}
+        {/* Title + description */}
         <div
           className="absolute bottom-8 left-6 z-10 max-w-sm"
           style={{
@@ -99,7 +112,7 @@ export default function EffectSection({
           <p className="text-sm text-white/50 leading-relaxed">{description}</p>
         </div>
 
-        {/* View Code button — bottom-right */}
+        {/* View Code button */}
         {showCode && (
           <button
             onClick={() => setCodePanelOpen(true)}
@@ -110,23 +123,12 @@ export default function EffectSection({
               backdropFilter: "blur(12px)",
             }}
           >
-            <span
-              style={{
-                width: 14,
-                height: 14,
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {"</>"}
-            </span>
-            View Code
+            {"</>"}
+            {" View Code"}
           </button>
         )}
       </section>
 
-      {/* Code panel rendered outside the section to avoid stacking-context issues */}
       <CodePanel
         effectId={id}
         hooks={hooks}

@@ -125,13 +125,21 @@ export default function MetallicPaint({
   useEffect(() => {
     let animId = 0;
     const tick = () => {
-      const pos = position.current;
-      setUniform("u_mouse", [pos.x, pos.y]);
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const pos = position.current;
+        // Convert CSS coords to canvas pixel coords to match u_resolution
+        const mx = pos.x < 0 ? rect.width * 0.5 : pos.x;
+        const my = pos.y < 0 ? rect.height * 0.5 : pos.y;
+        const dpr = canvas.width / rect.width;
+        setUniform("u_mouse", [mx * dpr, my * dpr]);
+      }
       animId = requestAnimationFrame(tick);
     };
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
-  }, [position, setUniform]);
+  }, [position, setUniform, canvasRef]);
 
   return (
     <canvas

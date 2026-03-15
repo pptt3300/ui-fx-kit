@@ -236,45 +236,53 @@ export function ClickSparkSection() {
 
 export function ParallaxHeroSection() {
   return (
-    <EffectSection
-      id="parallax-hero"
-      title="Parallax Hero"
-      description="Multi-layer scroll parallax with configurable depth speeds per layer."
-      category="Interactive"
-    >
-      <div className="w-full">
-        <ParallaxHero
-          height="300vh"
-          layers={[
-            {
-              speed: -80,
-              content: (
-                <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 to-zinc-950" />
-              ),
-            },
-            {
-              speed: -40,
-              content: (
-                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                  <div className="w-96 h-96 rounded-full bg-indigo-500 blur-3xl" />
-                </div>
-              ),
-            },
-            {
-              speed: 0,
-              content: (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="text-white font-black text-6xl mb-4">Parallax</p>
-                    <p className="text-white/40 text-sm font-mono">scroll to experience</p>
-                  </div>
-                </div>
-              ),
-            },
-          ]}
-        />
+    <section id="parallax-hero" className="relative">
+      <div className="absolute top-4 left-4 z-20">
+        <span className="text-xs border rounded-full px-3 py-1 bg-orange-500/20 text-orange-300 border-orange-500/30">
+          Interactive
+        </span>
       </div>
-    </EffectSection>
+      <ParallaxHero
+        height="250vh"
+        layers={[
+          {
+            speed: 0.2,
+            content: (
+              <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-violet-950 to-zinc-950" />
+            ),
+          },
+          {
+            speed: 0.5,
+            content: (
+              <div className="absolute inset-0 flex items-center justify-center opacity-30">
+                <div className="w-[500px] h-[500px] rounded-full bg-indigo-500 blur-[120px]" />
+              </div>
+            ),
+          },
+          {
+            speed: 0.8,
+            content: (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-white/10 font-black text-[12rem] leading-none select-none">FX</p>
+                </div>
+              </div>
+            ),
+          },
+          {
+            speed: 1,
+            content: (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-white font-black text-6xl mb-4">Parallax Hero</p>
+                  <p className="text-white/40 text-sm font-mono">scroll through this section</p>
+                </div>
+              </div>
+            ),
+          },
+        ]}
+      />
+    </section>
   );
 }
 
