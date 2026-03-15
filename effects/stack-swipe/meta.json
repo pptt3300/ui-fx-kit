@@ -1,0 +1,9 @@
+{
+  "name": "Stack Swipe",
+  "description": "Tinder-style swipeable card stack with drag gesture, spring snap-back, velocity-based dismiss, and stacked depth effect.",
+  "tags": ["card", "swipe", "gesture", "spring", "stack", "drag"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useGesture", "useSpring"],
+  "files": ["StackSwipe.tsx"]
+}
