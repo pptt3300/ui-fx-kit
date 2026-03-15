@@ -1,0 +1,9 @@
+{
+  "name": "Sticker Peel",
+  "description": "Card corner peel effect that reacts to mouse proximity, with spring-interpolated peel size and configurable corner position.",
+  "tags": ["card", "sticker", "peel", "mouse", "spring", "hover"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useMousePosition", "useSpring"],
+  "files": ["StickerPeel.tsx"]
+}
