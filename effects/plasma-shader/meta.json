@@ -1,0 +1,9 @@
+{
+  "name": "Plasma Shader",
+  "description": "Classic plasma effect via WebGL fragment shader with sine-wave interference patterns mapped to a color gradient palette.",
+  "tags": ["background", "webgl", "shader", "plasma", "psychedelic"],
+  "framework": "react",
+  "dependencies": [],
+  "hooks": ["useWebGL"],
+  "files": ["PlasmaShader.tsx"]
+}
