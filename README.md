@@ -2,23 +2,28 @@
 
 64 composable React UI effects. Hooks · CSS · Components.
 
-## What is this?
+[Live Demo](https://pptt3300.github.io/ui-fx-kit/) · [中文文档](./README.zh.md)
 
-A three-layer architecture for UI effects:
+## Get Started
 
-| Layer | Count | What it does |
-|-------|-------|-------------|
-| **Hooks** | 19 | Zero-dependency physics, gestures, noise, WebGL, particles |
-| **CSS** | 13 | Standalone animation snippets — glass, glow, shimmer, glitch |
-| **Effects** | 64 | Complete React components ready to drop in |
+### Option 1: CLI (recommended)
 
-Each layer is independently usable. Use a hook to build your own effect. Use CSS for quick styling. Use an effect for instant results.
+```bash
+# Clone the toolkit
+git clone https://github.com/pptt3300/ui-fx-kit.git
 
-## Quick Start
+# Add an effect to your project
+node ui-fx-kit/bin/cli.js add holographic-card --target ./src
 
-### With Claude Code (recommended)
+# Add multiple effects at once
+node ui-fx-kit/bin/cli.js add gradient-mesh silk-waves cursor-glow --target ./src
+```
 
-Add the MCP server to your Claude Code settings:
+The CLI automatically copies the effect + its hook dependencies + CSS. No npm install needed for the toolkit itself.
+
+### Option 2: MCP Server (for Claude Code users)
+
+Add to your Claude Code MCP settings:
 
 ```json
 {
@@ -31,125 +36,106 @@ Add the MCP server to your Claude Code settings:
 }
 ```
 
-Then ask:
+Then just tell Claude what you want:
 
 ```
-Add holographic-card to my project
+"Add a holographic card effect to my landing page"
+"I need a matrix rain background"
+"Give me a cursor glow trail"
 ```
 
-Claude will fetch the effect source, its hook dependencies, and any CSS — then integrate it into your codebase.
+Claude will pick the right effect, copy the source code into your project, and wire up the imports.
 
-### Manual
-
-Copy any effect directory into your project:
+### Option 3: Manual copy
 
 ```
-effects/holographic-card/
-  HolographicCard.tsx    # The component
-  meta.json              # Metadata
+# Copy what you need
+cp -r ui-fx-kit/effects/holographic-card/ your-project/src/effects/
+cp ui-fx-kit/hooks/useTilt3D.ts your-project/src/hooks/
+cp ui-fx-kit/css/holographic.css your-project/src/css/
 ```
 
-Then copy the hooks it depends on from `hooks/` and any CSS from `css/`.
+## CLI Commands
 
-## Effects
+```bash
+# List all 64 effects
+node ui-fx-kit/bin/cli.js list
 
-### Background (14)
+# Filter by category
+node ui-fx-kit/bin/cli.js list background
 
-aurora-bg · constellation-bg · gradient-mesh · matrix-rain · ripple-wave · starfield-warp · geometric-morph · noise-flow-field · silk-waves · plasma-shader · lightning-bolts · light-rays · grid-distortion · liquid-chrome
+# See effect details before adding
+node ui-fx-kit/bin/cli.js info silk-waves
 
-### Text (10)
+# Add to your project
+node ui-fx-kit/bin/cli.js add silk-waves --target ./src
+```
 
-typewriter-text · text-reveal · scramble-text · split-flap · morphing-text · staggered-chars · glitch-text · ascii-text · text-pressure · circular-text
+## What's Inside
 
-### Card & Container (9)
+### Effects (64)
 
-spotlight-cards · physics-cards · holographic-card · flip-card · stack-swipe · bento-grid · parallax-depth-card · sticker-peel · reflective-card
+| Category | Count | Examples |
+|----------|-------|---------|
+| Background | 14 | aurora-bg, gradient-mesh, matrix-rain, silk-waves, plasma-shader, liquid-chrome |
+| Text | 10 | scramble-text, split-flap, morphing-text, glitch-text, text-pressure |
+| Card | 9 | holographic-card, flip-card, stack-swipe, bento-grid, reflective-card |
+| Cursor | 6 | cursor-glow, blob-cursor, splash-cursor, pixel-trail, ghost-cursor |
+| Shader | 8 | metallic-paint, iridescence, liquid-ether, metaballs, noise-grain |
+| Interactive | 17 | dock-magnify, confetti-burst, drag-reorder, counter-ticker, parallax-hero |
 
-### Cursor (6)
+### Hooks (19)
 
-cursor-glow · blob-cursor · splash-cursor · pixel-trail · image-trail · ghost-cursor
+Each hook is zero-dependency and works standalone:
 
-### Shader & Material (8)
-
-liquid-glass · 3d-hero · metallic-paint · iridescence · liquid-ether · prism-refraction · metaballs · noise-grain
-
-### Interactive & Scroll (17)
-
-magnetic-button · spotlight-input · interactive-dot-grid · scroll-velocity · particle-text · dock-magnify · confetti-burst · ripple-button · drag-reorder · click-spark · parallax-hero · horizontal-scroll · counter-ticker · circular-gallery · shimmer-skeleton · page-transition · stagger-list
-
-## Hooks
-
-| Hook | Description |
+| Hook | What it does |
 |------|-------------|
-| `useMousePosition` | Mouse tracking (ref or state mode, element or window scope) |
-| `useSpring` | Spring physics for single numeric value |
-| `useTilt3D` | 3D perspective tilt with spring physics |
-| `useMagnetic` | Magnetic cursor attraction |
-| `useCanvasSetup` | DPI-aware canvas + rAF loop |
-| `useParticles` | Generic particle system manager |
-| `useProximity` | Distance-based force field math |
-| `useScrollProgress` | Scroll progress + velocity tracking |
-| `useSpotlight` | Cursor-tracking spotlight gradients |
-| `useTypewriter` | Typewriter text state machine |
-| `useInView` | Intersection Observer wrapper |
-| `useStagger` | Staggered animation orchestrator |
-| `useGesture` | Unified drag/swipe via pointer events |
-| `useScramble` | Text decode scramble state machine |
-| `useSplitFlap` | Split-flap display state machine |
-| `useMorphText` | Blur-fade text morph cycle |
-| `usePerlinNoise` | Perlin noise with FBM |
-| `useGradientMesh` | Animated gradient blob system |
-| `useWebGL` | WebGL shader pipeline |
+| `useWebGL` | WebGL shader pipeline — compile, render loop, uniforms |
+| `useSpring` | Spring physics for smooth animations |
+| `useMousePosition` | Mouse tracking (ref mode for canvas, state mode for CSS) |
+| `useParticles` | Particle system with spawn/update/render |
+| `usePerlinNoise` | Perlin noise + FBM for organic motion |
+| `useGesture` | Drag/swipe via pointer events |
+| `useTilt3D` | 3D perspective tilt following cursor |
+| `useCanvasSetup` | DPI-aware canvas with rAF loop |
+| `useStagger` | Staggered animation timing |
+| `useInView` | Intersection Observer for scroll triggers |
 
-## Theme System
+[Full hook list →](./hooks/)
 
-Four modes to control colors across all effects:
+### CSS Snippets (13)
 
-```tsx
-import { ThemeProvider } from "./presets";
+Drop-in animation classes: `glass-card`, `holographic`, `shimmer`, `neon-glow`, `glitch-effect`, `sticker-peel`, `iridescent`, `stagger-presets`, and more.
 
-// Mode 1: Curated palette (13 built-in)
-<ThemeProvider palette="neon">
+### Color Palettes (13)
 
-// Mode 2: Single color → monochromatic scale
-<ThemeProvider color="#6366f1">
-
-// Mode 3: Brand color → auto-generated complementary palette
-<ThemeProvider brand="#1DB954">
-
-// Mode 4: No provider → effects use their defaults
-```
-
-**Built-in palettes:** default · neon · pastel · warm · arctic · mono · stripe · vercel · linear · supabase · figma · discord · spotify
+Curated color sets you can pass as props: `default`, `neon`, `pastel`, `warm`, `arctic`, `mono`, `stripe`, `vercel`, `linear`, `supabase`, `figma`, `discord`, `spotify`.
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────┐
-│          Effects (64)               │
-│  Complete React components          │
-│  Each self-contained in own dir     │
-├─────────────────────────────────────┤
-│          CSS (13)                   │
-│  Standalone animation snippets      │
-│  Import and use anywhere            │
-├─────────────────────────────────────┤
-│          Hooks (19)                 │
-│  Zero-dependency primitives         │
-│  Physics, gestures, WebGL, noise    │
-└─────────────────────────────────────┘
+effects/     → Complete React components (each in its own directory)
+  ├── holographic-card/
+  │   ├── HolographicCard.tsx
+  │   └── meta.json
+  ├── gradient-mesh/
+  └── ...
+hooks/       → Reusable React hooks (physics, gestures, WebGL)
+css/         → Standalone CSS animation snippets
+presets/     → Color palettes and spring configs
+bin/         → CLI tool
+mcp-server.js → MCP server for Claude Code
 ```
 
-Effects compose hooks + CSS. Hooks are standalone. CSS is standalone. Use any layer independently.
+Effects import from `hooks/` and `css/`. The CLI resolves these dependencies automatically when you `add` an effect.
 
 ## Tech Stack
 
-- React 19
-- TypeScript
-- framer-motion (optional, per effect)
+- React 18+, TypeScript
 - WebGL (shader effects)
+- framer-motion (optional, some effects)
 - Zero runtime dependencies for hooks
 
 ## License
 
-MIT
+Apache-2.0
