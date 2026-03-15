@@ -83,8 +83,9 @@ export default function CircularGallery({
         height: (radius * 2) + 200,
         perspective: 1200,
         cursor: draggable ? "grab" : "default",
+        ...(draggable ? { touchAction: "none" as const } : {}),
       }}
-      {...(draggable ? gesture.handlers : {})}
+      {...(draggable ? { onPointerDown: gesture.handlers.onPointerDown, onPointerMove: gesture.handlers.onPointerMove, onPointerUp: gesture.handlers.onPointerUp } : {})}
     >
       <div
         style={{

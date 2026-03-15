@@ -116,29 +116,12 @@ export default function DragReorder<T>({
             }}
             {...(i === dragState.originIndex || !dragState.active
               ? {
-                  onPointerDown: (e) => {
+                  onPointerDown: (e: React.PointerEvent) => {
                     startDrag(i);
                     gesture.handlers.onPointerDown(e);
                   },
                   onPointerMove: gesture.handlers.onPointerMove,
                   onPointerUp: gesture.handlers.onPointerUp,
-                  style: {
-                    position: "absolute" as const,
-                    top: i * itemHeight,
-                    left: 0,
-                    right: 0,
-                    height: itemHeight,
-                    transform: `translateY(${translateY}px) scale(${isDragging ? 1.03 : 1})`,
-                    transition: isDragging
-                      ? "transform 0.05s ease, box-shadow 0.2s ease"
-                      : "transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease",
-                    zIndex: isDragging ? 10 : 1,
-                    boxShadow: isDragging
-                      ? "0 8px 32px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.1)"
-                      : "none",
-                    cursor: isDragging ? "grabbing" : "grab",
-                    touchAction: "none",
-                  },
                 }
               : {})}
           >

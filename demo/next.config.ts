@@ -1,15 +1,38 @@
 import type { NextConfig } from "next";
 import path from "path";
 
+const rootDir = path.resolve(__dirname, "..");
+
 const nextConfig: NextConfig = {
+  typescript: {
+    // Effects are type-checked via root tsconfig, not demo's
+    ignoreBuildErrors: true,
+  },
+  turbopack: {
+    root: rootDir,
+    resolveAlias: {
+      "@effects": path.join(rootDir, "effects"),
+      "@hooks": path.join(rootDir, "hooks"),
+      "@css": path.join(rootDir, "css"),
+      "@presets": path.join(rootDir, "presets"),
+    },
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      "@effects": path.resolve(__dirname, "../effects"),
-      "@hooks": path.resolve(__dirname, "../hooks"),
-      "@css": path.resolve(__dirname, "../css"),
-      "@presets": path.resolve(__dirname, "../presets"),
+      "@effects": path.join(rootDir, "effects"),
+      "@hooks": path.join(rootDir, "hooks"),
+      "@css": path.join(rootDir, "css"),
+      "@presets": path.join(rootDir, "presets"),
     };
+    // Allow resolving modules from project root (for effects' relative imports)
+    config.resolve.modules = [
+      ...(config.resolve.modules || []),
+      rootDir,
+      path.join(__dirname, "node_modules"),
+      path.join(rootDir, "node_modules"),
+      "node_modules",
+    ];
     return config;
   },
 };
