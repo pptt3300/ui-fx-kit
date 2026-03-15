@@ -45,12 +45,13 @@ export function useWebGL(options: UseWebGLOptions) {
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const programRef = useRef<WebGLProgram | null>(null);
   const uniformLocations = useRef<Map<string, WebGLUniformLocation>>(new Map());
-  const timeRef = useRef(0);
+  const pendingUniforms = useRef<Map<string, number | number[]>>(new Map());
+  const readyRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext("webgl", { premultipliedAlpha: false });
+    const gl = canvas.getContext("webgl", { premultipliedAlpha: false, alpha: true });
     if (!gl) return;
     glRef.current = gl;
 
@@ -84,6 +85,7 @@ export function useWebGL(options: UseWebGLOptions) {
     programRef.current = program;
     gl.useProgram(program);
 
+    // Fullscreen quad
     const posBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
@@ -91,23 +93,91 @@ export function useWebGL(options: UseWebGLOptions) {
     gl.enableVertexAttribArray(posAttr);
     gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
 
+    // Pre-fetch common uniform locations
+    uniformLocations.current.clear();
+    for (const name of ["u_time", "u_resolution", "u_mouse"]) {
+      const loc = gl.getUniformLocation(program, name);
+      if (loc) uniformLocations.current.set(name, loc);
+    }
     if (initialUniforms) {
       for (const name of Object.keys(initialUniforms)) {
         const loc = gl.getUniformLocation(program, name);
         if (loc) uniformLocations.current.set(name, loc);
       }
     }
-    for (const name of ["u_time", "u_resolution", "u_mouse"]) {
-      const loc = gl.getUniformLocation(program, name);
-      if (loc) uniformLocations.current.set(name, loc);
+
+    // Resize
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+
+    readyRef.current = true;
+
+    // Replay any uniforms that were set before program was ready
+    for (const [name, value] of pendingUniforms.current) {
+      applyUniform(gl, program, name, value, uniformLocations.current);
     }
+    pendingUniforms.current.clear();
 
     return () => {
+      readyRef.current = false;
+      programRef.current = null;
+      glRef.current = null;
+      uniformLocations.current.clear();
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);
     };
   }, [vertexShader, fragmentShader, initialUniforms]);
+
+  // Resize handler
+  useEffect(() => {
+    const onResize = () => {
+      const canvas = canvasRef.current;
+      const gl = glRef.current;
+      if (!canvas || !gl) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const setUniform = useCallback((name: string, value: number | number[]) => {
+    const gl = glRef.current;
+    const program = programRef.current;
+    if (!gl || !program || !readyRef.current) {
+      // Store for replay when program becomes ready
+      pendingUniforms.current.set(name, value);
+      return;
+    }
+    applyUniform(gl, program, name, value, uniformLocations.current);
+  }, []);
+
+  const startLoop = useCallback(() => {
+    let animId = 0;
+    const start = performance.now();
+    const loop = () => {
+      const gl = glRef.current;
+      const canvas = canvasRef.current;
+      if (!gl || !canvas || !readyRef.current) {
+        animId = requestAnimationFrame(loop);
+        return;
+      }
+      const t = (performance.now() - start) / 1000;
+      setUniform("u_time", t);
+      setUniform("u_resolution", [canvas.width, canvas.height]);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      animId = requestAnimationFrame(loop);
+    };
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [setUniform]);
 
   const resize = useCallback(() => {
     const canvas = canvasRef.current;
@@ -120,44 +190,24 @@ export function useWebGL(options: UseWebGLOptions) {
     gl.viewport(0, 0, canvas.width, canvas.height);
   }, []);
 
-  useEffect(() => {
-    resize();
-    window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
-  }, [resize]);
-
-  const setUniform = useCallback((name: string, value: number | number[]) => {
-    const gl = glRef.current;
-    const program = programRef.current;
-    if (!gl || !program) return;
-    let loc = uniformLocations.current.get(name);
-    if (!loc) {
-      loc = gl.getUniformLocation(program, name) ?? undefined;
-      if (loc) uniformLocations.current.set(name, loc);
-      else return;
-    }
-    if (typeof value === "number") gl.uniform1f(loc, value);
-    else if (value.length === 2) gl.uniform2f(loc, value[0], value[1]);
-    else if (value.length === 3) gl.uniform3f(loc, value[0], value[1], value[2]);
-    else if (value.length === 4) gl.uniform4f(loc, value[0], value[1], value[2], value[3]);
-  }, []);
-
-  const startLoop = useCallback(() => {
-    let animId = 0;
-    const start = performance.now();
-    const loop = () => {
-      const gl = glRef.current;
-      const canvas = canvasRef.current;
-      if (!gl || !canvas) { animId = requestAnimationFrame(loop); return; }
-      timeRef.current = (performance.now() - start) / 1000;
-      setUniform("u_time", timeRef.current);
-      setUniform("u_resolution", [canvas.width, canvas.height]);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      animId = requestAnimationFrame(loop);
-    };
-    animId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animId);
-  }, [setUniform]);
-
   return { canvasRef, setUniform, startLoop, resize, gl: glRef, program: programRef };
+}
+
+function applyUniform(
+  gl: WebGLRenderingContext,
+  program: WebGLProgram,
+  name: string,
+  value: number | number[],
+  cache: Map<string, WebGLUniformLocation>,
+) {
+  let loc = cache.get(name);
+  if (!loc) {
+    loc = gl.getUniformLocation(program, name) ?? undefined;
+    if (loc) cache.set(name, loc);
+    else return;
+  }
+  if (typeof value === "number") gl.uniform1f(loc, value);
+  else if (value.length === 2) gl.uniform2f(loc, value[0], value[1]);
+  else if (value.length === 3) gl.uniform3f(loc, value[0], value[1], value[2]);
+  else if (value.length === 4) gl.uniform4f(loc, value[0], value[1], value[2], value[3]);
 }
