@@ -1,9 +1,21 @@
 {
   "name": "Morphing Text",
   "description": "Cycles through an array of words using blur-fade morph transitions. Text blurs out, swaps at midpoint, then sharpens into the next word.",
-  "tags": ["text", "morph", "blur", "animation", "cycle"],
+  "tags": [
+    "text",
+    "morph",
+    "blur",
+    "animation",
+    "cycle"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useMorphText"],
-  "files": ["MorphingText.tsx"]
+  "hooks": [
+    "useMorphText"
+  ],
+  "files": [
+    "MorphingText.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

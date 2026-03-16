@@ -32,8 +32,12 @@ async function loadEffectsMeta(tag) {
         id: dir.name,
         name: meta.name,
         description: meta.description,
+        usage: meta.usage || "",
         tags: meta.tags,
         dependencies: meta.dependencies,
+        hooks: meta.hooks || [],
+        presets: meta.presets || [],
+        css: meta.css || [],
         files: meta.files,
       });
     } catch {
@@ -71,17 +75,32 @@ server.tool(
   },
 );
 
+function rewriteImports(code, baseDir) {
+  if (!baseDir) return code;
+  const base = baseDir.replace(/\/+$/, "");
+  code = code.replace(/from\s+["']\.\.\/\.\.\/hooks(\/[^"']*)?["']/g, `from "${base}/hooks$1"`);
+  code = code.replace(/from\s+["']\.\.\/\.\.\/presets(\/[^"']*)?["']/g, `from "${base}/presets$1"`);
+  code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, `import "${base}/css/`);
+  return code;
+}
+
 server.tool(
   "get_effect",
-  "Get the full source code of a UI effect by its ID",
+  "Get the full source code of a UI effect by its ID. Use baseDir to rewrite internal import paths for your project.",
   {
     id: z
       .string()
       .describe(
         "Effect ID (directory name, e.g. 'particle-text', 'cursor-glow')",
       ),
+    baseDir: z
+      .string()
+      .optional()
+      .describe(
+        "Base directory for import rewriting (e.g. '@/lib/ui-fx' or '../shared'). When set, ../../hooks becomes {baseDir}/hooks, etc.",
+      ),
   },
-  async ({ id }) => {
+  async ({ id, baseDir }) => {
     const metaPath = join(EFFECTS_DIR, id, "meta.json");
     let meta;
     try {
@@ -99,6 +118,28 @@ server.tool(
 
     const result = [`# ${meta.name}\n`, `${meta.description}\n`];
 
+    if (meta.usage) {
+      result.push(`## Usage\n\`\`\`tsx\n${meta.usage}\n\`\`\`\n`);
+    }
+
+    if (meta.hooks?.length > 0) {
+      result.push(
+        `## Internal Hooks\nRequires: ${meta.hooks.join(", ")}\nUse \`get_hook(name)\` to fetch each hook's source code.\n`,
+      );
+    }
+
+    if (meta.presets?.length > 0) {
+      result.push(
+        `## Presets\nRequires: ${meta.presets.join(", ")}\nUse \`get_preset(name)\` to fetch preset source code.\n`,
+      );
+    }
+
+    if (meta.css?.length > 0) {
+      result.push(
+        `## CSS\nRequires: ${meta.css.join(", ")}\nUse \`get_css(id)\` to fetch each CSS file. (Strip .css extension for the id)\n`,
+      );
+    }
+
     if (meta.dependencies?.length > 0) {
       result.push(
         `## Dependencies\nnpm install ${meta.dependencies.join(" ")}\n`,
@@ -106,7 +147,8 @@ server.tool(
     }
 
     for (const file of meta.files) {
-      const code = await readFile(join(EFFECTS_DIR, id, file), "utf-8");
+      let code = await readFile(join(EFFECTS_DIR, id, file), "utf-8");
+      code = rewriteImports(code, baseDir);
       result.push(`## ${file}\n\`\`\`tsx\n${code}\n\`\`\``);
     }
 

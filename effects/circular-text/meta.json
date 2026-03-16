@@ -1,9 +1,22 @@
 {
   "name": "Circular Text",
   "description": "Text rotates along a circular SVG path. Hover spring-animates the rotation direction to reverse, then eases back when mouse leaves.",
-  "tags": ["text", "circular", "svg", "animation", "hover", "spring"],
+  "tags": [
+    "text",
+    "circular",
+    "svg",
+    "animation",
+    "hover",
+    "spring"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useSpring"],
-  "files": ["CircularText.tsx"]
+  "hooks": [
+    "useSpring"
+  ],
+  "files": [
+    "CircularText.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

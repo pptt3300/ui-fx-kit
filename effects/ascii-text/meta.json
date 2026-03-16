@@ -1,9 +1,22 @@
 {
   "name": "ASCII Text",
   "description": "Renders text as ASCII character art on canvas. Mouse hover within a radius reveals solid text, with a smooth transition at the boundary.",
-  "tags": ["text", "ascii", "canvas", "mouse", "interactive"],
+  "tags": [
+    "text",
+    "ascii",
+    "canvas",
+    "mouse",
+    "interactive"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useMousePosition"],
-  "files": ["ASCIIText.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition"
+  ],
+  "files": [
+    "ASCIIText.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

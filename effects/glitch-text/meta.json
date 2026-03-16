@@ -1,9 +1,23 @@
 {
   "name": "Glitch Text",
   "description": "RGB-split glitch effect on text using CSS pseudo-elements. Mouse position drives the RGB offset direction. Supports continuous or hover-activated modes.",
-  "tags": ["text", "glitch", "rgb-split", "animation", "mouse"],
+  "tags": [
+    "text",
+    "glitch",
+    "rgb-split",
+    "animation",
+    "mouse"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useMousePosition"],
-  "files": ["GlitchText.tsx"]
+  "hooks": [
+    "useMousePosition"
+  ],
+  "files": [
+    "GlitchText.tsx"
+  ],
+  "presets": [],
+  "css": [
+    "glitch-effect.css"
+  ]
 }

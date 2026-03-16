@@ -1,8 +1,19 @@
 {
   "name": "Constellation Background",
   "description": "Floating particles with connecting lines that form a constellation network. Particles are repelled by the cursor, and lines connect nearby particles with position-based gradient colors.",
-  "tags": ["canvas", "background", "interactive", "mouse", "particles"],
+  "tags": [
+    "canvas",
+    "background",
+    "interactive",
+    "mouse",
+    "particles"
+  ],
   "framework": "react",
   "dependencies": [],
-  "files": ["ConstellationBg.tsx"]
+  "files": [
+    "ConstellationBg.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

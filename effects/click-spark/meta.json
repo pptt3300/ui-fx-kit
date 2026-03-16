@@ -1,9 +1,24 @@
 {
   "name": "Click Spark",
   "description": "Global click micro-interaction — emits short spark lines from click position that fade out in 300ms.",
-  "tags": ["interactive", "click", "canvas", "particles", "global"],
+  "tags": [
+    "interactive",
+    "click",
+    "canvas",
+    "particles",
+    "global"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useParticles"],
-  "files": ["ClickSpark.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useParticles"
+  ],
+  "files": [
+    "ClickSpark.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

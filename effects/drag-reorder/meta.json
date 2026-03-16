@@ -1,9 +1,21 @@
 {
   "name": "Drag Reorder",
   "description": "Drag-to-reorder list with spring-based layout transitions and elevation shadow on the dragged item.",
-  "tags": ["interactive", "drag", "list", "reorder", "gesture"],
+  "tags": [
+    "interactive",
+    "drag",
+    "list",
+    "reorder",
+    "gesture"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useGesture"],
-  "files": ["DragReorder.tsx"]
+  "hooks": [
+    "useGesture"
+  ],
+  "files": [
+    "DragReorder.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

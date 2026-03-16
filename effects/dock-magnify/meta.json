@@ -1,9 +1,24 @@
 {
   "name": "Dock Magnify",
   "description": "macOS-style dock with Gaussian magnification on hover — items scale up based on cursor proximity.",
-  "tags": ["interactive", "hover", "magnify", "dock", "cursor"],
+  "tags": [
+    "interactive",
+    "hover",
+    "magnify",
+    "dock",
+    "cursor"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useMousePosition", "proximity"],
-  "files": ["DockMagnify.tsx"]
+  "hooks": [
+    "proximity",
+    "useMousePosition"
+  ],
+  "files": [
+    "DockMagnify.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

@@ -1,9 +1,25 @@
 {
   "name": "Bento Grid",
   "description": "CSS Grid layout with staggered scale-in entrance animation on scroll-into-view and per-cell 3D tilt hover effect.",
-  "tags": ["card", "grid", "bento", "stagger", "tilt", "scroll", "layout"],
+  "tags": [
+    "card",
+    "grid",
+    "bento",
+    "stagger",
+    "tilt",
+    "scroll",
+    "layout"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useTilt3D", "useStagger", "useInView"],
-  "files": ["BentoGrid.tsx"]
+  "hooks": [
+    "useInView",
+    "useStagger",
+    "useTilt3D"
+  ],
+  "files": [
+    "BentoGrid.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

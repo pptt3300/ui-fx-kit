@@ -1,9 +1,23 @@
 {
   "name": "Noise Grain",
   "description": "Canvas-based film grain overlay with optional mouse clear-radius, animated or static, mono or color noise.",
-  "tags": ["canvas", "grain", "noise", "film", "texture", "overlay"],
+  "tags": [
+    "canvas",
+    "grain",
+    "noise",
+    "film",
+    "texture",
+    "overlay"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useMousePosition"],
-  "files": ["NoiseGrain.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition"
+  ],
+  "files": [
+    "NoiseGrain.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

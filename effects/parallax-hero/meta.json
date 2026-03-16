@@ -1,9 +1,20 @@
 {
   "name": "Parallax Hero",
   "description": "Multi-layer parallax scroll effect — each layer moves at a different speed creating depth.",
-  "tags": ["scroll", "parallax", "hero", "layers"],
+  "tags": [
+    "scroll",
+    "parallax",
+    "hero",
+    "layers"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useScrollProgress"],
-  "files": ["ParallaxHero.tsx"]
+  "hooks": [
+    "useScrollProgress"
+  ],
+  "files": [
+    "ParallaxHero.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

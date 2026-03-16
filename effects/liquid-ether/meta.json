@@ -1,9 +1,26 @@
 {
   "name": "Liquid Ether",
   "description": "Layered FBM noise fluid shader with mouse-driven vortex distortion and multi-color blending.",
-  "tags": ["shader", "webgl", "fluid", "noise", "smoke", "ethereal", "background"],
+  "tags": [
+    "shader",
+    "webgl",
+    "fluid",
+    "noise",
+    "smoke",
+    "ethereal",
+    "background"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL", "useMousePosition"],
-  "files": ["LiquidEther.tsx"]
+  "hooks": [
+    "useMousePosition",
+    "useWebGL"
+  ],
+  "files": [
+    "LiquidEther.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

@@ -1,9 +1,27 @@
 {
   "name": "Holographic Card",
   "description": "Dark card with rainbow holographic refraction overlay, 3D tilt physics, and sparkle particle burst on mouse movement.",
-  "tags": ["card", "holographic", "3d", "tilt", "particles", "mouse"],
+  "tags": [
+    "card",
+    "holographic",
+    "3d",
+    "tilt",
+    "particles",
+    "mouse"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useTilt3D", "useMousePosition", "useCanvasSetup", "useParticles"],
-  "files": ["HolographicCard.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition",
+    "useParticles",
+    "useTilt3D"
+  ],
+  "files": [
+    "HolographicCard.tsx"
+  ],
+  "presets": [],
+  "css": [
+    "holographic.css"
+  ]
 }

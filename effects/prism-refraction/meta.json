@@ -1,9 +1,24 @@
 {
   "name": "Prism Refraction",
   "description": "Chromatic aberration / dispersion overlay shader with mouse-controlled prism position producing rainbow edge fringing.",
-  "tags": ["shader", "webgl", "chromatic-aberration", "dispersion", "prism", "rainbow", "overlay"],
+  "tags": [
+    "shader",
+    "webgl",
+    "chromatic-aberration",
+    "dispersion",
+    "prism",
+    "rainbow",
+    "overlay"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL", "useMousePosition"],
-  "files": ["PrismRefraction.tsx"]
+  "hooks": [
+    "useMousePosition",
+    "useWebGL"
+  ],
+  "files": [
+    "PrismRefraction.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

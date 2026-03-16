@@ -1,9 +1,26 @@
 {
   "name": "Noise Flow Field",
   "description": "Perlin noise flow field with thousands of particles. Each particle follows noise-derived angles, leaving semi-transparent streaks.",
-  "tags": ["background", "canvas", "particles", "noise", "flow", "ambient"],
+  "tags": [
+    "background",
+    "canvas",
+    "particles",
+    "noise",
+    "flow",
+    "ambient"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useParticles", "usePerlinNoise"],
-  "files": ["NoiseFlowField.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useParticles",
+    "usePerlinNoise"
+  ],
+  "files": [
+    "NoiseFlowField.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

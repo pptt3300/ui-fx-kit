@@ -1,9 +1,23 @@
 {
   "name": "Shimmer Skeleton",
   "description": "Loading skeleton with shimmer animation — cursor proximity accelerates the shimmer speed.",
-  "tags": ["loading", "skeleton", "shimmer", "placeholder"],
+  "tags": [
+    "loading",
+    "skeleton",
+    "shimmer",
+    "placeholder"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useMousePosition", "proximity"],
-  "files": ["ShimmerSkeleton.tsx"]
+  "hooks": [
+    "proximity",
+    "useMousePosition"
+  ],
+  "files": [
+    "ShimmerSkeleton.tsx"
+  ],
+  "presets": [],
+  "css": [
+    "shimmer.css"
+  ]
 }

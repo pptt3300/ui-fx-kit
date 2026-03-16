@@ -1,9 +1,26 @@
 {
   "name": "Geometric Morph",
   "description": "SVG polygon that morphs between shapes using spring physics. Perlin noise and mouse proximity distort vertices in real time.",
-  "tags": ["background", "svg", "interactive", "morph", "geometry", "spring"],
+  "tags": [
+    "background",
+    "svg",
+    "interactive",
+    "morph",
+    "geometry",
+    "spring"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useSpring", "usePerlinNoise", "useMousePosition"],
-  "files": ["GeometricMorph.tsx"]
+  "hooks": [
+    "useMousePosition",
+    "usePerlinNoise",
+    "useSpring"
+  ],
+  "files": [
+    "GeometricMorph.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

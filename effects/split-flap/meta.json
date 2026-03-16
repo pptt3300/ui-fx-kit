@@ -1,9 +1,23 @@
 {
   "name": "Split-Flap Display",
   "description": "Mechanical split-flap (Solari) board effect — each character flips through the alphabet to reveal the target text.",
-  "tags": ["text", "split-flap", "mechanical", "retro", "animation"],
+  "tags": [
+    "text",
+    "split-flap",
+    "mechanical",
+    "retro",
+    "animation"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useSplitFlap"],
-  "files": ["SplitFlap.tsx"]
+  "hooks": [
+    "useSplitFlap"
+  ],
+  "files": [
+    "SplitFlap.tsx"
+  ],
+  "presets": [],
+  "css": [
+    "split-flap.css"
+  ]
 }

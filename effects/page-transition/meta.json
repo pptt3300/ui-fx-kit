@@ -1,9 +1,18 @@
 {
   "name": "Page Transition",
   "description": "CSS-only page transition wrapper — morph (scale crossfade), fade, and slide variants.",
-  "tags": ["transition", "animation", "navigation", "pages"],
+  "tags": [
+    "transition",
+    "animation",
+    "navigation",
+    "pages"
+  ],
   "framework": "react",
   "dependencies": [],
   "hooks": [],
-  "files": ["PageTransition.tsx"]
+  "files": [
+    "PageTransition.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

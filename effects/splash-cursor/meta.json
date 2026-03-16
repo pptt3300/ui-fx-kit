@@ -1,9 +1,24 @@
 {
   "name": "Splash Cursor",
   "description": "Canvas particle burst effect that splashes colorful particles from the cursor as it moves.",
-  "tags": ["cursor", "canvas", "particles", "global"],
+  "tags": [
+    "cursor",
+    "canvas",
+    "particles",
+    "global"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useParticles", "useMousePosition"],
-  "files": ["SplashCursor.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition",
+    "useParticles"
+  ],
+  "files": [
+    "SplashCursor.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

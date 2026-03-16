@@ -1,9 +1,21 @@
 {
   "name": "Image Trail",
   "description": "DOM-based cursor trail that stamps images along the mouse path with entry/exit animations.",
-  "tags": ["cursor", "dom", "trail", "image", "global"],
+  "tags": [
+    "cursor",
+    "dom",
+    "trail",
+    "image",
+    "global"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useMousePosition"],
-  "files": ["ImageTrail.tsx"]
+  "hooks": [
+    "useMousePosition"
+  ],
+  "files": [
+    "ImageTrail.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

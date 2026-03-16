@@ -1,9 +1,23 @@
 {
   "name": "Ripple Wave",
   "description": "2D wave equation propagation on a grid of dots. Click to create ripples, or use center-source mode for continuous ambient waves.",
-  "tags": ["background", "canvas", "interactive", "wave", "physics"],
+  "tags": [
+    "background",
+    "canvas",
+    "interactive",
+    "wave",
+    "physics"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup"],
-  "files": ["RippleWave.tsx"]
+  "hooks": [
+    "useCanvasSetup"
+  ],
+  "files": [
+    "RippleWave.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

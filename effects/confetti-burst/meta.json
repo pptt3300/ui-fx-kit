@@ -1,9 +1,23 @@
 {
   "name": "Confetti Burst",
   "description": "Full-page canvas confetti explosion — trigger imperatively or on mount.",
-  "tags": ["celebration", "canvas", "particles", "confetti"],
+  "tags": [
+    "celebration",
+    "canvas",
+    "particles",
+    "confetti"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useParticles"],
-  "files": ["ConfettiBurst.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useParticles"
+  ],
+  "files": [
+    "ConfettiBurst.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

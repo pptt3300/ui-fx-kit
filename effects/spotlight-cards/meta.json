@@ -1,8 +1,21 @@
 {
   "name": "Spotlight Cards",
   "description": "Dark cards with cursor-tracking spotlight effect, border glow using CSS mask compositing, and scroll-triggered entrance animations.",
-  "tags": ["card", "spotlight", "mouse", "scroll", "dark"],
+  "tags": [
+    "card",
+    "spotlight",
+    "mouse",
+    "scroll",
+    "dark"
+  ],
   "framework": "react",
-  "dependencies": ["framer-motion"],
-  "files": ["SpotlightCards.tsx"]
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "SpotlightCards.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

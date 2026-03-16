@@ -1,8 +1,19 @@
 {
   "name": "Cursor Glow Trail",
   "description": "Full-page canvas overlay that renders a glowing cursor with colored particle trails. Trail density scales with movement speed, particles have gravity and fade out.",
-  "tags": ["canvas", "cursor", "global", "trail", "particles"],
+  "tags": [
+    "canvas",
+    "cursor",
+    "global",
+    "trail",
+    "particles"
+  ],
   "framework": "react",
   "dependencies": [],
-  "files": ["CursorGlow.tsx"]
+  "files": [
+    "CursorGlow.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

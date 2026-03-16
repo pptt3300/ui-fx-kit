@@ -1,9 +1,23 @@
 {
   "name": "Blob Cursor",
   "description": "WebGL metaball cursor with elastic spring-lag blob that deforms on click.",
-  "tags": ["cursor", "webgl", "metaball", "spring", "global"],
+  "tags": [
+    "cursor",
+    "webgl",
+    "metaball",
+    "spring",
+    "global"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL", "useMousePosition"],
-  "files": ["BlobCursor.tsx"]
+  "hooks": [
+    "useMousePosition"
+  ],
+  "files": [
+    "BlobCursor.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

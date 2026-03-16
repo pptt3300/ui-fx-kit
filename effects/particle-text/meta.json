@@ -1,8 +1,19 @@
 {
   "name": "Particle Text",
   "description": "Text composed of thousands of particles that scatter on mouse hover and spring back with damped oscillation. Supports gradient colors and ghost trails.",
-  "tags": ["canvas", "physics", "text", "interactive", "mouse"],
+  "tags": [
+    "canvas",
+    "physics",
+    "text",
+    "interactive",
+    "mouse"
+  ],
   "framework": "react",
   "dependencies": [],
-  "files": ["ParticleText.tsx"]
+  "files": [
+    "ParticleText.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

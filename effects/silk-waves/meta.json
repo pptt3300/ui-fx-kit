@@ -1,9 +1,21 @@
 {
   "name": "Silk Waves",
   "description": "Layered silk-like wave strands rendered via WebGL with mouse-reactive distortion and Perlin noise displacement.",
-  "tags": ["background", "webgl", "waves", "mouse-reactive", "ambient"],
+  "tags": [
+    "background",
+    "webgl",
+    "waves",
+    "mouse-reactive",
+    "ambient"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL", "useMousePosition"],
-  "files": ["SilkWaves.tsx"]
+  "hooks": [],
+  "files": [
+    "SilkWaves.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

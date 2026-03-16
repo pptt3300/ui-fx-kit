@@ -1,9 +1,20 @@
 {
   "name": "Horizontal Scroll",
   "description": "Vertical scroll drives horizontal card gallery — sticky container translates cards as user scrolls.",
-  "tags": ["scroll", "horizontal", "gallery", "cards"],
+  "tags": [
+    "scroll",
+    "horizontal",
+    "gallery",
+    "cards"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useScrollProgress"],
-  "files": ["HorizontalScroll.tsx"]
+  "hooks": [
+    "useScrollProgress"
+  ],
+  "files": [
+    "HorizontalScroll.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

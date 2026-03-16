@@ -1,9 +1,26 @@
 {
   "name": "Reflective Card",
   "description": "Card with mouse-tracking reflection overlay in glass (frosted blur + radial highlight) or metallic (iridescent angle shift) mode.",
-  "tags": ["card", "reflective", "glass", "metallic", "mouse", "tilt", "iridescent"],
+  "tags": [
+    "card",
+    "reflective",
+    "glass",
+    "metallic",
+    "mouse",
+    "tilt",
+    "iridescent"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useTilt3D", "useMousePosition"],
-  "files": ["ReflectiveCard.tsx"]
+  "hooks": [
+    "useMousePosition",
+    "useTilt3D"
+  ],
+  "files": [
+    "ReflectiveCard.tsx"
+  ],
+  "presets": [],
+  "css": [
+    "iridescent.css"
+  ]
 }

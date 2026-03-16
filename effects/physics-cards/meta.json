@@ -1,8 +1,21 @@
 {
   "name": "Physics Cards",
   "description": "Draggable cards with spring physics, 3D perspective tilt that follows cursor, and dynamic light reflection. Combines framer-motion drag with CSS 3D transforms.",
-  "tags": ["card", "drag", "3d", "spring", "interactive"],
+  "tags": [
+    "card",
+    "drag",
+    "3d",
+    "spring",
+    "interactive"
+  ],
   "framework": "react",
-  "dependencies": ["framer-motion"],
-  "files": ["PhysicsCards.tsx"]
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "PhysicsCards.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

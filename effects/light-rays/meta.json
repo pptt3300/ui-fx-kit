@@ -1,9 +1,24 @@
 {
   "name": "Light Rays",
   "description": "Volumetric light ray effect via WebGL with radial angular modulation and mouse-reactive light source positioning.",
-  "tags": ["background", "webgl", "rays", "light", "mouse-reactive", "ambient"],
+  "tags": [
+    "background",
+    "webgl",
+    "rays",
+    "light",
+    "mouse-reactive",
+    "ambient"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL"],
-  "files": ["LightRays.tsx"]
+  "hooks": [
+    "useWebGL"
+  ],
+  "files": [
+    "LightRays.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

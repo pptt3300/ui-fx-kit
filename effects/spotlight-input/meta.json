@@ -1,8 +1,22 @@
 {
   "name": "Spotlight Input",
   "description": "Input field with cursor-tracking border glow. Hover shows radial gradient border, focus shows rotating conic gradient rainbow border with outer glow shadow. Includes typing sparkle particles and submit shockwave explosion.",
-  "tags": ["form", "input", "interactive", "mouse", "canvas", "sparkles"],
+  "tags": [
+    "form",
+    "input",
+    "interactive",
+    "mouse",
+    "canvas",
+    "sparkles"
+  ],
   "framework": "react",
-  "dependencies": ["lucide-react"],
-  "files": ["SpotlightInput.tsx"]
+  "dependencies": [
+    "lucide-react"
+  ],
+  "files": [
+    "SpotlightInput.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

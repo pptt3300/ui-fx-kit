@@ -1,9 +1,22 @@
 {
   "name": "Gradient Mesh",
   "description": "Animated gradient mesh with drifting radial blobs. Theme-aware, pure CSS radial gradients — no canvas.",
-  "tags": ["background", "gradient", "ambient", "css"],
+  "tags": [
+    "background",
+    "gradient",
+    "ambient",
+    "css"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useGradientMesh"],
-  "files": ["GradientMesh.tsx"]
+  "hooks": [
+    "useGradientMesh"
+  ],
+  "files": [
+    "GradientMesh.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

@@ -1,8 +1,18 @@
 {
   "name": "Aurora Background",
   "description": "Slow-breathing aurora wave bands drawn on canvas. Multiple sine waves with different frequencies create organic, gently drifting aurora borealis effect.",
-  "tags": ["canvas", "background", "ambient", "waves"],
+  "tags": [
+    "canvas",
+    "background",
+    "ambient",
+    "waves"
+  ],
   "framework": "react",
   "dependencies": [],
-  "files": ["AuroraBg.tsx"]
+  "files": [
+    "AuroraBg.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

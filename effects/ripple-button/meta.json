@@ -1,9 +1,20 @@
 {
   "name": "Ripple Button",
   "description": "Material Design-style ripple effect button with multiple concurrent ripples expanding from click point.",
-  "tags": ["interactive", "button", "ripple", "click"],
+  "tags": [
+    "interactive",
+    "button",
+    "ripple",
+    "click"
+  ],
   "framework": "react",
   "dependencies": [],
   "hooks": [],
-  "files": ["RippleButton.tsx"]
+  "files": [
+    "RippleButton.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

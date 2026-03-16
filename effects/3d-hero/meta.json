@@ -1,8 +1,23 @@
 {
   "name": "3D Hero Scene",
   "description": "WebGL hero section with wireframe icosahedron that deforms and follows cursor, floating particles, and star field background.",
-  "tags": ["3d", "webgl", "hero", "interactive", "threejs"],
+  "tags": [
+    "3d",
+    "webgl",
+    "hero",
+    "interactive",
+    "threejs"
+  ],
   "framework": "react",
-  "dependencies": ["three", "@react-three/fiber", "@react-three/drei"],
-  "files": ["HeroScene.tsx"]
+  "dependencies": [
+    "three",
+    "@react-three/fiber",
+    "@react-three/drei"
+  ],
+  "files": [
+    "HeroScene.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

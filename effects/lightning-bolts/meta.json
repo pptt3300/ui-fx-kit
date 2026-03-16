@@ -1,9 +1,23 @@
 {
   "name": "Lightning Bolts",
   "description": "Recursive midpoint-displacement lightning bolts with branching, glow passes, and fade-out. Spawns on interval or click.",
-  "tags": ["background", "canvas", "lightning", "particles", "interactive"],
+  "tags": [
+    "background",
+    "canvas",
+    "lightning",
+    "particles",
+    "interactive"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup"],
-  "files": ["LightningBolts.tsx"]
+  "hooks": [
+    "useCanvasSetup"
+  ],
+  "files": [
+    "LightningBolts.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

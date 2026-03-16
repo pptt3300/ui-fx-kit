@@ -1,8 +1,20 @@
 {
   "name": "Magnetic Button",
   "description": "Buttons and icons that are magnetically attracted to the cursor position. Uses spring-damped motion values for natural tracking behavior.",
-  "tags": ["button", "interactive", "mouse", "spring"],
+  "tags": [
+    "button",
+    "interactive",
+    "mouse",
+    "spring"
+  ],
   "framework": "react",
-  "dependencies": ["framer-motion"],
-  "files": ["MagneticButton.tsx"]
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "MagneticButton.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

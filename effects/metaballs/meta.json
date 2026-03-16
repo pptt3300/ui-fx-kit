@@ -1,9 +1,25 @@
 {
   "name": "MetaBalls",
   "description": "WebGL isosurface metaballs with physics simulation, smooth color blending, and mouse attract/repel interaction.",
-  "tags": ["shader", "webgl", "metaballs", "isosurface", "physics", "fluid"],
+  "tags": [
+    "shader",
+    "webgl",
+    "metaballs",
+    "isosurface",
+    "physics",
+    "fluid"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useWebGL", "useMousePosition"],
-  "files": ["MetaBalls.tsx"]
+  "hooks": [
+    "useMousePosition",
+    "useWebGL"
+  ],
+  "files": [
+    "MetaBalls.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }

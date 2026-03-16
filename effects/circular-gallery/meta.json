@@ -1,9 +1,22 @@
 {
   "name": "Circular Gallery",
   "description": "3D carousel with items arranged on a circle — drag to spin with momentum, auto-rotates at rest.",
-  "tags": ["interactive", "3d", "carousel", "gallery", "gesture"],
+  "tags": [
+    "interactive",
+    "3d",
+    "carousel",
+    "gallery",
+    "gesture"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useGesture", "useSpring"],
-  "files": ["CircularGallery.tsx"]
+  "hooks": [
+    "useGesture",
+    "useSpring"
+  ],
+  "files": [
+    "CircularGallery.tsx"
+  ],
+  "presets": [],
+  "css": []
 }

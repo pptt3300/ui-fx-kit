@@ -1,8 +1,20 @@
 {
   "name": "Scroll Velocity Text",
   "description": "Marquee text that accelerates with scroll velocity, plus animated number counters that count up as they scroll into view.",
-  "tags": ["scroll", "text", "animation", "counter"],
+  "tags": [
+    "scroll",
+    "text",
+    "animation",
+    "counter"
+  ],
   "framework": "react",
-  "dependencies": ["framer-motion"],
-  "files": ["ScrollVelocity.tsx"]
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "ScrollVelocity.tsx"
+  ],
+  "hooks": [],
+  "presets": [],
+  "css": []
 }

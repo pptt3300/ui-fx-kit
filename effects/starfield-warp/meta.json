@@ -1,9 +1,25 @@
 {
   "name": "Starfield Warp",
   "description": "3D starfield warp effect with motion streak lines. Stars project from 3D space to 2D; mouse position controls warp speed.",
-  "tags": ["background", "canvas", "3d", "stars", "interactive", "ambient"],
+  "tags": [
+    "background",
+    "canvas",
+    "3d",
+    "stars",
+    "interactive",
+    "ambient"
+  ],
   "framework": "react",
   "dependencies": [],
-  "hooks": ["useCanvasSetup", "useMousePosition"],
-  "files": ["StarfieldWarp.tsx"]
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition"
+  ],
+  "files": [
+    "StarfieldWarp.tsx"
+  ],
+  "presets": [
+    "colors"
+  ],
+  "css": []
 }
