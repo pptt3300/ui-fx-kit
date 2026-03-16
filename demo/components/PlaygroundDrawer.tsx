@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toEffectName } from "@demo/lib/toEffectName";
 import { hexToRgb } from "@demo/lib/colorUtils";
+import { useI18n } from "@demo/lib/i18n";
 
 export interface ControlDef {
   key: string;
@@ -107,6 +108,7 @@ export default function PlaygroundDrawer({
   propGroups,
 }: PlaygroundDrawerProps) {
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
 
   // Auto-close when section scrolls out of view
   useEffect(() => {
@@ -173,10 +175,10 @@ export default function PlaygroundDrawer({
                     <span className="w-2 h-2 rounded-full bg-violet-400/80" />
                     <span className="w-2 h-2 rounded-full bg-cyan-400/80" />
                   </span>
-                  Playground
+                  {t("pg.playground")}
                 </>
               ) : (
-                "↓ Install"
+                t("pg.triggerInstall")
               )}
             </button>
           </motion.div>
@@ -203,13 +205,15 @@ export default function PlaygroundDrawer({
             <div className="flex items-center justify-between px-5 py-3 shrink-0">
               <div className="flex items-center gap-4">
                 <span className="text-[11px] font-bold uppercase tracking-widest text-white/30">
-                  {hasControls ? "Controls" : "Install"}
+                  {hasControls ? t("pg.controls") : t("pg.install")}
                 </span>
 
                 {/* Tab bar — full mode only */}
                 {hasControls && (
                   <div className="flex gap-1">
-                    {(["Playground", "Install"] as Tab[]).map((tab) => (
+                    {(["Playground", "Install"] as Tab[]).map((tab) => {
+                      const label = tab === "Playground" ? t("pg.playground") : t("pg.install");
+                      return (
                       <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -219,7 +223,7 @@ export default function PlaygroundDrawer({
                             : "text-white/40 hover:text-white/70"
                         }`}
                       >
-                        {tab}
+                        {label}
                         {activeTab === tab && (
                           <motion.div
                             layoutId="drawer-tab-indicator"
@@ -227,7 +231,8 @@ export default function PlaygroundDrawer({
                           />
                         )}
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -252,7 +257,7 @@ export default function PlaygroundDrawer({
                         onClick={handleReset}
                         className="text-[10px] text-white/30 hover:text-white/60 transition-colors"
                       >
-                        Reset
+                        {t("pg.reset")}
                       </button>
                     </div>
                   )}
@@ -381,7 +386,7 @@ export default function PlaygroundDrawer({
                   {/* CLI command */}
                   <div>
                     <p className="text-[10px] text-white/40 uppercase tracking-wider mb-2">
-                      CLI
+                      {t("pg.cli")}
                     </p>
                     <div
                       className="rounded p-3 font-mono text-xs leading-relaxed"
@@ -400,7 +405,7 @@ export default function PlaygroundDrawer({
                   {/* Usage snippet */}
                   <div>
                     <p className="text-[10px] text-white/40 uppercase tracking-wider mb-2">
-                      Usage
+                      {t("pg.usage")}
                     </p>
                     <pre
                       className="rounded p-3 font-mono text-xs text-cyan-300 leading-relaxed whitespace-pre-wrap"

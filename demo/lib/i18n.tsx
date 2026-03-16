@@ -63,11 +63,20 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.license": "MIT License",
 
     // Effect sections - general
-    "effect.viewCode": "View Code",
     "effect.moveCursor": "move your cursor",
     "effect.scrollHere": "scroll here to activate",
     "effect.clickAnywhere": "click anywhere",
     "effect.clickToToggle": "click to toggle",
+
+    // Playground
+    "pg.playground": "Playground",
+    "pg.install": "Install",
+    "pg.controls": "Controls",
+    "pg.reset": "Reset",
+    "pg.cli": "CLI",
+    "pg.usage": "Usage",
+    "pg.triggerPlayground": "⚙ Playground",
+    "pg.triggerInstall": "↓ Install",
 
     // Language
     "lang.switch": "中文",
@@ -131,11 +140,20 @@ const translations: Record<Locale, Record<string, string>> = {
     "footer.license": "MIT 许可证",
 
     // Effect sections
-    "effect.viewCode": "查看代码",
     "effect.moveCursor": "移动鼠标",
     "effect.scrollHere": "滚动到此处激活",
     "effect.clickAnywhere": "点击任意位置",
     "effect.clickToToggle": "点击切换",
+
+    // Playground
+    "pg.playground": "调参面板",
+    "pg.install": "安装",
+    "pg.controls": "控件",
+    "pg.reset": "重置",
+    "pg.cli": "安装命令",
+    "pg.usage": "使用方式",
+    "pg.triggerPlayground": "⚙ 调参",
+    "pg.triggerInstall": "↓ 安装",
 
     // Language
     "lang.switch": "EN",
