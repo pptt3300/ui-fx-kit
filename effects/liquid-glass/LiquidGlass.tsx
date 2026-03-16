@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useCanvasSetup } from "../../hooks";
 
 function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
@@ -35,32 +36,20 @@ function AnimatedBlob({ className, delay = 0 }: { className: string; delay?: num
 }
 
 function MorphingShape() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
+  const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const [hue, setHue] = useState(250);
+  const tRef = useRef(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    return startLoop((ctx) => {
+      const w = ctx.canvas.width / 2;
+      const h = ctx.canvas.height / 2;
+      ctx.clearRect(0, 0, w, h);
 
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * 2;
-      canvas.height = rect.height * 2;
-      ctx.scale(2, 2);
-    };
-    resize();
-
-    let t = 0;
-    const animate = () => {
-      const rect = canvas.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width, rect.height);
-
-      const cx = rect.width / 2;
-      const cy = rect.height / 2;
+      const cx = w / 2;
+      const cy = h / 2;
       const r = Math.min(cx, cy) * 0.6;
+      const t = tRef.current;
 
       ctx.beginPath();
       const points = 6;
@@ -84,17 +73,9 @@ function MorphingShape() {
       ctx.fillStyle = gradient;
       ctx.fill();
 
-      t += 0.008;
-      animRef.current = requestAnimationFrame(animate);
-    };
-    animate();
-    window.addEventListener("resize", resize);
-
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener("resize", resize);
-    };
-  }, [hue]);
+      tRef.current += 0.008;
+    });
+  }, [startLoop, hue]);
 
   return (
     <div className="relative">

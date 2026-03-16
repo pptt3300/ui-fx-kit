@@ -104,6 +104,57 @@ Each hook is zero-dependency and works standalone:
 
 [Full hook list →](./hooks/)
 
+## Compose Your Own Effect
+
+The hooks layer is designed for composition. Mix and match hooks to create custom effects without starting from scratch.
+
+**Example: Custom cursor trail**
+
+```tsx
+import { useMousePosition, useCanvasSetup, useParticles } from "./hooks";
+
+// Three hooks → a complete cursor effect
+const { position } = useMousePosition({ scope: "window" });
+const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
+const particles = useParticles({
+  spawn: () => ({ x: position.current.x, y: position.current.y, alpha: 1 }),
+  update: (p) => { p.alpha *= 0.95; return p.alpha > 0.01; },
+});
+```
+
+**Example: Tilt card with spotlight**
+
+```tsx
+import { useTilt3D, useSpotlight } from "./hooks";
+
+// Two hooks → 3D tilt + cursor-tracking light
+const { ref, shineRef, handlers: tiltHandlers } = useTilt3D({ maxRotation: 12 });
+const { spotlightBg, handlers: spotHandlers } = useSpotlight({ radius: 400 });
+```
+
+**Example: Proximity-reactive grid**
+
+```tsx
+import { useCanvasSetup, useMousePosition } from "./hooks";
+import { proximity } from "./hooks";
+
+// Canvas + mouse + math → interactive force field
+const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
+const { position, handlers } = useMousePosition({ scope: "element" });
+// In draw loop: proximity(mouse, dot, { radius: 120 }) → displacement
+```
+
+### Common Combinations
+
+| Hooks | What You Get |
+|-------|-------------|
+| `useCanvasSetup` + `useParticles` + `useMousePosition` | Cursor-reactive particle effects |
+| `useTilt3D` + `useSpotlight` | 3D cards with dynamic lighting |
+| `useCanvasSetup` + `useMousePosition` + `proximity` | Interactive force-field grids |
+| `useScrollProgress` + `useStagger` | Scroll-triggered staggered animations |
+| `useCanvasSetup` + `usePerlinNoise` | Organic generative backgrounds |
+| `useWebGL` + `useMousePosition` | GPU shader effects with cursor interaction |
+
 ### CSS Snippets (13)
 
 Drop-in animation classes: `glass-card`, `holographic`, `shimmer`, `neon-glow`, `glitch-effect`, `sticker-peel`, `iridescent`, `stagger-presets`, and more.

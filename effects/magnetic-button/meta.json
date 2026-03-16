@@ -14,7 +14,7 @@
   "files": [
     "MagneticButton.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useMagnetic"],
   "presets": [],
   "css": []
 }

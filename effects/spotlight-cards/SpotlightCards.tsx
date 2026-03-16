@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSpotlight } from "../../hooks";
 
 function SpotlightCard({ title, description, icon, gradient }: {
   title: string;
@@ -7,25 +7,11 @@ function SpotlightCard({ title, description, icon, gradient }: {
   icon: string;
   gradient: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouse = (e: React.MouseEvent) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
+  const { isHovered, spotlightBg, borderGlowBg, handlers } = useSpotlight({ radius: 300, intensity: 0.15 });
 
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={handleMouse}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      {...handlers}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -42,7 +28,7 @@ function SpotlightCard({ title, description, icon, gradient }: {
             transition={{ duration: 0.3 }}
             className="absolute inset-0 z-0 pointer-events-none"
             style={{
-              background: `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99,102,241,0.15), transparent 60%)`,
+              background: spotlightBg,
             }}
           />
         )}
@@ -53,7 +39,7 @@ function SpotlightCard({ title, description, icon, gradient }: {
         <div
           className="absolute inset-0 z-0 pointer-events-none rounded-2xl"
           style={{
-            background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99,102,241,0.3), transparent 60%)`,
+            background: borderGlowBg,
             mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
             maskComposite: "exclude",

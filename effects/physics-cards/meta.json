@@ -15,7 +15,7 @@
   "files": [
     "PhysicsCards.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useTilt3D"],
   "presets": [],
   "css": []
 }

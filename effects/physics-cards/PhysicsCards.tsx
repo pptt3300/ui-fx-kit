@@ -1,50 +1,21 @@
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useTilt3D } from "../../hooks";
 
 function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [15, -15]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-15, 15]), { stiffness: 300, damping: 30 });
-  const shine = useTransform(
-    [x, y] as never,
-    ([latestX, latestY]: number[]) =>
-      `radial-gradient(circle at ${(latestX + 0.5) * 100}% ${(latestY + 0.5) * 100}%, rgba(255,255,255,0.25) 0%, transparent 60%)`
-  );
-
-  const handleMouse = (e: React.MouseEvent) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
-
-  const handleLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
+  const { ref, shineRef, handlers } = useTilt3D({ maxRotation: 15 });
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={handleLeave}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-        perspective: 1000,
-      }}
+      {...handlers}
       className={`relative group ${className}`}
     >
       <div className="relative z-10">{children}</div>
-      <motion.div
+      <div
+        ref={shineRef}
         className="absolute inset-0 rounded-2xl z-20 pointer-events-none"
-        style={{ background: shine }}
       />
-    </motion.div>
+    </div>
   );
 }
 

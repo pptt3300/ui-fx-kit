@@ -19,6 +19,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useCanvasSetup, useParticles, useSpotlight } from "../../hooks";
 
 interface Sparkle {
   x: number; y: number;
@@ -35,11 +36,11 @@ interface Shockwave {
 }
 
 const SPARK_COLORS: [number, number, number][] = [
-  [99, 102, 241],   // indigo
-  [139, 92, 246],   // violet
-  [34, 211, 238],   // cyan
-  [167, 139, 250],  // lavender
-  [255, 255, 255],  // white
+  [99, 102, 241],
+  [139, 92, 246],
+  [34, 211, 238],
+  [167, 139, 250],
+  [255, 255, 255],
 ];
 
 interface Props {
@@ -58,18 +59,41 @@ export default function SpotlightInput({
   loading = false,
 }: Props) {
   const [value, setValue] = useState("");
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const sparkCanvasRef = useRef<HTMLCanvasElement>(null);
-  const sparklesRef = useRef<Sparkle[]>([]);
-  const shockwavesRef = useRef<Shockwave[]>([]);
-  const sparkAnimRef = useRef<number>(0);
+
+  const { ref: containerRef, isHovered, spotlightBg, borderGlowBg, conicBorderBg, handlers: spotlightHandlers } = useSpotlight();
+  const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
+
+  const sparkles = useParticles<Sparkle>({
+    spawn: () => ({
+      x: 0, y: 0, vx: 0, vy: 0,
+      size: 1 + Math.random() * 2, alpha: 0.8 + Math.random() * 0.2,
+      color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
+    }),
+    update: (s) => {
+      s.x += s.vx; s.y += s.vy;
+      s.vy += 0.06; s.vx *= 0.97; s.alpha *= 0.94; s.size *= 0.98;
+      return s.alpha >= 0.02 && s.size >= 0.2;
+    },
+    maxCount: 200,
+  });
+
+  const shockwaves = useParticles<Shockwave>({
+    spawn: () => ({
+      x: 0, y: 0, radius: 5, maxRadius: 200, alpha: 0.5,
+      color: SPARK_COLORS[0],
+    }),
+    update: (w) => {
+      w.radius += (w.maxRadius - w.radius) * 0.06;
+      w.alpha *= 0.96;
+      return w.alpha >= 0.01;
+    },
+    maxCount: 10,
+  });
 
   const spawnShockwave = useCallback(() => {
-    const canvas = sparkCanvasRef.current;
+    const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
     const canvasRect = canvas.getBoundingClientRect();
@@ -78,81 +102,62 @@ export default function SpotlightInput({
     const cy = containerRect.top - canvasRect.top + containerRect.height / 2;
 
     for (let i = 0; i < 3; i++) {
-      shockwavesRef.current.push({
+      shockwaves.emitWith(1, () => ({
         x: cx, y: cy, radius: 5 + i * 3,
         maxRadius: 200 + i * 80, alpha: 0.5 - i * 0.1,
         color: SPARK_COLORS[i % SPARK_COLORS.length],
-      });
+      }));
     }
     for (let i = 0; i < 30; i++) {
       const angle = (Math.PI * 2 * i) / 30 + (Math.random() - 0.5) * 0.3;
       const speed = 3 + Math.random() * 6;
-      sparklesRef.current.push({
+      sparkles.emitWith(1, () => ({
         x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
         size: 1.5 + Math.random() * 2.5, alpha: 0.9,
         color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
-      });
+      }));
     }
-  }, []);
+  }, [canvasRef, containerRef, sparkles, shockwaves]);
 
   const spawnSparkles = useCallback((x: number, y: number) => {
     const count = 4 + Math.floor(Math.random() * 4);
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
       const speed = 1.5 + Math.random() * 3;
-      sparklesRef.current.push({
+      sparkles.emitWith(1, () => ({
         x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 1.5,
         size: 1 + Math.random() * 2, alpha: 0.8 + Math.random() * 0.2,
         color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
-      });
+      }));
     }
-  }, []);
+  }, [sparkles]);
 
   useEffect(() => {
-    const canvas = sparkCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * 2;
-      canvas.height = rect.height * 2;
-      ctx.setTransform(2, 0, 0, 2, 0, 0);
-    };
-    resize();
-    const animate = () => {
-      const rect = canvas.getBoundingClientRect();
-      ctx.clearRect(0, 0, rect.width, rect.height);
-      const sparks = sparklesRef.current;
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        s.x += s.vx; s.y += s.vy;
-        s.vy += 0.06; s.vx *= 0.97; s.alpha *= 0.94; s.size *= 0.98;
-        if (s.alpha < 0.02 || s.size < 0.2) { sparks.splice(i, 1); continue; }
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${s.alpha * 0.15})`; ctx.fill();
-        ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${s.alpha})`; ctx.fill();
-      }
-      const waves = shockwavesRef.current;
-      for (let i = waves.length - 1; i >= 0; i--) {
-        const w = waves[i];
-        w.radius += (w.maxRadius - w.radius) * 0.06; w.alpha *= 0.96;
-        if (w.alpha < 0.01) { waves.splice(i, 1); continue; }
-        ctx.beginPath(); ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${w.alpha})`; ctx.lineWidth = 2; ctx.stroke();
-        ctx.beginPath(); ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${w.alpha * 0.3})`; ctx.lineWidth = 6; ctx.stroke();
-      }
-      sparkAnimRef.current = requestAnimationFrame(animate);
-    };
-    animate();
-    window.addEventListener("resize", resize);
-    return () => { cancelAnimationFrame(sparkAnimRef.current); window.removeEventListener("resize", resize); };
-  }, []);
+    return startLoop((ctx) => {
+      const w = ctx.canvas.width / 2;
+      const h = ctx.canvas.height / 2;
+      ctx.clearRect(0, 0, w, h);
+
+      sparkles.tick(1);
+      sparkles.forEach(ctx, (c, s) => {
+        c.beginPath(); c.arc(s.x, s.y, s.size * 3, 0, Math.PI * 2);
+        c.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${s.alpha * 0.15})`; c.fill();
+        c.beginPath(); c.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        c.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${s.alpha})`; c.fill();
+      });
+
+      shockwaves.tick(1);
+      shockwaves.forEach(ctx, (c, w) => {
+        c.beginPath(); c.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+        c.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${w.alpha})`; c.lineWidth = 2; c.stroke();
+        c.beginPath(); c.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+        c.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${w.alpha * 0.3})`; c.lineWidth = 6; c.stroke();
+      });
+    });
+  }, [startLoop, sparkles, shockwaves]);
 
   const handleKeyDown = () => {
-    const input = inputRef.current; const canvas = sparkCanvasRef.current;
+    const input = inputRef.current; const canvas = canvasRef.current;
     if (!input || !canvas) return;
     const inputRect = input.getBoundingClientRect(); const canvasRect = canvas.getBoundingClientRect();
     const selStart = input.selectionStart ?? value.length;
@@ -161,27 +166,19 @@ export default function SpotlightInput({
     spawnSparkles(cursorX, cursorY);
   };
 
-  const handleMouse = (e: React.MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
   const borderBg = isFocused
-    ? `conic-gradient(from ${Math.round((mousePos.x / (containerRef.current?.offsetWidth || 400)) * 360)}deg at ${mousePos.x}px ${mousePos.y}px, #6366f1, #8b5cf6, #22d3ee, #a78bfa, #6366f1)`
+    ? conicBorderBg
     : isHovered
-      ? `radial-gradient(300px circle at ${mousePos.x}px ${mousePos.y}px, #6366f1, #8b5cf6 30%, transparent 60%)`
+      ? borderGlowBg
       : "#e2e8f0";
 
-  const innerGlow = isHovered
-    ? `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99,102,241,0.04), rgba(139,92,246,0.02) 40%, transparent 60%)`
-    : "none";
+  const innerGlow = isHovered ? spotlightBg : "none";
 
   return (
     <div className="relative">
-      <canvas ref={sparkCanvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-20" style={{ height: "100%" }} />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-20" style={{ height: "100%" }} />
       <form onSubmit={(e) => { e.preventDefault(); if (value.trim()) { spawnShockwave(); onSubmit(value.trim()); } }}>
-        <div ref={containerRef} onMouseMove={handleMouse} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}
+        <div ref={containerRef} {...spotlightHandlers}
           className={`relative rounded-2xl p-[1px] transition-shadow duration-300 ${isFocused ? "shadow-[0_0_30px_-5px_rgba(99,102,241,0.3),0_0_60px_-10px_rgba(139,92,246,0.15)]" : ""}`}
           style={{ background: borderBg }}>
           <div className="relative rounded-2xl bg-white overflow-hidden">

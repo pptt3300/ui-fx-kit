@@ -1,42 +1,28 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useCanvasSetup } from "../../hooks";
 
 export default function AuroraBg() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
+  const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
+  const tRef = useRef(0);
+
+  const bands = [
+    { color: [99, 102, 241], alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
+    { color: [139, 92, 246], alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
+    { color: [34, 211, 238],  alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
+    { color: [167, 139, 250], alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
+  ];
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * 2;
-      canvas.height = rect.height * 2;
-      ctx.setTransform(2, 0, 0, 2, 0, 0);
-    };
-    resize();
-
-    // Very slow, gentle aurora bands
-    const bands = [
-      { color: [99, 102, 241], alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
-      { color: [139, 92, 246], alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
-      { color: [34, 211, 238],  alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
-      { color: [167, 139, 250], alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
-    ];
-
-    let t = 0;
-
-    const animate = () => {
-      const rect = canvas.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
+    return startLoop((ctx) => {
+      const canvas = ctx.canvas;
+      const w = canvas.width / 2;
+      const h = canvas.height / 2;
       ctx.clearRect(0, 0, w, h);
+
+      const t = tRef.current;
 
       for (const band of bands) {
         ctx.beginPath();
-
         const baseY = h * band.yOffset;
         ctx.moveTo(0, h);
 
@@ -60,18 +46,9 @@ export default function AuroraBg() {
         ctx.fill();
       }
 
-      t += 0.016; // ~1 per second at 60fps, very slow drift
-      animRef.current = requestAnimationFrame(animate);
-    };
-
-    animate();
-    window.addEventListener("resize", resize);
-
-    return () => {
-      cancelAnimationFrame(animRef.current);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
+      tRef.current += 0.016;
+    });
+  }, [startLoop]);
 
   return (
     <canvas

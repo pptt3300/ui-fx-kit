@@ -15,7 +15,7 @@
   "files": [
     "SpotlightCards.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useSpotlight"],
   "presets": [],
   "css": []
 }

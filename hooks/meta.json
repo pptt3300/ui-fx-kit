@@ -2,96 +2,115 @@
   {
     "name": "useMousePosition",
     "description": "Track mouse position relative to an element or the window. Supports ref mode (no re-renders, for rAF) and state mode (reactive, for CSS).",
-    "tags": ["mouse", "interactive", "tracking"]
+    "tags": ["mouse", "interactive", "tracking"],
+    "combinesWith": ["useCanvasSetup", "useParticles", "useTilt3D", "useSpotlight", "proximity"]
   },
   {
     "name": "useSpring",
     "description": "Zero-dependency spring physics for a single numeric value. Ideal for Canvas animation loops where framer-motion isn't available.",
-    "tags": ["physics", "animation", "spring"]
+    "tags": ["physics", "animation", "spring"],
+    "combinesWith": ["useMousePosition", "useCanvasSetup"]
   },
   {
     "name": "useTilt3D",
     "description": "3D perspective tilt that follows cursor with spring physics. Applies transforms directly to the DOM element (no re-renders).",
-    "tags": ["3d", "mouse", "interactive", "physics"]
+    "tags": ["3d", "mouse", "interactive", "physics"],
+    "combinesWith": ["useMousePosition", "useSpotlight"]
   },
   {
     "name": "useMagnetic",
     "description": "Magnetic attraction effect — element follows cursor with spring physics. Great for buttons and interactive elements.",
-    "tags": ["mouse", "interactive", "physics", "spring"]
+    "tags": ["mouse", "interactive", "physics", "spring"],
+    "combinesWith": ["useMousePosition"]
   },
   {
     "name": "useCanvasSetup",
     "description": "DPI-aware canvas setup with automatic resize handling and rAF loop management.",
-    "tags": ["canvas", "setup", "animation"]
+    "tags": ["canvas", "setup", "animation"],
+    "combinesWith": ["useParticles", "useMousePosition", "usePerlinNoise", "proximity", "useWebGL"]
   },
   {
     "name": "useParticles",
     "description": "Generic particle system manager with spawn, update, emit, and rendering helpers. Supports max count culling.",
-    "tags": ["canvas", "particles", "animation", "physics"]
+    "tags": ["canvas", "particles", "animation", "physics"],
+    "combinesWith": ["useCanvasSetup", "useMousePosition"]
   },
   {
-    "name": "useProximity",
+    "name": "proximity",
     "description": "Pure computation: distance-based force field between two points. Not a React hook — just math. Returns distance, proximity, force, angle.",
-    "tags": ["math", "physics", "proximity"]
+    "tags": ["math", "physics", "proximity"],
+    "combinesWith": ["useCanvasSetup", "useMousePosition"]
   },
   {
     "name": "useScrollProgress",
     "description": "Track scroll progress and velocity. Supports element-level (IntersectionObserver) and page-level scroll tracking.",
-    "tags": ["scroll", "tracking", "animation"]
+    "tags": ["scroll", "tracking", "animation"],
+    "combinesWith": ["useStagger", "useInView"]
   },
   {
     "name": "useSpotlight",
     "description": "Cursor-tracking spotlight effect that returns CSS gradient strings. Supports radial, border glow, and conic border modes.",
-    "tags": ["mouse", "interactive", "css", "gradient"]
+    "tags": ["mouse", "interactive", "css", "gradient"],
+    "combinesWith": ["useTilt3D", "useMousePosition"]
   },
   {
     "name": "useTypewriter",
     "description": "Pure state machine for typewriter text effect. Cycles through phrases with typing, pausing, and deleting phases.",
-    "tags": ["text", "animation", "typewriter"]
+    "tags": ["text", "animation", "typewriter"],
+    "combinesWith": []
   },
   {
     "name": "useInView",
     "description": "Intersection Observer wrapper for triggering effects on scroll-into-view. Binary in/out detection with once option.",
-    "tags": ["scroll", "tracking", "intersection"]
+    "tags": ["scroll", "tracking", "intersection"],
+    "combinesWith": ["useStagger", "useScrollProgress"]
   },
   {
     "name": "useStagger",
     "description": "Staggered animation orchestrator. Computes delays for N items with linear, center-out, edges-in, or random distribution patterns.",
-    "tags": ["animation", "stagger", "orchestration"]
+    "tags": ["animation", "stagger", "orchestration"],
+    "combinesWith": ["useInView", "useScrollProgress"]
   },
   {
     "name": "useGesture",
     "description": "Unified drag/swipe gesture handling via pointer events. Tracks position, velocity, and supports axis locking.",
-    "tags": ["gesture", "interactive", "drag", "swipe"]
+    "tags": ["gesture", "interactive", "drag", "swipe"],
+    "combinesWith": ["useSpring", "useMagnetic"]
   },
   {
     "name": "useScramble",
     "description": "Text decode state machine — characters scramble through random glyphs before settling on target text.",
-    "tags": ["text", "animation", "decode"]
+    "tags": ["text", "animation", "decode"],
+    "combinesWith": []
   },
   {
     "name": "useSplitFlap",
     "description": "Split-flap display state machine. Each column cycles through charset with mechanical flip animation timing.",
-    "tags": ["text", "animation", "split-flap"]
+    "tags": ["text", "animation", "split-flap"],
+    "combinesWith": []
   },
   {
     "name": "useMorphText",
     "description": "Text morph cycle — blur-fade transitions between an array of words with configurable hold and morph durations.",
-    "tags": ["text", "animation", "morph"]
+    "tags": ["text", "animation", "morph"],
+    "combinesWith": []
   },
   {
     "name": "usePerlinNoise",
     "description": "Perlin noise generator with seeded permutation table. Returns noise2D and fbm functions for flow fields and organic motion.",
-    "tags": ["math", "noise", "generative", "physics"]
+    "tags": ["math", "noise", "generative", "physics"],
+    "combinesWith": ["useCanvasSetup", "useWebGL"]
   },
   {
     "name": "useGradientMesh",
     "description": "Animated gradient mesh with drifting radial blobs. Returns tick() for animation and toCSS() for rendering as CSS gradients.",
-    "tags": ["gradient", "animation", "background", "css"]
+    "tags": ["gradient", "animation", "background", "css"],
+    "combinesWith": ["useCanvasSetup"]
   },
   {
     "name": "useWebGL",
     "description": "Zero-dependency WebGL context, shader compilation, uniform management, and fullscreen quad render loop. Foundation for all shader effects.",
-    "tags": ["webgl", "shader", "canvas", "gpu"]
+    "tags": ["webgl", "shader", "canvas", "gpu"],
+    "combinesWith": ["useMousePosition", "usePerlinNoise"]
   }
 ]

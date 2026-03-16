@@ -13,7 +13,7 @@
   "files": [
     "CursorGlow.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useMousePosition", "useCanvasSetup", "useParticles"],
   "presets": [],
   "css": []
 }

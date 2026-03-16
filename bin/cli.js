@@ -93,12 +93,16 @@ async function ensureDir(dir) {
   if (!existsSync(dir)) await mkdir(dir, { recursive: true });
 }
 
-async function copyWithLog(src, dest, label, { force = false } = {}) {
-  await ensureDir(dirname(dest));
+async function copyWithLog(src, dest, label, { force = false, dryRun = false } = {}) {
   if (!force && existsSync(dest)) {
     console.log(`  ${DIM}~${RESET} ${label} ${DIM}(exists, skipped)${RESET}`);
     return false;
   }
+  if (dryRun) {
+    console.log(`  ${GREEN}+${RESET} ${label} ${DIM}(would copy)${RESET}`);
+    return true;
+  }
+  await ensureDir(dirname(dest));
   await copyFile(src, dest);
   console.log(`  ${GREEN}+${RESET} ${label}`);
   return true;
@@ -128,7 +132,7 @@ async function cmdList(tag) {
   }
 }
 
-async function cmdAdd(effectId, targetDir) {
+async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
   // Validate effect exists
   let meta;
   try {
@@ -141,7 +145,7 @@ async function cmdAdd(effectId, targetDir) {
 
   const target = resolve(targetDir || ".");
 
-  console.log(`\n${BOLD}ui-fx-kit add${RESET} ${CYAN}${meta.name}${RESET}\n`);
+  console.log(`\n${BOLD}ui-fx-kit add${RESET} ${CYAN}${meta.name}${RESET}${dryRun ? ` ${YELLOW}(dry run)${RESET}` : ""}\n`);
   console.log(`${DIM}${meta.description}${RESET}\n`);
 
   // 1. Scan effect source for actual dependencies
@@ -170,17 +174,20 @@ async function cmdAdd(effectId, targetDir) {
   }
 
   // 2. Determine target structure
-  const effectsTarget = join(target, "effects", effectId);
-  const hooksTarget = join(target, "hooks");
-  const cssTarget = join(target, "css");
-  const presetsTarget = join(target, "presets");
+  // If target already ends with effects/, hooks/, css/, or presets/, use parent as root
+  const base = basename(target);
+  const root = ["effects", "hooks", "css", "presets"].includes(base) ? dirname(target) : target;
+  const effectsTarget = join(root, "effects", effectId);
+  const hooksTarget = join(root, "hooks");
+  const cssTarget = join(root, "css");
+  const presetsTarget = join(root, "presets");
 
   // 3. Copy effect files (always overwrite — user explicitly asked for this effect)
   console.log(`${BOLD}Effect:${RESET}`);
   for (const file of effectFiles) {
-    await copyWithLog(join(effectDir, file), join(effectsTarget, file), `effects/${effectId}/${file}`, { force: true });
+    await copyWithLog(join(effectDir, file), join(effectsTarget, file), `effects/${effectId}/${file}`, { force: true, dryRun });
   }
-  await copyWithLog(join(effectDir, "meta.json"), join(effectsTarget, "meta.json"), `effects/${effectId}/meta.json`, { force: true });
+  await copyWithLog(join(effectDir, "meta.json"), join(effectsTarget, "meta.json"), `effects/${effectId}/meta.json`, { force: true, dryRun });
 
   // 4. Copy hooks (skip if already exists — don't overwrite user modifications)
   if (allHooks.size > 0) {
@@ -189,12 +196,12 @@ async function cmdAdd(effectId, targetDir) {
       const hookFile = hook === "proximity" ? "useProximity.ts" : `${hook}.ts`;
       const src = join(HOOKS_DIR, hookFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`);
+        await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`, { dryRun });
       }
     }
     // Merge hooks/index.ts — add new exports without removing existing ones
     const indexPath = join(hooksTarget, "index.ts");
-    await ensureDir(hooksTarget);
+    if (!dryRun) await ensureDir(hooksTarget);
     const { writeFile } = await import("fs/promises");
 
     let existingExports = new Set();
@@ -206,13 +213,17 @@ async function cmdAdd(effectId, targetDir) {
 
     const newHooks = Array.from(allHooks).filter(h => !existingExports.has(h));
     if (newHooks.length > 0 || !existsSync(indexPath)) {
-      const allExports = new Set([...existingExports, ...allHooks]);
-      const indexLines = Array.from(allExports).map(h => {
-        const file = h === "proximity" ? "useProximity" : h;
-        return `export { ${h} } from "./${file}";`;
-      });
-      await writeFile(indexPath, indexLines.join("\n") + "\n");
-      console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(${newHooks.length > 0 ? "merged " + newHooks.length + " new exports" : "created"})${RESET}`);
+      if (dryRun) {
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(would ${newHooks.length > 0 ? "merge " + newHooks.length + " new exports" : "create"})${RESET}`);
+      } else {
+        const allExports = new Set([...existingExports, ...allHooks]);
+        const indexLines = Array.from(allExports).map(h => {
+          const file = h === "proximity" ? "useProximity" : h;
+          return `export { ${h} } from "./${file}";`;
+        });
+        await writeFile(indexPath, indexLines.join("\n") + "\n");
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(${newHooks.length > 0 ? "merged " + newHooks.length + " new exports" : "created"})${RESET}`);
+      }
     } else {
       console.log(`  ${DIM}~${RESET} hooks/index.ts ${DIM}(no new exports needed)${RESET}`);
     }
@@ -224,7 +235,7 @@ async function cmdAdd(effectId, targetDir) {
     for (const cssFile of allCss) {
       const src = join(CSS_DIR, cssFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(cssTarget, cssFile), `css/${cssFile}`);
+        await copyWithLog(src, join(cssTarget, cssFile), `css/${cssFile}`, { dryRun });
       }
     }
   }
@@ -236,7 +247,7 @@ async function cmdAdd(effectId, targetDir) {
       const tsFile = `${preset}.ts`;
       const src = join(PRESETS_DIR, tsFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(presetsTarget, tsFile), `presets/${tsFile}`);
+        await copyWithLog(src, join(presetsTarget, tsFile), `presets/${tsFile}`, { dryRun });
       }
     }
   }
@@ -253,24 +264,32 @@ async function cmdAdd(effectId, targetDir) {
   const uniqueDeps = [...new Set(npmDeps)];
 
   // 8. Fix import paths in copied effect files
-  console.log(`\n${BOLD}Fixing imports...${RESET}`);
-  for (const file of effectFiles) {
-    const destPath = join(effectsTarget, file);
-    let code = await readFile(destPath, "utf-8");
-    // Fix: ../../hooks → ../hooks (effect is in effects/name/, hooks is in hooks/)
-    code = code.replace(/from\s+["']\.\.\/\.\.\/hooks["']/g, 'from "../../hooks"');
-    code = code.replace(/from\s+["']\.\.\/\.\.\/presets\/(\w+)["']/g, 'from "../../presets/$1"');
-    code = code.replace(/from\s+["']\.\.\/\.\.\/presets["']/g, 'from "../../presets"');
-    code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, 'import "../../css/');
-    const { writeFile } = await import("fs/promises");
-    await writeFile(destPath, code);
+  if (dryRun) {
+    console.log(`\n${BOLD}Imports:${RESET}`);
+    console.log(`  ${GREEN}✓${RESET} Import paths ${DIM}(would adjust)${RESET}`);
+  } else {
+    console.log(`\n${BOLD}Fixing imports...${RESET}`);
+    for (const file of effectFiles) {
+      const destPath = join(effectsTarget, file);
+      let code = await readFile(destPath, "utf-8");
+      code = code.replace(/from\s+["']\.\.\/\.\.\/hooks["']/g, 'from "../../hooks"');
+      code = code.replace(/from\s+["']\.\.\/\.\.\/presets\/(\w+)["']/g, 'from "../../presets/$1"');
+      code = code.replace(/from\s+["']\.\.\/\.\.\/presets["']/g, 'from "../../presets"');
+      code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, 'import "../../css/');
+      const { writeFile } = await import("fs/promises");
+      await writeFile(destPath, code);
+    }
+    console.log(`  ${GREEN}✓${RESET} Import paths adjusted`);
   }
-  console.log(`  ${GREEN}✓${RESET} Import paths adjusted`);
 
   // 9. Summary
-  console.log(`\n${GREEN}${BOLD}Done!${RESET}\n`);
-
-  console.log(`${BOLD}Files written to:${RESET} ${CYAN}${resolve(effectsTarget)}${RESET}\n`);
+  if (dryRun) {
+    console.log(`\n${YELLOW}${BOLD}Dry run complete.${RESET} No files were written.\n`);
+    console.log(`${BOLD}Would write to:${RESET} ${CYAN}${resolve(effectsTarget)}${RESET}\n`);
+  } else {
+    console.log(`\n${GREEN}${BOLD}Done!${RESET}\n`);
+    console.log(`${BOLD}Files written to:${RESET} ${CYAN}${resolve(effectsTarget)}${RESET}\n`);
+  }
 
   if (uniqueDeps.length > 0) {
     console.log(`${YELLOW}Install required dependencies:${RESET}`);
@@ -345,7 +364,7 @@ ${BOLD}ui-fx-kit${RESET} — 64 composable React UI effects
 
 ${BOLD}Commands:${RESET}
   ${CYAN}list${RESET} [tag]                    List all effects (optionally filter by tag)
-  ${CYAN}add${RESET} <name> [--target dir]     Add an effect to your project
+  ${CYAN}add${RESET} <name> [--target dir] [--dry-run]  Add an effect to your project
   ${CYAN}info${RESET} <name>                   Show effect details and dependencies
 
 ${BOLD}Examples:${RESET}
@@ -376,8 +395,9 @@ if (wantsHelp || command === "help" || !command) {
     console.log(`Use: npx ui-fx-kit add ${effectNames[0]} --target ./src\n`);
     process.exit(1);
   }
+  const dryRun = flags["dry-run"] === true;
   for (const name of effectNames) {
-    await cmdAdd(name, targetDir);
+    await cmdAdd(name, targetDir, { dryRun });
     if (effectNames.length > 1) console.log(`${DIM}${"─".repeat(50)}${RESET}\n`);
   }
 } else if (command === "info") {

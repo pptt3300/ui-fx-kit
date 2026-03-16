@@ -15,7 +15,7 @@
   "files": [
     "LiquidGlass.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useCanvasSetup"],
   "presets": [],
   "css": []
 }

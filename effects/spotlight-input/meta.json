@@ -10,13 +10,11 @@
     "sparkles"
   ],
   "framework": "react",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": [],
   "files": [
     "SpotlightInput.tsx"
   ],
-  "hooks": [],
+  "hooks": ["useCanvasSetup", "useParticles", "useSpotlight"],
   "presets": [],
   "css": []
 }

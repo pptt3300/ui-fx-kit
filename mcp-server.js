@@ -152,6 +152,12 @@ server.tool(
       result.push(`## ${file}\n\`\`\`tsx\n${code}\n\`\`\``);
     }
 
+    result.push(`\n## Install\n\`\`\`bash\nnpx ui-fx-kit add ${id} --target ./src\n\`\`\``);
+
+    if (meta.dependencies?.length > 0) {
+      result.push(`\nThen install npm dependencies:\n\`\`\`bash\nnpm install ${meta.dependencies.join(" ")}\n\`\`\``);
+    }
+
     return {
       content: [{ type: "text", text: result.join("\n") }],
     };
@@ -366,6 +372,7 @@ server.tool(
             name: e.name,
             description: e.description,
             tags: e.tags,
+            install: `npx ui-fx-kit add ${e.id} --target ./src`,
           });
         }
       }
