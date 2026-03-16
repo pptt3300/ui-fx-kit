@@ -1,34 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
 import { proximity } from "../../hooks";
 
-export default function InteractiveDotGrid() {
+interface InteractiveDotGridProps {
+  gap?: number;
+  influenceRadius?: number;
+  maxDisplacement?: number;
+  className?: string;
+}
+
+export default function InteractiveDotGrid({
+  gap = 28,
+  influenceRadius = 120,
+  maxDisplacement = 14,
+  className,
+}: InteractiveDotGridProps) {
   const { canvasRef, startLoop, size } = useCanvasSetup({ dpr: 2 });
   const { position, handlers } = useMousePosition({ scope: "element" });
 
-  const gap = 28;
   const dotRadius = 1.5;
-  const influenceRadius = 120;
-  const maxDisplacement = 14;
+  const propsRef = useRef({ gap, influenceRadius, maxDisplacement });
+  propsRef.current = { gap, influenceRadius, maxDisplacement };
 
   useEffect(() => {
     return startLoop((ctx) => {
+      const { gap: g, influenceRadius: ir, maxDisplacement: md } = propsRef.current;
       const w = size.width || ctx.canvas.width / 2;
       const h = size.height || ctx.canvas.height / 2;
       ctx.clearRect(0, 0, w, h);
 
       const mouse = position.current;
-      const cols = Math.floor(w / gap);
-      const rows = Math.floor(h / gap);
-      const offsetX = (w - (cols - 1) * gap) / 2;
-      const offsetY = (h - (rows - 1) * gap) / 2;
+      const cols = Math.floor(w / g);
+      const rows = Math.floor(h / g);
+      const offsetX = (w - (cols - 1) * g) / 2;
+      const offsetY = (h - (rows - 1) * g) / 2;
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const baseX = offsetX + col * gap;
-          const baseY = offsetY + row * gap;
+          const baseX = offsetX + col * g;
+          const baseY = offsetY + row * g;
 
-          const result = proximity(mouse, { x: baseX, y: baseY }, { radius: influenceRadius, easing: "quadratic" });
+          const result = proximity(mouse, { x: baseX, y: baseY }, { radius: ir, easing: "quadratic" });
 
           let drawX = baseX;
           let drawY = baseY;
@@ -36,8 +48,8 @@ export default function InteractiveDotGrid() {
           let alpha = 0.2;
 
           if (result.inRange) {
-            drawX -= Math.cos(result.angle) * result.force * maxDisplacement;
-            drawY -= Math.sin(result.angle) * result.force * maxDisplacement;
+            drawX -= Math.cos(result.angle) * result.force * md;
+            drawY -= Math.sin(result.angle) * result.force * md;
             scale = 1 + result.force * 2;
             alpha = 0.2 + result.force * 0.8;
           }
@@ -50,11 +62,11 @@ export default function InteractiveDotGrid() {
           ctx.fill();
 
           if (result.inRange && col < cols - 1) {
-            const nx = offsetX + (col + 1) * gap;
-            const nResult = proximity(mouse, { x: nx, y: baseY }, { radius: influenceRadius, easing: "quadratic" });
+            const nx = offsetX + (col + 1) * g;
+            const nResult = proximity(mouse, { x: nx, y: baseY }, { radius: ir, easing: "quadratic" });
             if (nResult.inRange) {
-              const nnx = nx - Math.cos(nResult.angle) * nResult.force * maxDisplacement;
-              const nny = baseY - Math.sin(nResult.angle) * nResult.force * maxDisplacement;
+              const nnx = nx - Math.cos(nResult.angle) * nResult.force * md;
+              const nny = baseY - Math.sin(nResult.angle) * nResult.force * md;
               ctx.beginPath();
               ctx.moveTo(drawX, drawY);
               ctx.lineTo(nnx, nny);
@@ -69,22 +81,11 @@ export default function InteractiveDotGrid() {
   }, [startLoop, position, size]);
 
   return (
-    <section className="py-24 px-6 bg-white">
-      <div className="max-w-5xl mx-auto">
-        <h2 className="text-sm font-mono text-indigo-500 mb-2 tracking-widest uppercase">05 / Interactive Grid</h2>
-        <p className="text-slate-500 mb-8 max-w-lg">
-          A grid of dots that reacts to cursor proximity. Each dot is displaced away from the cursor with quadratic easing, and connecting lines form between nearby affected dots.
-        </p>
-        <div className="rounded-2xl bg-slate-950 overflow-hidden shadow-xl">
-          <canvas
-            ref={canvasRef}
-            className="w-full cursor-crosshair"
-            style={{ height: 400 }}
-            onMouseMove={handlers.onMouseMove}
-            onMouseLeave={handlers.onMouseLeave}
-          />
-        </div>
-      </div>
-    </section>
+    <canvas
+      ref={canvasRef}
+      className={className ?? "absolute inset-0 w-full h-full cursor-crosshair"}
+      onMouseMove={handlers.onMouseMove}
+      onMouseLeave={handlers.onMouseLeave}
+    />
   );
 }

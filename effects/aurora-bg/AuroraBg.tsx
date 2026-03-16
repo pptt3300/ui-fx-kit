@@ -1,19 +1,36 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup } from "../../hooks";
+import type { RGB } from "../../presets";
 
-export default function AuroraBg() {
+interface AuroraBgProps {
+  speed?: number;    // multiplier on animation speed, default 1
+  colors?: RGB[];    // band colors, default [[99,102,241],[139,92,246],[34,211,238],[167,139,250]]
+  className?: string;
+}
+
+const DEFAULT_COLORS: RGB[] = [
+  [99, 102, 241],
+  [139, 92, 246],
+  [34, 211, 238],
+  [167, 139, 250],
+];
+
+export default function AuroraBg({ speed = 1, colors = DEFAULT_COLORS, className }: AuroraBgProps) {
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const tRef = useRef(0);
+  const propsRef = useRef({ speed, colors });
+  propsRef.current = { speed, colors };
 
-  const bands = [
-    { color: [99, 102, 241], alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
-    { color: [139, 92, 246], alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
-    { color: [34, 211, 238],  alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
-    { color: [167, 139, 250], alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
+  const BANDS_META = [
+    { alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
+    { alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
+    { alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
+    { alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
   ];
 
   useEffect(() => {
     return startLoop((ctx) => {
+      const { speed: s, colors: c } = propsRef.current;
       const canvas = ctx.canvas;
       const w = canvas.width / 2;
       const h = canvas.height / 2;
@@ -21,7 +38,9 @@ export default function AuroraBg() {
 
       const t = tRef.current;
 
-      for (const band of bands) {
+      for (let i = 0; i < BANDS_META.length; i++) {
+        const band = BANDS_META[i];
+        const color = c[i] ?? c[0];
         ctx.beginPath();
         const baseY = h * band.yOffset;
         ctx.moveTo(0, h);
@@ -38,22 +57,22 @@ export default function AuroraBg() {
         ctx.closePath();
 
         const grad = ctx.createLinearGradient(0, baseY - band.amplitude, 0, h);
-        grad.addColorStop(0, `rgba(${band.color[0]},${band.color[1]},${band.color[2]},${band.alpha})`);
-        grad.addColorStop(0.4, `rgba(${band.color[0]},${band.color[1]},${band.color[2]},${band.alpha * 0.5})`);
-        grad.addColorStop(1, `rgba(${band.color[0]},${band.color[1]},${band.color[2]},0)`);
+        grad.addColorStop(0, `rgba(${color[0]},${color[1]},${color[2]},${band.alpha})`);
+        grad.addColorStop(0.4, `rgba(${color[0]},${color[1]},${color[2]},${band.alpha * 0.5})`);
+        grad.addColorStop(1, `rgba(${color[0]},${color[1]},${color[2]},0)`);
 
         ctx.fillStyle = grad;
         ctx.fill();
       }
 
-      tRef.current += 0.016;
+      tRef.current += 0.016 * s;
     });
   }, [startLoop]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
+      className={className ?? "absolute inset-0 w-full h-full pointer-events-none"}
     />
   );
 }

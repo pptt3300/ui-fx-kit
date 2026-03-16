@@ -51,7 +51,7 @@ export default function DockMagnify({
   return (
     <div
       ref={containerRef}
-      className={`flex items-end gap-2 px-4 py-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 ${className}`}
+      className={`flex items-end gap-2 px-5 py-4 rounded-2xl bg-white/[0.07] backdrop-blur-xl border border-white/15 shadow-2xl ${className}`}
       {...handlers}
     >
       {items.map((item, i) => {

@@ -8,6 +8,13 @@ interface Star {
   radius: number;
 }
 
+export interface ConstellationBgProps {
+  count?: number;
+  linkDist?: number;
+  mouseRadius?: number;
+  className?: string;
+}
+
 function colorAtPosition(x: number, y: number, w: number, h: number): [number, number, number] {
   // Horizontal: indigo -> violet -> cyan
   // Vertical: slightly shift warmth
@@ -39,11 +46,42 @@ function colorAtPosition(x: number, y: number, w: number, h: number): [number, n
   return [Math.round(Math.max(0, Math.min(255, r))), Math.round(Math.max(0, Math.min(255, g))), Math.round(Math.max(0, Math.min(255, b)))];
 }
 
-export default function ConstellationBg() {
+export default function ConstellationBg({
+  count = 70,
+  linkDist = 140,
+  mouseRadius = 160,
+  className,
+}: ConstellationBgProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const animRef = useRef<number>(0);
   const starsRef = useRef<Star[]>([]);
+
+  // Refs for props so the animation loop always reads latest values
+  const countRef = useRef(count);
+  const linkDistRef = useRef(linkDist);
+  const mouseRadiusRef = useRef(mouseRadius);
+  countRef.current = count;
+  linkDistRef.current = linkDist;
+  mouseRadiusRef.current = mouseRadius;
+
+  // Re-seed stars when count changes
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const stars: Star[] = [];
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * rect.width,
+        y: Math.random() * rect.height,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        radius: 1 + Math.random() * 1.5,
+      });
+    }
+    starsRef.current = stars;
+  }, [count]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,9 +89,6 @@ export default function ConstellationBg() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const COUNT = 70;
-    const LINK_DIST = 140;
-    const MOUSE_RADIUS = 160;
     const MOUSE_PUSH = 0.8;
 
     const resize = () => {
@@ -64,7 +99,7 @@ export default function ConstellationBg() {
 
       if (starsRef.current.length === 0) {
         const stars: Star[] = [];
-        for (let i = 0; i < COUNT; i++) {
+        for (let i = 0; i < countRef.current; i++) {
           stars.push({
             x: Math.random() * rect.width,
             y: Math.random() * rect.height,
@@ -87,6 +122,8 @@ export default function ConstellationBg() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
       const stars = starsRef.current;
+      const LINK_DIST = linkDistRef.current;
+      const MOUSE_RADIUS = mouseRadiusRef.current;
 
       for (const s of stars) {
         const dx = s.x - mx;
@@ -179,6 +216,7 @@ export default function ConstellationBg() {
       cancelAnimationFrame(animRef.current);
       window.removeEventListener("resize", resize);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- props read via refs, loop must not restart
   }, []);
 
   const handleMouse = (e: React.MouseEvent) => {
@@ -190,7 +228,7 @@ export default function ConstellationBg() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-auto"
+      className={className ?? "absolute inset-0 w-full h-full pointer-events-auto"}
       onMouseMove={handleMouse}
       onMouseLeave={() => { mouseRef.current = { x: -9999, y: -9999 }; }}
     />

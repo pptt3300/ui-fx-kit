@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useMousePosition, useCanvasSetup, useParticles } from "../../hooks";
+import type { RGB } from "../../presets";
 
 interface Trail {
   x: number;
@@ -8,10 +9,16 @@ interface Trail {
   vx: number;
   vy: number;
   size: number;
-  color: [number, number, number];
+  color: RGB;
 }
 
-const COLORS: [number, number, number][] = [
+interface CursorGlowProps {
+  colors?: RGB[];
+  maxParticles?: number;
+  className?: string;
+}
+
+const DEFAULT_COLORS: RGB[] = [
   [99, 102, 241],
   [139, 92, 246],
   [34, 211, 238],
@@ -19,13 +26,16 @@ const COLORS: [number, number, number][] = [
   [129, 140, 248],
 ];
 
-export default function CursorGlow() {
+export default function CursorGlow({ colors = DEFAULT_COLORS, maxParticles = 500, className }: CursorGlowProps) {
   const { position } = useMousePosition({ scope: "window" });
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const prevRef = useRef({ x: -100, y: -100 });
+  const colorsRef = useRef(colors);
+  colorsRef.current = colors;
 
   const particles = useParticles<Trail>({
     spawn: () => {
+      const c = colorsRef.current;
       const pos = position.current;
       const px = prevRef.current.x;
       const py = prevRef.current.y;
@@ -39,7 +49,7 @@ export default function CursorGlow() {
         vx: -Math.cos(angle) * v + (Math.random() - 0.5) * 0.5,
         vy: -Math.sin(angle) * v + (Math.random() - 0.5) * 0.5 - 0.3,
         size: 1.5 + Math.random() * 2.5,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        color: c[Math.floor(Math.random() * c.length)],
       };
     },
     update: (t) => {
@@ -51,7 +61,7 @@ export default function CursorGlow() {
       t.size *= 0.985;
       return t.age <= 50 && t.size >= 0.2;
     },
-    maxCount: 500,
+    maxCount: maxParticles,
   });
 
   useEffect(() => {
@@ -83,11 +93,15 @@ export default function CursorGlow() {
       });
 
       if (mx > 0 && my > 0) {
+        const c = colorsRef.current;
+        const gc = c[1] ?? c[0]; // glow center color
+        const gm = c[0] ?? gc;   // glow mid color
+        const ge = c[2] ?? gc;   // glow edge color
         const glowRadius = 20 + Math.min(speed * 0.3, 15);
         const grad = ctx.createRadialGradient(mx, my, 0, mx, my, glowRadius);
-        grad.addColorStop(0, "rgba(139,92,246,0.15)");
-        grad.addColorStop(0.4, "rgba(99,102,241,0.06)");
-        grad.addColorStop(1, "rgba(34,211,238,0)");
+        grad.addColorStop(0, `rgba(${gc[0]},${gc[1]},${gc[2]},0.15)`);
+        grad.addColorStop(0.4, `rgba(${gm[0]},${gm[1]},${gm[2]},0.06)`);
+        grad.addColorStop(1, `rgba(${ge[0]},${ge[1]},${ge[2]},0)`);
         ctx.beginPath();
         ctx.arc(mx, my, glowRadius, 0, Math.PI * 2);
         ctx.fillStyle = grad;
@@ -104,7 +118,7 @@ export default function CursorGlow() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full pointer-events-none z-50"
+      className={`fixed inset-0 w-full h-full pointer-events-none z-50${className ? ` ${className}` : ""}`}
       style={{ mixBlendMode: "screen" }}
     />
   );
