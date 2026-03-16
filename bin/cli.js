@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readdir, readFile, copyFile, mkdir, stat } from "fs/promises";
+import { readdir, readFile, copyFile, mkdir, stat, writeFile } from "fs/promises";
 import { join, dirname, basename, resolve, relative } from "path";
 import { fileURLToPath } from "url";
 import { existsSync } from "fs";
@@ -47,23 +47,24 @@ async function scanDeps(filePath) {
   const cssFiles = [];
   const presetFiles = [];
 
-  // Match: import { useX, useY } from "../../hooks" or "./hooks"
+  // Match runtime imports from hooks (skip `import type`)
   const hookImports = code.matchAll(/import\s+\{([^}]+)\}\s+from\s+["'][^"']*hooks["']/g);
   for (const m of hookImports) {
+    // Skip if this is an `import type` statement
+    if (/import\s+type\s+\{/.test(m[0])) continue;
     const names = m[1].split(",").map(s => s.replace(/\s+as\s+\w+/, "").trim()).filter(Boolean);
     for (const name of names) {
       if (name.startsWith("use") || name === "proximity") hooks.push(name);
     }
   }
 
-  // Match: import type { X } from "../../hooks" — skip these
   // Match: import "../../css/foo.css"
   const cssImports = code.matchAll(/import\s+["']([^"']*css\/([^"']+))["']/g);
   for (const m of cssImports) {
     cssFiles.push(m[2]);
   }
 
-  // Match: import { X } from "../../presets/colors" or "../../presets"
+  // Match runtime imports from presets (skip `import type`)
   const presetImports = code.matchAll(/import\s+(?:type\s+)?(?:\{[^}]+\}|\w+)\s+from\s+["'][^"']*presets(?:\/(\w+))?["']/g);
   for (const m of presetImports) {
     const file = m[1] || "index";
@@ -89,10 +90,6 @@ async function scanHookDeps(hookName) {
   }
 }
 
-async function ensureDir(dir) {
-  if (!existsSync(dir)) await mkdir(dir, { recursive: true });
-}
-
 async function copyWithLog(src, dest, label, { force = false, dryRun = false } = {}) {
   if (!force && existsSync(dest)) {
     console.log(`  ${DIM}~${RESET} ${label} ${DIM}(exists, skipped)${RESET}`);
@@ -102,9 +99,10 @@ async function copyWithLog(src, dest, label, { force = false, dryRun = false } =
     console.log(`  ${GREEN}+${RESET} ${label} ${DIM}(would copy)${RESET}`);
     return true;
   }
-  await ensureDir(dirname(dest));
+  const overwriting = force && existsSync(dest);
+  await mkdir(dirname(dest), { recursive: true });
   await copyFile(src, dest);
-  console.log(`  ${GREEN}+${RESET} ${label}`);
+  console.log(`  ${GREEN}+${RESET} ${label}${overwriting ? ` ${YELLOW}(overwritten)${RESET}` : ""}`);
   return true;
 }
 
@@ -174,9 +172,10 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
   }
 
   // 2. Determine target structure
-  // If target already ends with effects/, hooks/, css/, or presets/, use parent as root
-  const base = basename(target);
-  const root = ["effects", "hooks", "css", "presets"].includes(base) ? dirname(target) : target;
+  // Strip trailing slashes, then check if target ends with a known subdirectory
+  const normalized = target.replace(/\/+$/, "");
+  const base = basename(normalized);
+  const root = ["effects", "hooks", "css", "presets"].includes(base) ? dirname(normalized) : normalized;
   const effectsTarget = join(root, "effects", effectId);
   const hooksTarget = join(root, "hooks");
   const cssTarget = join(root, "css");
@@ -199,29 +198,38 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
         await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`, { dryRun });
       }
     }
-    // Merge hooks/index.ts — add new exports without removing existing ones
+    // Merge hooks/index.ts — append new exports without destroying existing content
     const indexPath = join(hooksTarget, "index.ts");
-    if (!dryRun) await ensureDir(hooksTarget);
-    const { writeFile } = await import("fs/promises");
 
-    let existingExports = new Set();
+    let existingContent = "";
+    let existingExportNames = new Set();
     if (existsSync(indexPath)) {
-      const existing = await readFile(indexPath, "utf-8");
-      const matches = existing.matchAll(/export\s+\{\s*(\w+)\s*\}/g);
-      for (const m of matches) existingExports.add(m[1]);
+      existingContent = await readFile(indexPath, "utf-8");
+      // Collect all exported names (both value and type exports)
+      const exportMatches = existingContent.matchAll(/export\s+(?:type\s+)?\{([^}]+)\}/g);
+      for (const m of exportMatches) {
+        const names = m[1].split(",").map(s => s.replace(/\s+as\s+\w+/, "").trim()).filter(Boolean);
+        names.forEach(n => existingExportNames.add(n));
+      }
     }
 
-    const newHooks = Array.from(allHooks).filter(h => !existingExports.has(h));
+    const newHooks = Array.from(allHooks).filter(h => !existingExportNames.has(h));
     if (newHooks.length > 0 || !existsSync(indexPath)) {
       if (dryRun) {
         console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(would ${newHooks.length > 0 ? "merge " + newHooks.length + " new exports" : "create"})${RESET}`);
       } else {
-        const allExports = new Set([...existingExports, ...allHooks]);
-        const indexLines = Array.from(allExports).map(h => {
+        await mkdir(hooksTarget, { recursive: true });
+        // Append new export lines to existing content instead of overwriting
+        const newLines = newHooks.map(h => {
           const file = h === "proximity" ? "useProximity" : h;
           return `export { ${h} } from "./${file}";`;
         });
-        await writeFile(indexPath, indexLines.join("\n") + "\n");
+        if (existingContent) {
+          const appended = existingContent.trimEnd() + "\n" + newLines.join("\n") + "\n";
+          await writeFile(indexPath, appended);
+        } else {
+          await writeFile(indexPath, newLines.join("\n") + "\n");
+        }
         console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(${newHooks.length > 0 ? "merged " + newHooks.length + " new exports" : "created"})${RESET}`);
       }
     } else {
@@ -252,16 +260,16 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
     }
   }
 
-  // 7. Check for npm dependencies
-  const npmDeps = [];
+  // 7. Check for npm dependencies (from meta.json + source scanning as fallback)
+  const npmDeps = new Set(meta.dependencies || []);
   for (const file of effectFiles) {
     const code = await readFile(join(effectDir, file), "utf-8");
-    if (code.includes("framer-motion")) npmDeps.push("framer-motion");
-    if (code.includes("@react-three/fiber")) npmDeps.push("@react-three/fiber");
-    if (code.includes("@react-three/drei")) npmDeps.push("@react-three/drei");
-    if (code.includes("from \"three\"")) npmDeps.push("three");
+    if (code.includes("framer-motion")) npmDeps.add("framer-motion");
+    if (code.includes("@react-three/fiber")) npmDeps.add("@react-three/fiber");
+    if (code.includes("@react-three/drei")) npmDeps.add("@react-three/drei");
+    if (code.includes("from \"three\"") || code.includes("from 'three'")) npmDeps.add("three");
   }
-  const uniqueDeps = [...new Set(npmDeps)];
+  const uniqueDeps = [...npmDeps];
 
   // 8. Fix import paths in copied effect files
   if (dryRun) {
@@ -279,8 +287,7 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
       code = code.replace(/from\s+["']\.\.\/\.\.\/hooks(\/[^"']*)?["']/g, `from "${relHooks}$1"`);
       code = code.replace(/from\s+["']\.\.\/\.\.\/presets\/(\w+)["']/g, `from "${relPresets}/$1"`);
       code = code.replace(/from\s+["']\.\.\/\.\.\/presets["']/g, `from "${relPresets}"`);
-      code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, `import "${relCss}/`);
-      const { writeFile } = await import("fs/promises");
+      code = code.replace(/import\s+["']\.\.\/\.\.\/css\/([^"']+)["']/g, `import "${relCss}/$1"`);
       await writeFile(destPath, code);
     }
     console.log(`  ${GREEN}✓${RESET} Import paths adjusted`);
@@ -302,8 +309,8 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
 
   console.log(`${BOLD}Usage:${RESET}`);
   const componentName = meta.name.replace(/\s+/g, "");
-  const importPath = resolve(effectsTarget, effectFiles[0]?.replace(".tsx", "") || "");
-  console.log(`  import ${componentName} from "./effects/${effectId}/${effectFiles[0]?.replace(".tsx", "")}";`);
+  const ext = effectFiles[0]?.match(/\.\w+$/)?.[0] || ".tsx";
+  console.log(`  import ${componentName} from "./effects/${effectId}/${effectFiles[0]?.replace(ext, "")}";`);
   console.log(`  <${componentName} />\n`);
 }
 
@@ -320,6 +327,8 @@ async function cmdInfo(effectId) {
   console.log(`${DIM}${meta.description}${RESET}\n`);
   console.log(`${BOLD}Tags:${RESET}     ${meta.tags?.join(", ") || "none"}`);
   console.log(`${BOLD}Hooks:${RESET}    ${meta.hooks?.join(", ") || "none"}`);
+  console.log(`${BOLD}CSS:${RESET}      ${meta.css?.join(", ") || "none"}`);
+  console.log(`${BOLD}Presets:${RESET}   ${meta.presets?.join(", ") || "none"}`);
   console.log(`${BOLD}Files:${RESET}    ${meta.files?.join(", ") || "none"}`);
 
   if (meta.dependencies?.length > 0) {
@@ -376,6 +385,7 @@ ${BOLD}Examples:${RESET}
   npx ui-fx-kit list background
   npx ui-fx-kit add holographic-card
   npx ui-fx-kit add gradient-mesh --target ./src
+  npx ui-fx-kit add scramble-text --target ./src --dry-run
   npx ui-fx-kit info silk-waves
 `);
 }
@@ -393,7 +403,12 @@ if (wantsHelp || command === "help" || !command) {
     console.log(`  npx ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src\n`);
     process.exit(1);
   }
-  const targetDir = flags.target || ".";
+  if (!flags.target) {
+    console.error(`\n${RED}Error:${RESET} --target is required.`);
+    console.log(`Use: npx ui-fx-kit add ${effectNames[0]} --target ./src\n`);
+    process.exit(1);
+  }
+  const targetDir = flags.target;
   if (targetDir.startsWith("-")) {
     console.error(`\n${RED}Error:${RESET} Invalid target directory "${targetDir}".`);
     console.log(`Use: npx ui-fx-kit add ${effectNames[0]} --target ./src\n`);

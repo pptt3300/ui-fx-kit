@@ -80,7 +80,7 @@ function rewriteImports(code, baseDir) {
   const base = baseDir.replace(/\/+$/, "");
   code = code.replace(/from\s+["']\.\.\/\.\.\/hooks(\/[^"']*)?["']/g, `from "${base}/hooks$1"`);
   code = code.replace(/from\s+["']\.\.\/\.\.\/presets(\/[^"']*)?["']/g, `from "${base}/presets$1"`);
-  code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, `import "${base}/css/`);
+  code = code.replace(/import\s+["']\.\.\/\.\.\/css\/([^"']+)["']/g, `import "${base}/css/$1"`);
   return code;
 }
 
