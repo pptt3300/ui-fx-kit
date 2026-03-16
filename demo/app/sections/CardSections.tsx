@@ -22,8 +22,10 @@ export function SpotlightCardsSection() {
       description="Mouse-tracking spotlight that illuminates cards from within. Dark glassmorphism."
       category="Card"
     >
-      <div className="flex items-center justify-center w-full h-full bg-zinc-950 min-h-screen">
-        <SpotlightCards />
+      <div className="flex items-center justify-center w-full h-full bg-slate-950 p-8">
+        <div className="max-w-5xl w-full">
+          <SpotlightCards embedded />
+        </div>
       </div>
     </EffectSection>
   );
@@ -37,8 +39,10 @@ export function PhysicsCardsSection() {
       description="Draggable cards with spring physics, tilt on hover, and collision stacking."
       category="Card"
     >
-      <div className="flex items-center justify-center w-full h-full bg-zinc-950 min-h-screen">
-        <PhysicsCards />
+      <div className="flex items-center justify-center w-full h-full bg-zinc-950 p-8">
+        <div className="max-w-5xl w-full">
+          <PhysicsCards embedded />
+        </div>
       </div>
     </EffectSection>
   );

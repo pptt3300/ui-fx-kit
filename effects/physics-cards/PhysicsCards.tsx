@@ -73,13 +73,23 @@ function DraggableCard({ color, title, desc, icon }: {
   );
 }
 
-export default function PhysicsCards() {
+export default function PhysicsCards({ embedded = false }: { embedded?: boolean } = {}) {
   const cards = [
     { color: "bg-gradient-to-br from-violet-600 to-indigo-700", title: "Spring Physics", desc: "Drag me around! I'll spring back with natural momentum.", icon: "🌀" },
     { color: "bg-gradient-to-br from-rose-500 to-pink-600", title: "3D Tilt", desc: "Move your cursor over me to see the perspective shift.", icon: "💎" },
     { color: "bg-gradient-to-br from-amber-500 to-orange-600", title: "Elastic Drag", desc: "Feel the resistance as you pull me from my origin.", icon: "🔥" },
     { color: "bg-gradient-to-br from-emerald-500 to-teal-600", title: "Smooth Motion", desc: "60fps animations powered by hardware acceleration.", icon: "⚡" },
   ];
+
+  const grid = (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {cards.map((card) => (
+        <DraggableCard key={card.title} {...card} />
+      ))}
+    </div>
+  );
+
+  if (embedded) return grid;
 
   return (
     <section className="py-24 px-6 bg-white">
@@ -88,11 +98,7 @@ export default function PhysicsCards() {
         <p className="text-slate-500 mb-12 max-w-lg">
           Cards with spring-based drag physics and 3D perspective tilt. Drag them around, hover to see the light reflection shift in real-time.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {cards.map((card) => (
-            <DraggableCard key={card.title} {...card} />
-          ))}
-        </div>
+        {grid}
       </div>
     </section>
   );
