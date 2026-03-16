@@ -1,20 +1,19 @@
 {
   "name": "Scroll Text Reveal",
   "description": "Text that progressively reveals as you scroll. Word-by-word fade+deblur and character-by-character color transition driven by scroll position.",
-  "tags": [
-    "scroll",
-    "text",
-    "reveal",
-    "animation"
-  ],
+  "category": ["text", "scroll", "animation"],
   "framework": "react",
-  "dependencies": [
-    "framer-motion"
-  ],
-  "files": [
-    "TextReveal.tsx"
-  ],
+  "runtime": ["css-animations", "intersection-observer"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["text is always in DOM — accessible to screen readers", "needs reduced-motion fallback"],
+  "dependencies": ["framer-motion"],
+  "files": ["TextReveal.tsx"],
+  "imports": ["react", "framer-motion"],
   "hooks": [],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {},
+  "use_cases": ["long-form storytelling page", "about section scroll reveal", "manifesto or mission statement", "case study narrative"],
+  "conflicts": ["no tunable props — text and layout are hardcoded", "many motion.span nodes for character-level reveal"]
 }

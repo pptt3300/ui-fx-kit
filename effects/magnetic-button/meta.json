@@ -1,20 +1,19 @@
 {
   "name": "Magnetic Button",
   "description": "Buttons and icons that are magnetically attracted to the cursor position. Uses spring-damped motion values for natural tracking behavior.",
-  "tags": [
-    "button",
-    "interactive",
-    "mouse",
-    "spring"
-  ],
+  "category": ["interactive", "button", "animation"],
   "framework": "react",
-  "dependencies": [
-    "framer-motion"
-  ],
-  "files": [
-    "MagneticButton.tsx"
-  ],
+  "runtime": ["pointer-events", "css-animations"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": false,
+  "accessibility_notes": ["magnetic displacement may confuse screen-reader spatial models", "needs reduced-motion fallback"],
+  "dependencies": ["framer-motion"],
+  "files": ["MagneticButton.tsx"],
+  "imports": ["framer-motion", "../../hooks"],
   "hooks": ["useMagnetic"],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {},
+  "use_cases": ["CTA button with playful hover effect", "icon grid with magnetic hover attraction", "navigation links with subtle pull", "interactive landing page buttons"],
+  "conflicts": ["relies on mouse hover — no touch equivalent", "hardcoded demo layout — use useMagnetic hook directly for custom integration"]
 }

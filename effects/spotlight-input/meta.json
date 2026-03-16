@@ -1,20 +1,25 @@
 {
   "name": "Spotlight Input",
   "description": "Input field with cursor-tracking border glow. Hover shows radial gradient border, focus shows rotating conic gradient rainbow border with outer glow shadow. Includes typing sparkle particles and submit shockwave explosion.",
-  "tags": [
-    "form",
-    "input",
-    "interactive",
-    "mouse",
-    "canvas",
-    "sparkles"
-  ],
+  "category": ["form", "interactive", "particles"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events", "css-animations"],
+  "complexity": "high",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["input must retain keyboard accessibility", "sparkle/shockwave is decorative — canvas is pointer-events: none", "needs focus-visible styles"],
   "dependencies": [],
-  "files": [
-    "SpotlightInput.tsx"
-  ],
+  "files": ["SpotlightInput.tsx"],
+  "imports": ["react", "../../hooks"],
   "hooks": ["useCanvasSetup", "useParticles", "useSpotlight"],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "onSubmit": { "type": "function", "description": "Callback with input value on form submit" },
+    "onFocusChange": { "type": "function", "description": "Optional callback when focus state changes" },
+    "placeholder": { "type": "string", "default": "Type here...", "description": "Input placeholder text" },
+    "buttonLabel": { "type": "string", "default": "Submit", "description": "Submit button label" },
+    "loading": { "type": "boolean", "default": false, "description": "Disable input and button when loading" }
+  },
+  "use_cases": ["hero CTA input", "search bar with flair", "newsletter signup", "URL shortener input"],
+  "conflicts": ["canvas overlay may intercept clicks if z-index misconfigured", "conic-gradient border not supported in older browsers", "sparkle position assumes monospace-like character width"]
 }

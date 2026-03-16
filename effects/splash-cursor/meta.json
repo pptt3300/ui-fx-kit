@@ -1,24 +1,29 @@
 {
   "name": "Splash Cursor",
   "description": "Canvas particle burst effect that splashes colorful particles from the cursor as it moves.",
-  "tags": [
-    "cursor",
-    "canvas",
-    "particles",
-    "global"
-  ],
+  "category": ["cursor", "particles", "interactive"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["purely decorative overlay — pointer-events: none", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition",
-    "useParticles"
-  ],
-  "files": [
-    "SplashCursor.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["SplashCursor.tsx"],
+  "imports": ["react", "../../hooks", "../../presets/colors"],
+  "hooks": ["useCanvasSetup", "useMousePosition", "useParticles"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "particleCount": { "type": "number", "default": 15, "range": [1, 50], "description": "Max particles emitted per movement burst" },
+    "spread": { "type": "number", "default": 360, "range": [30, 360], "description": "Emission arc in degrees" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas overlay" }
+  },
+  "use_cases": ["portfolio site cursor effect", "interactive landing page", "game-like UI accent", "creative agency site"],
+  "conflicts": ["fixed fullscreen overlay — z-index may conflict with modals", "high particle count causes frame drops on low-end devices", "no touch support"]
 }

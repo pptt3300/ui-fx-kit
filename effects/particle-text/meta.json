@@ -1,19 +1,22 @@
 {
   "name": "Particle Text",
   "description": "Text composed of thousands of particles that scatter on mouse hover and spring back with damped oscillation. Supports gradient colors and ghost trails.",
-  "tags": [
-    "canvas",
-    "physics",
-    "text",
-    "interactive",
-    "mouse"
-  ],
+  "category": ["text", "interactive", "particles"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "high",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["text is rendered as canvas pixels — provide an accessible text alternative", "needs reduced-motion fallback"],
   "dependencies": [],
-  "files": [
-    "ParticleText.tsx"
-  ],
+  "files": ["ParticleText.tsx"],
+  "imports": [],
   "hooks": [],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "text": { "type": "string", "description": "The text string to render as particles" },
+    "collapsed": { "type": "boolean", "description": "When true, particles cluster tighter with stiffer springs and no mouse interaction" }
+  },
+  "use_cases": ["hero title with interactive particle effect", "creative portfolio name display", "experimental typography showcase"],
+  "conflicts": ["canvas text rendering depends on font loading — may flash on first paint", "mouse interaction disabled when collapsed", "high particle count on long text strings"]
 }

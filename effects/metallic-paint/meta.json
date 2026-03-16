@@ -1,21 +1,29 @@
 {
   "name": "Metallic Paint",
   "description": "Anisotropic BRDF metallic surface shader with mouse-driven viewing angle and brush-direction highlights.",
-  "tags": [
-    "shader",
-    "webgl",
-    "metallic",
-    "material",
-    "anisotropic"
-  ],
+  "category": ["background", "shader", "interactive"],
   "framework": "react",
+  "runtime": ["webgl", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "high",
+  "mobile_safe": false,
+  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
   "dependencies": [],
+  "files": ["MetallicPaint.tsx"],
+  "imports": ["../../presets/colors"],
   "hooks": [],
-  "files": [
-    "MetallicPaint.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "color": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Base metal color as RGB tuple"
+    },
+    "brushAngle": { "type": "number", "default": 0, "range": [0, 6.28], "description": "Brush stroke angle in radians" },
+    "specular": { "type": "number", "default": 0.8, "range": [0, 2], "description": "Specular highlight intensity" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["premium product hero background", "luxury brand landing page", "metallic texture backdrop", "interactive material demo"],
+  "conflicts": ["WebGL required — no fallback for unsupported browsers", "heavy GPU usage on mobile"]
 }

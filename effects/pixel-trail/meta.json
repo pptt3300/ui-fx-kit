@@ -1,25 +1,30 @@
 {
   "name": "Pixel Trail",
   "description": "Retro pixel cursor trail that snaps to a grid and fades out with configurable colors.",
-  "tags": [
-    "cursor",
-    "canvas",
-    "pixel",
-    "retro",
-    "trail",
-    "global"
-  ],
+  "category": ["cursor", "interactive", "retro"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": false,
+  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition"
-  ],
-  "files": [
-    "PixelTrail.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["PixelTrail.tsx"],
+  "imports": ["../../hooks", "../../presets/colors"],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "pixelSize": { "type": "number", "default": 8, "range": [2, 32], "description": "Size of each trail pixel in px" },
+    "trailLength": { "type": "number", "default": 50, "range": [5, 200], "description": "Max number of trail pixels before oldest fade" },
+    "fadeSpeed": { "type": "number", "default": 0.05, "range": [0.01, 0.5], "description": "How fast trail pixels fade out" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "default": "", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["retro game-themed cursor effect", "creative portfolio mouse decoration", "8-bit aesthetic enhancement"],
+  "conflicts": ["fixed z-50 positioning — may cover modals or dropdowns", "mouse-only — invisible on touch devices"]
 }

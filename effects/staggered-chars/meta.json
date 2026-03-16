@@ -1,23 +1,26 @@
 {
   "name": "Staggered Characters",
   "description": "Each character enters with a staggered delay. Supports wave, bounce, rotate, fade, and scale variants with linear, center-out, edges-in, or random patterns.",
-  "tags": [
-    "text",
-    "stagger",
-    "animation",
-    "entrance"
-  ],
+  "category": ["text", "animation", "entrance"],
   "framework": "react",
+  "runtime": ["css-animations", "intersection-observer"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["full text should be in aria-label for screen readers", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useInView",
-    "useStagger"
-  ],
-  "files": [
-    "StaggeredChars.tsx"
-  ],
-  "presets": [],
-  "css": [
-    "stagger-presets.css"
-  ]
+  "files": ["StaggeredChars.tsx"],
+  "imports": ["react", "../../css/stagger-presets.css", "../../hooks"],
+  "hooks": ["useStagger", "useInView"],
+  "css": ["stagger-presets.css"],
+  "props_schema": {
+    "text": { "type": "string", "description": "Text to animate character by character" },
+    "variant": { "type": "enum", "options": ["wave", "bounce", "rotate", "fade", "scale"], "default": "wave", "description": "Animation style for each character" },
+    "pattern": { "type": "enum", "options": ["linear", "center-out", "edges-in", "random"], "default": "linear", "description": "Order in which characters animate" },
+    "duration": { "type": "number", "default": 500, "range": [100, 2000], "description": "Animation duration per character in ms" },
+    "trigger": { "type": "enum", "options": ["mount", "hover", "inView"], "default": "mount", "description": "When to start the animation" },
+    "className": { "type": "string", "description": "CSS class for the container span" }
+  },
+  "use_cases": ["hero headline animation", "section title entrance", "hover-activated text effect", "scroll-triggered text reveal"],
+  "conflicts": ["long text creates many DOM nodes — each char is a span", "hover trigger requires mouse — no touch equivalent"]
 }

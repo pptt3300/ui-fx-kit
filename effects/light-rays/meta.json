@@ -1,24 +1,25 @@
 {
   "name": "Light Rays",
   "description": "Volumetric light ray effect via WebGL with radial angular modulation and mouse-reactive light source positioning.",
-  "tags": [
-    "background",
-    "webgl",
-    "rays",
-    "light",
-    "mouse-reactive",
-    "ambient"
-  ],
+  "category": ["background", "shader", "ambient"],
   "framework": "react",
+  "runtime": ["webgl", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "high",
+  "mobile_safe": false,
+  "accessibility_notes": ["bright rays may affect photosensitive users", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useWebGL"
-  ],
-  "files": [
-    "LightRays.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["LightRays.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useWebGL"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "rayCount": { "type": "number", "default": 12, "range": [1, 24], "description": "Number of light rays radiating from source" },
+    "color": { "type": "string", "default": "[255,240,200]", "description": "RGB color array for the light rays" },
+    "mouseReactive": { "type": "boolean", "default": true, "description": "Whether the light source follows mouse position" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["dramatic hero section lighting", "worship/event page atmosphere", "cinematic product reveal background", "ambient dashboard accent"],
+  "conflicts": ["WebGL required — no fallback for unsupported browsers", "GPU-intensive on large viewports", "mouse reactivity has no touch equivalent"]
 }

@@ -1,18 +1,23 @@
 {
   "name": "Page Transition",
   "description": "CSS-only page transition wrapper — morph (scale crossfade), fade, and slide variants.",
-  "tags": [
-    "transition",
-    "animation",
-    "navigation",
-    "pages"
-  ],
+  "category": ["transition", "navigation"],
   "framework": "react",
+  "runtime": ["css-animations"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["ensure exiting content is aria-hidden during transition", "needs reduced-motion fallback"],
   "dependencies": [],
+  "files": ["PageTransition.tsx"],
+  "imports": [],
   "hooks": [],
-  "files": [
-    "PageTransition.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "activeKey": { "type": "string", "description": "Unique key for the current page — changing it triggers the transition" },
+    "type": { "type": "enum", "options": ["morph", "fade", "slide"], "default": "morph", "description": "Transition animation style" },
+    "className": { "type": "string", "default": "", "description": "CSS class for the container div" }
+  },
+  "use_cases": ["SPA page transitions", "tab content switching", "wizard step animations", "portfolio project navigation"],
+  "conflicts": ["absolute positioning during exit can cause layout shift if container lacks fixed height"]
 }

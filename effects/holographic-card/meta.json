@@ -1,27 +1,23 @@
 {
   "name": "Holographic Card",
   "description": "Dark card with rainbow holographic refraction overlay, 3D tilt physics, and sparkle particle burst on mouse movement.",
-  "tags": [
-    "card",
-    "holographic",
-    "3d",
-    "tilt",
-    "particles",
-    "mouse"
-  ],
+  "category": ["card", "interactive", "3d"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events", "css-animations"],
+  "complexity": "high",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["sparkle particles are purely decorative", "needs reduced-motion fallback", "flashing sparkles may affect photosensitive users"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition",
-    "useParticles",
-    "useTilt3D"
-  ],
-  "files": [
-    "HolographicCard.tsx"
-  ],
-  "presets": [],
-  "css": [
-    "holographic.css"
-  ]
+  "files": ["HolographicCard.tsx"],
+  "imports": ["react", "../../hooks", "../../css/holographic.css"],
+  "hooks": ["useCanvasSetup", "useMousePosition", "useParticles", "useTilt3D"],
+  "css": ["holographic.css"],
+  "props_schema": {
+    "sparkles": { "type": "boolean", "default": true, "description": "Enable sparkle particles on mouse movement" },
+    "tiltMax": { "type": "number", "default": 15, "range": [0, 30], "description": "Maximum 3D tilt rotation in degrees" },
+    "className": { "type": "string", "description": "CSS class appended to the card wrapper" }
+  },
+  "use_cases": ["premium product showcase card", "NFT or collectible display", "pricing card with wow factor", "portfolio project highlight"],
+  "conflicts": ["relies on mouse hover for tilt and sparkles — no touch fallback", "canvas sparkle layer adds GPU overhead"]
 }

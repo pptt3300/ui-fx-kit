@@ -1,23 +1,26 @@
 {
   "name": "Matrix Rain",
   "description": "Classic matrix rain effect with falling character columns. Supports katakana, latin, binary, or custom charsets with configurable speed, density, and color.",
-  "tags": [
-    "background",
-    "canvas",
-    "matrix",
-    "characters",
-    "ambient"
-  ],
+  "category": ["background", "canvas", "ambient"],
   "framework": "react",
+  "runtime": ["canvas"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["rapid character changes may affect photosensitive users", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup"
-  ],
-  "files": [
-    "MatrixRain.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["MatrixRain.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useCanvasSetup"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "charset": { "type": "enum", "options": ["katakana", "latin", "binary"], "description": "Character set for rain columns, or a custom string of characters" },
+    "speed": { "type": "number", "default": 1, "range": [0.2, 5], "description": "Fall speed multiplier" },
+    "density": { "type": "number", "default": 0.7, "range": [0.1, 1], "description": "Column density — higher means more active columns" },
+    "color": { "type": "string", "default": "[34,211,153]", "description": "RGB color array for trail characters" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["cyberpunk/hacker themed background", "loading screen or splash page", "developer portfolio decoration", "gaming site ambient backdrop"],
+  "conflicts": ["semi-transparent fade causes ghosting — canvas never fully clears", "many columns with high density may impact performance on large screens"]
 }

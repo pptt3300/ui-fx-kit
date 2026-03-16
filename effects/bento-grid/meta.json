@@ -1,25 +1,30 @@
 {
   "name": "Bento Grid",
   "description": "CSS Grid layout with staggered scale-in entrance animation on scroll-into-view and per-cell 3D tilt hover effect.",
-  "tags": [
-    "card",
-    "grid",
-    "bento",
-    "stagger",
-    "tilt",
-    "scroll",
-    "layout"
-  ],
+  "category": ["layout", "card", "scroll"],
   "framework": "react",
+  "runtime": ["intersection-observer", "css-animations", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["entrance animation should respect prefers-reduced-motion", "tilt effect is decorative — content remains accessible"],
   "dependencies": [],
+  "files": [
+    "BentoGrid.tsx"
+  ],
+  "imports": ["../../hooks"],
   "hooks": [
     "useInView",
     "useStagger",
     "useTilt3D"
   ],
-  "files": [
-    "BentoGrid.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "items": { "type": "array", "description": "Array of { content: ReactNode, colSpan?: number, rowSpan?: number }" },
+    "columns": { "type": "number", "default": 4, "range": [1, 8], "description": "Number of grid columns" },
+    "gap": { "type": "number", "default": 16, "range": [4, 48], "description": "Gap between grid cells in pixels" },
+    "className": { "type": "string", "description": "CSS class for the grid container" }
+  },
+  "use_cases": ["feature showcase grid", "dashboard widget layout", "portfolio project cards", "pricing comparison"],
+  "conflicts": ["tilt effect uses will-change:transform on each cell — many cells may cause compositing overhead"]
 }

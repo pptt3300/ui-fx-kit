@@ -3,38 +3,117 @@
     "id": "glass-card",
     "name": "Frosted Glass Card",
     "description": "Frosted glass card with backdrop blur and saturation. Includes border and shadow styling.",
-    "tags": ["glass", "card", "blur", "backdrop"]
+    "tags": ["glass", "card", "blur", "backdrop"],
+    "usage": "<div className=\"fx-glass\">",
+    "applies_to": "card",
+    "quick_win": true
   },
   {
     "id": "cursor-blink",
     "name": "Cursor Blink",
     "description": "Blinking cursor animation keyframes and utility class. Pairs with useTypewriter.",
-    "tags": ["cursor", "animation", "typewriter"]
+    "tags": ["cursor", "animation", "typewriter"],
+    "usage": "<span className=\"fx-cursor-blink\">|</span>",
+    "applies_to": "text",
+    "quick_win": true
   },
   {
     "id": "glow-shadow",
     "name": "Glow Shadow",
     "description": "Colored glow shadows with hover animation. Indigo/violet color scheme with hover intensity boost.",
-    "tags": ["glow", "shadow", "hover", "animation"]
+    "tags": ["glow", "shadow", "hover", "animation"],
+    "usage": "<div className=\"fx-glow\">",
+    "applies_to": "card",
+    "quick_win": true
   },
   {
     "id": "noise-overlay",
     "name": "Noise Overlay",
     "description": "Film grain noise overlay using SVG turbulence filter. Add class to any container for texture.",
-    "tags": ["noise", "texture", "overlay", "grain"]
+    "tags": ["noise", "texture", "overlay", "grain"],
+    "usage": "<div className=\"fx-noise\">",
+    "applies_to": "container",
+    "quick_win": true
   },
   {
     "id": "text-gradient",
     "name": "Text Gradient",
     "description": "Animated gradient text — indigo to violet to cyan. Uses background-clip for text coloring with animated background position.",
-    "tags": ["text", "gradient", "animation", "color"]
+    "tags": ["text", "gradient", "animation", "color"],
+    "usage": "<h1 className=\"fx-text-gradient\">",
+    "applies_to": "text",
+    "quick_win": true
   },
-  {"id":"glitch-effect","name":"Glitch Effect","description":"RGB channel split + clip-path slicing for cyberpunk glitch text effect.","tags":["glitch","text","animation","cyberpunk"]},
-  {"id":"holographic","name":"Holographic Overlay","description":"Rainbow refraction gradient + noise sparkle overlay for trading card holographic effect.","tags":["holographic","card","rainbow","overlay"]},
-  {"id":"shimmer","name":"Shimmer Loading","description":"Animated gradient sweep for skeleton loading placeholders. Dark and light variants.","tags":["shimmer","loading","skeleton","animation"]},
-  {"id":"neon-glow","name":"Neon Glow & Scan Line","description":"Neon text/box glow with pulse animation and optional CRT scan line overlay.","tags":["neon","glow","scanline","cyberpunk"]},
-  {"id":"split-flap","name":"Split-Flap Character","description":"3D flip keyframes and structure for split-flap airport board character display.","tags":["split-flap","3d","text","animation"]},
-  {"id":"stagger-presets","name":"Stagger Entrance Presets","description":"Pre-built staggered entrance animations: slide-up, scale-in, blur-in, flip-in.","tags":["stagger","entrance","animation","presets"]},
-  {"id":"iridescent","name":"Iridescent Gradient","description":"Thin-film interference rainbow gradient with hue-rotate animation. Text and surface variants.","tags":["iridescent","rainbow","gradient","animation"]},
-  {"id":"sticker-peel","name":"Sticker Peel","description":"Corner peel effect with paper fold shadow on hover. Reveals content underneath.","tags":["sticker","peel","hover","3d"]}
+  {
+    "id": "glitch-effect",
+    "name": "Glitch Effect",
+    "description": "RGB channel split + clip-path slicing for cyberpunk glitch text effect.",
+    "tags": ["glitch", "text", "animation", "cyberpunk"],
+    "usage": "<span className=\"fx-glitch\" data-text=\"Glitch\">Glitch</span>",
+    "applies_to": "text",
+    "quick_win": true
+  },
+  {
+    "id": "holographic",
+    "name": "Holographic Overlay",
+    "description": "Rainbow refraction gradient + noise sparkle overlay for trading card holographic effect.",
+    "tags": ["holographic", "card", "rainbow", "overlay"],
+    "usage": "<div className=\"fx-holo\">",
+    "applies_to": "card",
+    "quick_win": true
+  },
+  {
+    "id": "shimmer",
+    "name": "Shimmer Loading",
+    "description": "Animated gradient sweep for skeleton loading placeholders. Dark and light variants.",
+    "tags": ["shimmer", "loading", "skeleton", "animation"],
+    "usage": "<div className=\"fx-shimmer fx-shimmer-dark fx-shimmer-line\" />",
+    "applies_to": "container",
+    "quick_win": true
+  },
+  {
+    "id": "neon-glow",
+    "name": "Neon Glow & Scan Line",
+    "description": "Neon text/box glow with pulse animation and optional CRT scan line overlay.",
+    "tags": ["neon", "glow", "scanline", "cyberpunk"],
+    "usage": "<span className=\"fx-neon\">",
+    "applies_to": "text",
+    "quick_win": true
+  },
+  {
+    "id": "split-flap",
+    "name": "Split-Flap Character",
+    "description": "3D flip keyframes and structure for split-flap airport board character display.",
+    "tags": ["split-flap", "3d", "text", "animation"],
+    "usage": "<span className=\"fx-flap-char\"><span className=\"fx-flap-char-inner\">A</span></span>",
+    "applies_to": "text",
+    "quick_win": true
+  },
+  {
+    "id": "stagger-presets",
+    "name": "Stagger Entrance Presets",
+    "description": "Pre-built staggered entrance animations: slide-up, scale-in, blur-in, flip-in.",
+    "tags": ["stagger", "entrance", "animation", "presets"],
+    "usage": "<div className=\"fx-stagger-item fx-stagger-slide-up\">",
+    "applies_to": "container",
+    "quick_win": true
+  },
+  {
+    "id": "iridescent",
+    "name": "Iridescent Gradient",
+    "description": "Thin-film interference rainbow gradient with hue-rotate animation. Text and surface variants.",
+    "tags": ["iridescent", "rainbow", "gradient", "animation"],
+    "usage": "<div className=\"fx-iridescent\">",
+    "applies_to": "card",
+    "quick_win": true
+  },
+  {
+    "id": "sticker-peel",
+    "name": "Sticker Peel",
+    "description": "Corner peel effect with paper fold shadow on hover. Reveals content underneath.",
+    "tags": ["sticker", "peel", "hover", "3d"],
+    "usage": "<div className=\"fx-sticker\">",
+    "applies_to": "card",
+    "quick_win": true
+  }
 ]

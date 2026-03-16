@@ -1,20 +1,24 @@
 {
   "name": "Horizontal Scroll",
   "description": "Vertical scroll drives horizontal card gallery — sticky container translates cards as user scrolls.",
-  "tags": [
-    "scroll",
-    "horizontal",
-    "gallery",
-    "cards"
-  ],
+  "category": ["scroll", "layout", "gallery"],
   "framework": "react",
+  "runtime": ["css-animations"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["scroll hijacking may confuse keyboard/screen-reader users", "ensure cards are focusable for keyboard navigation"],
   "dependencies": [],
-  "hooks": [
-    "useScrollProgress"
-  ],
-  "files": [
-    "HorizontalScroll.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "files": ["HorizontalScroll.tsx"],
+  "imports": ["react", "../../hooks"],
+  "hooks": ["useScrollProgress"],
+  "css": [],
+  "props_schema": {
+    "items": { "type": "string", "description": "Array of ReactNode elements to display as cards" },
+    "cardWidth": { "type": "number", "default": 300, "range": [150, 600], "description": "Width of each card in pixels" },
+    "gap": { "type": "number", "default": 24, "range": [8, 64], "description": "Gap between cards in pixels" },
+    "className": { "type": "string", "description": "CSS class for the outer scroll container" }
+  },
+  "use_cases": ["portfolio project showcase", "testimonial carousel driven by scroll", "product feature gallery", "timeline or roadmap section"],
+  "conflicts": ["tall scroll container height may feel jarring on short content pages", "performance depends on number of items rendered"]
 }

@@ -1,26 +1,29 @@
 {
   "name": "Liquid Ether",
   "description": "Layered FBM noise fluid shader with mouse-driven vortex distortion and multi-color blending.",
-  "tags": [
-    "shader",
-    "webgl",
-    "fluid",
-    "noise",
-    "smoke",
-    "ethereal",
-    "background"
-  ],
+  "category": ["background", "shader", "interactive"],
   "framework": "react",
+  "runtime": ["webgl", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "high",
+  "mobile_safe": false,
+  "accessibility_notes": ["needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useMousePosition",
-    "useWebGL"
-  ],
-  "files": [
-    "LiquidEther.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["LiquidEther.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useMousePosition", "useWebGL"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "speed": { "type": "number", "default": 0.3, "range": [0.05, 2], "description": "Animation speed for fluid motion" },
+    "mouseStrength": { "type": "number", "default": 0.5, "range": [0, 2], "description": "Mouse vortex distortion strength" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["dark hero section background", "creative portfolio ambient backdrop", "music streaming app background", "ethereal mood-setting page layer"],
+  "conflicts": ["WebGL required — no fallback for unsupported browsers", "GPU-intensive on large viewports", "mouse vortex has no touch equivalent"]
 }

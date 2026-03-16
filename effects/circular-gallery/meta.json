@@ -1,22 +1,30 @@
 {
   "name": "Circular Gallery",
   "description": "3D carousel with items arranged on a circle — drag to spin with momentum, auto-rotates at rest.",
-  "tags": [
-    "interactive",
-    "3d",
-    "carousel",
-    "gallery",
-    "gesture"
-  ],
+  "category": ["gallery", "interactive", "3d"],
   "framework": "react",
+  "runtime": ["pointer-events", "css-animations"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["items behind the carousel are visually hidden but still in DOM", "consider aria-hidden on back-facing items"],
   "dependencies": [],
+  "files": [
+    "CircularGallery.tsx"
+  ],
+  "imports": ["../../hooks"],
   "hooks": [
     "useGesture",
     "useSpring"
   ],
-  "files": [
-    "CircularGallery.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "items": { "type": "array", "description": "Array of ReactNode elements to display on the carousel" },
+    "radius": { "type": "number", "default": 300, "range": [100, 600], "description": "Circle radius in pixels" },
+    "autoSpeed": { "type": "number", "default": 0.5, "range": [0, 3], "description": "Auto-rotation speed in radians per second" },
+    "draggable": { "type": "boolean", "default": true, "description": "Enable drag-to-spin interaction" },
+    "className": { "type": "string", "description": "CSS class for the container" }
+  },
+  "use_cases": ["product showcase carousel", "team member gallery", "image portfolio", "testimonial display"],
+  "conflicts": ["perspective-based 3D — clipping may occur if container overflow is hidden", "many items (>12) reduce visual clarity"]
 }

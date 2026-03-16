@@ -1,18 +1,29 @@
 {
   "name": "Aurora Background",
   "description": "Slow-breathing aurora wave bands drawn on canvas. Multiple sine waves with different frequencies create organic, gently drifting aurora borealis effect.",
-  "tags": [
-    "canvas",
-    "background",
-    "ambient",
-    "waves"
-  ],
+  "category": ["background", "ambient", "canvas"],
   "framework": "react",
+  "runtime": ["canvas"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["decorative only — use pointer-events-none", "needs reduced-motion fallback"],
   "dependencies": [],
   "files": [
     "AuroraBg.tsx"
   ],
+  "imports": ["../../hooks", "../../presets"],
   "hooks": ["useCanvasSetup"],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "speed": { "type": "number", "default": 1, "range": [0.1, 5], "description": "Animation speed multiplier" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["hero section background", "dashboard ambient decoration", "dark-mode landing page", "music player background"],
+  "conflicts": ["low contrast — ensure text on top has sufficient contrast ratio"]
 }

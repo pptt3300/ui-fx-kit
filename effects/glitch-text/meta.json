@@ -1,23 +1,25 @@
 {
   "name": "Glitch Text",
   "description": "RGB-split glitch effect on text using CSS pseudo-elements. Mouse position drives the RGB offset direction. Supports continuous or hover-activated modes.",
-  "tags": [
-    "text",
-    "glitch",
-    "rgb-split",
-    "animation",
-    "mouse"
-  ],
+  "category": ["text", "animation", "interactive"],
   "framework": "react",
+  "runtime": ["css-animations", "pointer-events"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["flashing colors may affect photosensitive users", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useMousePosition"
-  ],
-  "files": [
-    "GlitchText.tsx"
-  ],
-  "presets": [],
-  "css": [
-    "glitch-effect.css"
-  ]
+  "files": ["GlitchText.tsx"],
+  "imports": ["../../css/glitch-effect.css", "../../hooks"],
+  "hooks": ["useMousePosition"],
+  "css": ["glitch-effect.css"],
+  "props_schema": {
+    "text": { "type": "string", "description": "The text to display with glitch effect" },
+    "intensity": { "type": "number", "default": 0.5, "range": [0, 2], "description": "Glitch intensity multiplier" },
+    "mode": { "type": "enum", "options": ["continuous", "hover"], "description": "Whether glitch runs continuously or only on hover" },
+    "hoverMultiplier": { "type": "number", "default": 2, "range": [1, 5], "description": "Intensity multiplier applied on hover (hover mode only)" },
+    "className": { "type": "string", "description": "CSS class for the span element" }
+  },
+  "use_cases": ["hero heading with distortion feel", "cyberpunk-themed UI text", "error state or warning text emphasis"],
+  "conflicts": ["rapid RGB shifting may cause readability issues at high intensity"]
 }

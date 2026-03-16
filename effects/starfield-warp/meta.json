@@ -1,25 +1,30 @@
 {
   "name": "Starfield Warp",
   "description": "3D starfield warp effect with motion streak lines. Stars project from 3D space to 2D; mouse position controls warp speed.",
-  "tags": [
-    "background",
-    "canvas",
-    "3d",
-    "stars",
-    "interactive",
-    "ambient"
-  ],
+  "category": ["background", "interactive", "particles"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["purely decorative — hide from assistive tech", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition"
-  ],
-  "files": [
-    "StarfieldWarp.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["StarfieldWarp.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "count": { "type": "number", "default": 800, "range": [100, 2000], "description": "Number of stars in the field" },
+    "speed": { "type": "number", "default": 2, "range": [0.5, 10], "description": "Base warp speed multiplier" },
+    "mouseReactive": { "type": "boolean", "default": true, "description": "Mouse horizontal position controls warp speed" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["sci-fi themed landing page", "space-themed portfolio", "loading screen background", "immersive hero section"],
+  "conflicts": ["high star count (>1500) causes frame drops on low-end devices", "trail effect uses semi-transparent fill — no true clear"]
 }

@@ -1,25 +1,26 @@
 {
   "name": "Grid Distortion",
   "description": "Elastic grid of lines that repels away from the cursor using spring physics, with opacity modulated by displacement.",
-  "tags": [
-    "background",
-    "canvas",
-    "grid",
-    "mouse-reactive",
-    "spring",
-    "interactive"
-  ],
+  "category": ["background", "interactive", "canvas"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["needs reduced-motion fallback", "purely decorative, no semantic content"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition"
-  ],
-  "files": [
-    "GridDistortion.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["GridDistortion.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "gridSize": { "type": "number", "default": 20, "range": [8, 60], "description": "Spacing between grid lines in pixels" },
+    "radius": { "type": "number", "default": 150, "range": [50, 400], "description": "Cursor influence radius in pixels" },
+    "strength": { "type": "number", "default": 30, "range": [5, 100], "description": "Maximum displacement force" },
+    "color": { "type": "string", "default": "[255,255,255]", "description": "RGB color array for grid lines" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["interactive hero background", "cursor-reactive decoration behind content", "tech/engineering portfolio backdrop"],
+  "conflicts": ["small gridSize with large canvas creates many points — may lag on low-end devices", "relies on mouse hover, no touch equivalent"]
 }

@@ -1,23 +1,34 @@
 {
   "name": "Confetti Burst",
   "description": "Full-page canvas confetti explosion — trigger imperatively or on mount.",
-  "tags": [
-    "celebration",
-    "canvas",
-    "particles",
-    "confetti"
-  ],
+  "category": ["celebration", "particles", "canvas"],
   "framework": "react",
+  "runtime": ["canvas"],
+  "complexity": "low",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["decorative overlay — pointer-events-none", "needs reduced-motion fallback"],
   "dependencies": [],
+  "files": [
+    "ConfettiBurst.tsx"
+  ],
+  "imports": ["../../hooks", "../../presets/colors"],
   "hooks": [
     "useCanvasSetup",
     "useParticles"
   ],
-  "files": [
-    "ConfettiBurst.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "css": [],
+  "props_schema": {
+    "autoTrigger": { "type": "boolean", "default": false, "description": "Automatically trigger confetti burst on mount" },
+    "count": { "type": "number", "default": 100, "range": [20, 500], "description": "Number of confetti particles per burst" },
+    "spread": { "type": "number", "default": 90, "range": [30, 180], "description": "Spread angle in degrees from center upward" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas overlay" }
+  },
+  "use_cases": ["success state celebration", "checkout completion", "achievement unlock", "New Year countdown"],
+  "conflicts": ["z-index 9999 — may overlap all other overlays", "count > 300 may drop frames on low-end devices"]
 }

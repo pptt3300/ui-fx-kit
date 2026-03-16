@@ -1,25 +1,30 @@
 {
   "name": "MetaBalls",
   "description": "WebGL isosurface metaballs with physics simulation, smooth color blending, and mouse attract/repel interaction.",
-  "tags": [
-    "shader",
-    "webgl",
-    "metaballs",
-    "isosurface",
-    "physics",
-    "fluid"
-  ],
+  "category": ["background", "shader", "interactive"],
   "framework": "react",
+  "runtime": ["webgl", "pointer-events"],
+  "complexity": "high",
+  "performance_cost": "high",
+  "mobile_safe": false,
+  "accessibility_notes": ["needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useMousePosition",
-    "useWebGL"
-  ],
-  "files": [
-    "MetaBalls.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["MetaBalls.tsx"],
+  "imports": ["react", "../../hooks", "../../presets"],
+  "hooks": ["useMousePosition", "useWebGL"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "count": { "type": "number", "default": 6, "range": [2, 12], "description": "Number of metaballs (max 12)" },
+    "radiusRange": { "type": "string", "default": "[30,80]", "description": "Min/max radius range as [min, max] tuple in pixels" },
+    "mouseMode": { "type": "enum", "options": ["attract", "repel"], "description": "Whether balls are attracted to or repelled from cursor" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["organic hero section background", "creative agency landing page", "lava lamp style ambient decoration", "interactive art piece"],
+  "conflicts": ["WebGL required — no fallback for unsupported browsers", "direct WebGL uniform manipulation bypasses useWebGL abstraction", "GPU-intensive with many large balls"]
 }

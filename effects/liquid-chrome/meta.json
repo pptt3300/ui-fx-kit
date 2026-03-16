@@ -1,22 +1,23 @@
 {
   "name": "Liquid Chrome",
   "description": "Metallic chrome surface simulation via WebGL with FBM-based normal mapping, environment reflection, and mouse ripple distortion.",
-  "tags": [
-    "background",
-    "webgl",
-    "chrome",
-    "metallic",
-    "reflection",
-    "mouse-reactive"
-  ],
+  "category": ["background", "shader", "interactive"],
   "framework": "react",
+  "runtime": ["webgl", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "high",
+  "mobile_safe": false,
+  "accessibility_notes": ["highly reflective surface may be distracting", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useWebGL"
-  ],
-  "files": [
-    "LiquidChrome.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "files": ["LiquidChrome.tsx"],
+  "imports": ["react", "../../hooks"],
+  "hooks": ["useWebGL"],
+  "css": [],
+  "props_schema": {
+    "speed": { "type": "number", "default": 0.5, "range": [0.05, 2], "description": "Animation speed for chrome surface deformation" },
+    "mouseStrength": { "type": "number", "default": 0.3, "range": [0, 1], "description": "Mouse ripple distortion intensity" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["premium product landing page background", "creative agency hero section", "music or fashion site backdrop", "futuristic dashboard decoration"],
+  "conflicts": ["WebGL required — no fallback for unsupported browsers", "GPU-intensive on large viewports", "mouse reactivity has no touch equivalent"]
 }

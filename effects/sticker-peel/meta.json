@@ -1,25 +1,24 @@
 {
   "name": "Sticker Peel",
   "description": "Card corner peel effect that reacts to mouse proximity, with spring-interpolated peel size and configurable corner position.",
-  "tags": [
-    "card",
-    "sticker",
-    "peel",
-    "mouse",
-    "spring",
-    "hover"
-  ],
+  "category": ["card", "interactive", "hover"],
   "framework": "react",
+  "runtime": ["pointer-events", "css-animations"],
+  "complexity": "medium",
+  "performance_cost": "low",
+  "mobile_safe": false,
+  "accessibility_notes": ["peel is decorative — content behind should be accessible via other means", "no keyboard interaction"],
   "dependencies": [],
-  "hooks": [
-    "useMousePosition",
-    "useSpring"
-  ],
-  "files": [
-    "StickerPeel.tsx"
-  ],
-  "presets": [],
-  "css": [
-    "sticker-peel.css"
-  ]
+  "files": ["StickerPeel.tsx"],
+  "imports": ["react", "../../hooks", "../../css/sticker-peel.css"],
+  "hooks": ["useMousePosition", "useSpring"],
+  "css": ["sticker-peel.css"],
+  "props_schema": {
+    "front": { "type": "ReactNode", "description": "Content displayed on the front face" },
+    "behind": { "type": "ReactNode", "description": "Optional content revealed behind the peel" },
+    "corner": { "type": "enum", "options": ["bottom-right", "bottom-left", "top-right", "top-left"], "default": "bottom-right", "description": "Which corner peels" },
+    "className": { "type": "string", "description": "CSS class for the container" }
+  },
+  "use_cases": ["product card reveal", "hidden message or coupon", "interactive portfolio card", "before/after comparison"],
+  "conflicts": ["peel requires precise mouse positioning — not usable on touch", "overflow: hidden clips peel at container edge"]
 }

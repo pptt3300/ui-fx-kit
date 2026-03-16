@@ -1,30 +1,16 @@
 # ui-fx-kit
 
-64 个可组合的 React UI 视觉效果。Hooks · CSS · 组件。
+64 个可组合的 React UI 视觉效果。源码交付，不是 npm 依赖。
 
-[在线演示](https://pptt3300.github.io/ui-fx-kit/) · [English](./README.md)
+[在线演示 & Playground](https://pptt3300.github.io/ui-fx-kit/) · [English](./README.md)
 
-## 快速开始
+## 工作方式
 
-### 方式一：CLI 命令行（推荐）
+你描述想要什么效果，AI 选择匹配的组件，拉取源码，接入你的项目。你拥有代码，没有运行时依赖。
 
-```bash
-# 直接用 npx（无需安装）
-npx ui-fx-kit add holographic-card --target ./src
+### 配置（一次性）
 
-# 或者全局安装，后续使用更快
-npm install -g ui-fx-kit
-ui-fx-kit add holographic-card --target ./src
-
-# 一次添加多个效果
-ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
-```
-
-CLI 会自动复制效果源码 + 依赖的 hooks + CSS 到你的项目。你拥有代码，无运行时依赖，可以自由修改。
-
-### 方式二：MCP 服务器（Claude Code 用户）
-
-在 Claude Code 的 MCP 设置中添加：
+在 Claude Code 的 MCP 设置中添加（`~/.claude.json` 或项目 `.mcp.json`）：
 
 ```json
 {
@@ -37,103 +23,126 @@ CLI 会自动复制效果源码 + 依赖的 hooks + CSS 到你的项目。你拥
 }
 ```
 
-然后直接告诉 Claude 你想要什么：
+### 告诉 AI 你想要什么
+
+**具体效果：**
 
 ```
-"给我的登录页加一个全息卡片效果"
-"我需要一个矩阵雨背景"
-"加一个跟随鼠标的光标特效"
+"给 hero section 加个星空背景，用 neon 配色"
+"定价卡片加个全息效果"
+"首页标题加个打字机效果"
 ```
 
-Claude 会自动选择合适的效果，复制源码到你的项目，并配置好 import。
+**带约束条件：**
 
-### 方式三：手动复制
+```
+"加个背景效果，要求 mobile safe、低性能消耗、不要 WebGL"
+"我需要一个触屏也能用的光标效果"
+"给卡片加点质感，不想大改，越简单越好"
+```
+
+**自由组合 hooks：**
+
+```
+"用 useCanvasSetup + useParticles + useMousePosition 组合一个鼠标粒子拖尾"
+"用弹簧物理 + 3D 倾斜做一个卡片交互"
+```
+
+### AI 在背后做了什么
+
+```
+你的 prompt
+  → find_effects（按分类/性能/移动端兼容结构化筛选）
+  → get_effect_bundle（一次调用拿到源码 + 全部依赖）
+  → 写入文件到你的项目
+```
+
+一句话，一次请求，完整源码。
+
+## AI 工具速查
+
+MCP 服务器提供 12 个工具。你不需要直接调用——AI 会根据你的 prompt 自动选择。但了解有什么可以帮你写出更好的 prompt。
+
+| 工具 | AI 用它来做什么 |
+|------|---------------|
+| `find_effects` | 按分类、移动端兼容、性能消耗、复杂度、运行时筛选 |
+| `get_effect_bundle` | 一次拿到效果源码 + 全部 hook/CSS/preset 依赖 |
+| `suggest_combination` | 描述意图 → 返回 hook 组合建议 + 源码 |
+| `check_performance_budget` | 检查多个效果能否在同一页面共存 |
+| `list_effects` | 浏览所有效果（紧凑摘要） |
+| `search` | 跨效果、hooks、CSS 的关键词搜索 |
+| `list_css` | 浏览 CSS 片段（加个 class 就生效） |
+| `get_css` | 获取 CSS 片段源码 |
+| `list_hooks` | 浏览 hooks 及其组合关系图 |
+| `get_hook` | 获取 hook 源码 |
+| `get_preset` | 获取调色板或弹簧配置 |
+| `get_effect` | 获取单个效果源码（要完整依赖用 bundle） |
+
+## Prompt 技巧
+
+| 场景 | 好的 prompt | 为什么有效 |
+|------|-----------|-----------|
+| 浏览 | "有什么 mobile safe 的背景效果？" | 映射到 `find_effects(category="background", mobile_safe=true)` |
+| 具体需求 | "hero 背景换成流体渐变" | AI 搜索"流体渐变背景" → silk-waves 或 gradient-mesh |
+| 快速加质感 | "给卡片加个玻璃质感，不想改组件" | AI 选 CSS 片段 `glass-card`——加个 class 就行 |
+| 性能 | "当前页面已经有 3 个 canvas 效果了，还能加吗？" | AI 调用 `check_performance_budget` |
+| 自定义 | "用粒子 + 鼠标跟踪 + canvas 组合一个自定义效果" | AI 调用 `suggest_combination` |
+| 主题 | "所有效果统一用 spotify 配色" | AI 给每个效果传 `palette="spotify"` |
+
+**避免模糊 prompt**，比如"加点效果"或"用 ui-fx-kit"——AI 需要知道要什么效果、放在哪里。
+
+## 调色板
+
+13 套精选配色。支持 palette 的效果可以传 `palette="名字"`：
+
+`default` · `neon` · `pastel` · `warm` · `arctic` · `mono` · `stripe` · `vercel` · `linear` · `supabase` · `figma` · `discord` · `spotify`
+
+同一页面使用多个效果时，用相同的 palette 保持视觉一致性。
+
+## 不用 AI 也能用
+
+### CLI 命令行
 
 ```bash
-# 复制你需要的
-cp -r ui-fx-kit/effects/holographic-card/ 你的项目/src/effects/
-cp ui-fx-kit/hooks/useTilt3D.ts 你的项目/src/hooks/
-cp ui-fx-kit/css/holographic.css 你的项目/src/css/
-```
-
-## CLI 命令
-
-```bash
-# 列出全部 64 个效果
-npx ui-fx-kit list
-
-# 按分类筛选
+npx ui-fx-kit add holographic-card --target ./src
+npx ui-fx-kit add gradient-mesh silk-waves --target ./src
 npx ui-fx-kit list background
-
-# 查看效果详情
 npx ui-fx-kit info silk-waves
+```
 
-# 添加到项目
-npx ui-fx-kit add silk-waves --target ./src
+### Playground
+
+[演示站](https://pptt3300.github.io/ui-fx-kit/)上每个效果都有 Playground 面板——实时调参，然后复制带参数的 CLI 命令。
+
+### 手动复制
+
+```bash
+cp -r ui-fx-kit/effects/holographic-card/ 你的项目/src/effects/
 ```
 
 ## 包含内容
 
-### 效果组件（64 个）
-
-| 分类 | 数量 | 示例 |
+| 层级 | 数量 | 用途 |
 |------|------|------|
-| 背景效果 | 14 | 极光、渐变网格、矩阵雨、丝绸波浪、等离子体、液态铬 |
-| 文字效果 | 10 | 乱码解密、翻页牌、文字变形、故障文字、文字压力 |
-| 卡片效果 | 9 | 全息卡片、翻转卡片、堆叠滑动、瀑布流网格、反射卡片 |
-| 光标效果 | 6 | 光标光晕、液态光标、飞溅光标、像素轨迹、幽灵光标 |
-| 着色器效果 | 8 | 金属漆、虹彩、液态以太、棱镜折射、元球 |
-| 交互效果 | 17 | Dock 放大、五彩纸屑、拖拽排序、数字计数器、视差滚动 |
+| Effects | 64 | 完整 React 组件（背景、文字、卡片、光标、着色器、交互） |
+| Hooks | 19 | 零依赖构建块（物理、手势、WebGL、canvas、粒子） |
+| CSS | 13 | 即插即用动画类（玻璃、全息、霓虹、微光） |
+| Palettes | 13 | 精选配色方案 |
 
-### Hooks（19 个）
-
-每个 hook 零依赖，可独立使用：
-
-| Hook | 功能 |
-|------|------|
-| `useWebGL` | WebGL 着色器管线——编译、渲染循环、uniform 管理 |
-| `useSpring` | 弹簧物理动画 |
-| `useMousePosition` | 鼠标位置追踪（ref 模式用于 canvas，state 模式用于 CSS）|
-| `useParticles` | 粒子系统——生成、更新、渲染 |
-| `usePerlinNoise` | 柏林噪声 + FBM，用于有机运动 |
-| `useGesture` | 拖拽/滑动手势处理 |
-| `useTilt3D` | 跟随鼠标的 3D 透视倾斜 |
-| `useCanvasSetup` | 适配 DPI 的 canvas 画布 + requestAnimationFrame 循环 |
-| `useStagger` | 交错动画时序编排 |
-| `useInView` | Intersection Observer 封装，滚动触发 |
-
-### CSS 片段（13 个）
-
-即插即用的动画类：`glass-card`、`holographic`、`shimmer`、`neon-glow`、`glitch-effect`、`sticker-peel`、`iridescent` 等。
-
-### 调色板（13 套）
-
-精选配色方案，直接作为 props 传入效果组件：`default`、`neon`、`pastel`、`warm`、`arctic`、`mono`、`stripe`、`vercel`、`supabase`、`discord`、`spotify` 等。
+效果由 hooks 构建，hooks 可自由组合。AI 通过 `combinesWith` 图谱知道哪些 hooks 能搭配使用。
 
 ## 项目结构
 
 ```
-effects/     → 完整的 React 组件（每个在独立目录）
-  ├── holographic-card/
-  │   ├── HolographicCard.tsx
-  │   └── meta.json
-  ├── gradient-mesh/
-  └── ...
-hooks/       → 可复用的 React hooks（物理、手势、WebGL）
-css/         → 独立的 CSS 动画片段
-presets/     → 调色板和弹簧配置
-bin/         → CLI 命令行工具
-mcp-server.js → Claude Code 用的 MCP 服务器
+effects/      → React 组件（源码，不是编译产物）
+hooks/        → 可组合的 React hooks
+css/          → 独立 CSS 动画类
+presets/      → 调色板 + 弹簧配置
+bin/          → CLI 命令行工具
+mcp-server.js → AI 工具接口（12 个工具）
 ```
 
-效果组件从 `hooks/` 和 `css/` 导入依赖。CLI 在添加效果时会自动解析并复制这些依赖。
-
-## 技术栈
-
-- React 18+、TypeScript
-- WebGL（着色器效果）
-- framer-motion（可选，部分效果使用）
-- Hooks 零运行时依赖
+源码交付：CLI 和 MCP 服务器把文件复制到你的项目。你拥有并可以修改所有代码。
 
 ## 许可证
 

@@ -1,22 +1,29 @@
 {
   "name": "Gradient Mesh",
   "description": "Animated gradient mesh with drifting radial blobs. Theme-aware, pure CSS radial gradients — no canvas.",
-  "tags": [
-    "background",
-    "gradient",
-    "ambient",
-    "css"
-  ],
+  "category": ["background", "ambient"],
   "framework": "react",
+  "runtime": ["css-animations"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useGradientMesh"
-  ],
-  "files": [
-    "GradientMesh.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["GradientMesh.tsx"],
+  "imports": ["react", "../../hooks", "../../presets/colors"],
+  "hooks": ["useGradientMesh"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "count": { "type": "number", "default": 4, "range": [2, 10], "description": "Number of radial gradient blobs" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "speed": { "type": "number", "default": 0.3, "range": [0.05, 2], "description": "Animation speed for blob drift" },
+    "className": { "type": "string", "description": "CSS class for the container div" }
+  },
+  "use_cases": ["hero section background", "ambient dashboard backdrop", "landing page gradient fill", "card background decoration"],
+  "conflicts": ["many blobs may cause layout repaint overhead on older browsers"]
 }

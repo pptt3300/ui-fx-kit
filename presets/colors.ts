@@ -53,10 +53,11 @@ export function colorAtPosition(
   y: number,
   w: number,
   h: number,
+  stops?: [RGB, RGB, RGB],
 ): RGB {
   const tx = w > 0 ? x / w : 0;
   const ty = h > 0 ? y / h : 0;
-  const [r, g, b] = gradientColor(tx);
+  const [r, g, b] = gradientColor(tx, stops);
   return [
     Math.round(Math.max(0, Math.min(255, r + ty * 30 - 15))),
     Math.round(Math.max(0, Math.min(255, g - ty * 20 + 10))),

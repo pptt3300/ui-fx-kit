@@ -1,23 +1,30 @@
 {
   "name": "Ripple Wave",
   "description": "2D wave equation propagation on a grid of dots. Click to create ripples, or use center-source mode for continuous ambient waves.",
-  "tags": [
-    "background",
-    "canvas",
-    "interactive",
-    "wave",
-    "physics"
-  ],
+  "category": ["background", "interactive", "physics"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup"
-  ],
-  "files": [
-    "RippleWave.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "files": ["RippleWave.tsx"],
+  "imports": ["../../hooks", "../../presets"],
+  "hooks": ["useCanvasSetup"],
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "source": { "type": "enum", "options": ["center", "click"], "default": "click", "description": "Ripple trigger — center pulses automatically, click requires user interaction" },
+    "waveSpeed": { "type": "number", "default": 200, "range": [50, 500], "description": "Wave propagation speed" },
+    "gridSize": { "type": "number", "default": 40, "range": [10, 80], "description": "Distance between grid dots in px" },
+    "palette": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Color theme name from presets"
+    },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["interactive hero background", "physics simulation demo", "ambient dashboard decoration", "creative 404 page background"],
+  "conflicts": ["small gridSize with large canvas creates many dots — performance impact", "click mode requires pointer-events enabled on canvas"]
 }

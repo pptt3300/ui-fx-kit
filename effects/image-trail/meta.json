@@ -1,21 +1,24 @@
 {
   "name": "Image Trail",
   "description": "DOM-based cursor trail that stamps images along the mouse path with entry/exit animations.",
-  "tags": [
-    "cursor",
-    "dom",
-    "trail",
-    "image",
-    "global"
-  ],
+  "category": ["cursor", "interactive", "decoration"],
   "framework": "react",
+  "runtime": ["pointer-events", "css-animations"],
+  "complexity": "medium",
+  "performance_cost": "medium",
+  "mobile_safe": false,
+  "accessibility_notes": ["purely decorative, no semantic content", "needs reduced-motion fallback"],
   "dependencies": [],
-  "hooks": [
-    "useMousePosition"
-  ],
-  "files": [
-    "ImageTrail.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "files": ["ImageTrail.tsx"],
+  "imports": ["react", "../../hooks"],
+  "hooks": ["useMousePosition"],
+  "css": [],
+  "props_schema": {
+    "images": { "type": "string", "description": "Array of image URL strings to stamp along cursor path" },
+    "trailLength": { "type": "number", "default": 8, "range": [3, 20], "description": "Maximum number of visible trail images" },
+    "spawnDistance": { "type": "number", "default": 50, "range": [20, 150], "description": "Minimum cursor travel distance (px) before spawning next image" },
+    "className": { "type": "string", "description": "CSS class for the trail container overlay" }
+  },
+  "use_cases": ["creative portfolio mouse trail", "product showcase cursor interaction", "interactive art installation page"],
+  "conflicts": ["DOM-based — many trail items cause layout thrash", "relies on mouse movement, no touch equivalent", "global overlay may intercept clicks if z-index conflicts"]
 }

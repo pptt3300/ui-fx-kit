@@ -22,13 +22,15 @@ const DEFAULTS: Required<SpringConfig> = {
  * ```
  */
 export function useSpring(initial: number, config?: Partial<SpringConfig>) {
-  const cfg = { ...DEFAULTS, ...config };
+  const cfgRef = useRef({ ...DEFAULTS, ...config });
+  cfgRef.current = { ...DEFAULTS, ...config };
   const value = useRef(initial);
   const velocity = useRef(0);
   const target = useRef(initial);
 
   const tick = useCallback(
     (dt: number): number => {
+      const cfg = cfgRef.current;
       const displacement = value.current - target.current;
       const springForce = -cfg.stiffness * displacement;
       const dampingForce = -cfg.damping * velocity.current;
@@ -48,13 +50,14 @@ export function useSpring(initial: number, config?: Partial<SpringConfig>) {
 
       return value.current;
     },
-    [cfg.stiffness, cfg.damping, cfg.mass, cfg.precision],
+    [],
   );
 
   const settled = useCallback((): boolean => {
+    const cfg = cfgRef.current;
     const displacement = Math.abs(value.current - target.current);
     return displacement < cfg.precision && Math.abs(velocity.current) < cfg.precision;
-  }, [cfg.precision]);
+  }, []);
 
   const set = useCallback((v: number) => {
     value.current = v;

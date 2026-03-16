@@ -1,24 +1,25 @@
 {
   "name": "Stagger List",
   "description": "Staggered entrance animations for lists — slide-up, scale-in, blur-in, flip-in with configurable stagger patterns.",
-  "tags": [
-    "animation",
-    "stagger",
-    "scroll",
-    "list",
-    "entrance"
-  ],
+  "category": ["animation", "list", "entrance"],
   "framework": "react",
+  "runtime": ["css-animations", "intersection-observer"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["needs reduced-motion fallback", "content should be visible even without animation"],
   "dependencies": [],
-  "hooks": [
-    "useInView",
-    "useStagger"
-  ],
-  "files": [
-    "StaggerList.tsx"
-  ],
-  "presets": [],
-  "css": [
-    "stagger-presets.css"
-  ]
+  "files": ["StaggerList.tsx"],
+  "imports": ["react", "../../css/stagger-presets.css", "../../hooks"],
+  "hooks": ["useStagger", "useInView"],
+  "css": ["stagger-presets.css"],
+  "props_schema": {
+    "variant": { "type": "enum", "options": ["slide-up", "scale-in", "blur-in", "flip-in"], "default": "slide-up", "description": "Animation variant for each item" },
+    "pattern": { "type": "enum", "options": ["linear", "center-out", "edges-in", "random"], "default": "linear", "description": "Order in which items animate" },
+    "duration": { "type": "number", "default": 400, "range": [100, 1500], "description": "Animation duration per item in ms" },
+    "trigger": { "type": "enum", "options": ["mount", "inView"], "default": "inView", "description": "When to start the stagger animation" },
+    "className": { "type": "string", "description": "CSS class for the container" }
+  },
+  "use_cases": ["feature list entrance", "settings menu animation", "search results reveal", "dashboard widget loading"],
+  "conflicts": ["large lists (50+ items) may cause layout thrash during stagger"]
 }

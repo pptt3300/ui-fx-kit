@@ -1,4 +1,7 @@
 import { useRef, useEffect } from "react";
+import { colorAtPosition } from "../../presets/colors";
+import type { RGB } from "../../presets/colors";
+import { PALETTES } from "../../presets/palettes";
 
 interface Star {
   x: number;
@@ -12,46 +15,25 @@ export interface ConstellationBgProps {
   count?: number;
   linkDist?: number;
   mouseRadius?: number;
+  palette?: string;
+  colors?: [RGB, RGB, RGB];
   className?: string;
-}
-
-function colorAtPosition(x: number, y: number, w: number, h: number): [number, number, number] {
-  // Horizontal: indigo -> violet -> cyan
-  // Vertical: slightly shift warmth
-  const tx = w > 0 ? x / w : 0;
-  const ty = h > 0 ? y / h : 0;
-
-  // Blend left color (indigo) with right color (cyan) with mid (violet)
-  const left: [number, number, number] = [99, 102, 241];
-  const mid: [number, number, number] = [139, 92, 246];
-  const right: [number, number, number] = [34, 211, 238];
-
-  let r: number, g: number, b: number;
-  if (tx < 0.5) {
-    const t = tx * 2;
-    r = left[0] + (mid[0] - left[0]) * t;
-    g = left[1] + (mid[1] - left[1]) * t;
-    b = left[2] + (mid[2] - left[2]) * t;
-  } else {
-    const t = (tx - 0.5) * 2;
-    r = mid[0] + (right[0] - mid[0]) * t;
-    g = mid[1] + (right[1] - mid[1]) * t;
-    b = mid[2] + (right[2] - mid[2]) * t;
-  }
-
-  // Vertical warmth shift: top = cooler (more blue), bottom = warmer (more pink)
-  r += ty * 30 - 15;
-  g -= ty * 20 - 10;
-
-  return [Math.round(Math.max(0, Math.min(255, r))), Math.round(Math.max(0, Math.min(255, g))), Math.round(Math.max(0, Math.min(255, b)))];
 }
 
 export default function ConstellationBg({
   count = 70,
   linkDist = 140,
   mouseRadius = 160,
+  palette,
+  colors,
   className,
 }: ConstellationBgProps) {
+  const stops = colors
+    ?? (palette && PALETTES[palette]
+      ? PALETTES[palette].particles as [RGB, RGB, RGB]
+      : undefined);
+  const colorAt = (x: number, y: number, w: number, h: number) =>
+    colorAtPosition(x, y, w, h, stops);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const animRef = useRef<number>(0);
@@ -149,7 +131,7 @@ export default function ConstellationBg({
         if (s.y > h + 10) s.y = -10;
 
         // Position-based color
-        const [cr, cg, cb] = colorAtPosition(s.x, s.y, w, h);
+        const [cr, cg, cb] = colorAt(s.x, s.y, w, h);
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${cr},${cg},${cb},0.35)`;
@@ -164,8 +146,8 @@ export default function ConstellationBg({
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < LINK_DIST) {
             const alpha = (1 - dist / LINK_DIST) * 0.15;
-            const [r1, g1, b1] = colorAtPosition(stars[i].x, stars[i].y, w, h);
-            const [r2, g2, b2] = colorAtPosition(stars[j].x, stars[j].y, w, h);
+            const [r1, g1, b1] = colorAt(stars[i].x, stars[i].y, w, h);
+            const [r2, g2, b2] = colorAt(stars[j].x, stars[j].y, w, h);
 
             const grad = ctx.createLinearGradient(stars[i].x, stars[i].y, stars[j].x, stars[j].y);
             grad.addColorStop(0, `rgba(${r1},${g1},${b1},${alpha})`);
@@ -183,14 +165,14 @@ export default function ConstellationBg({
 
       // Mouse links — radiate from cursor in its local color
       if (mx > 0 && my > 0) {
-        const [mr, mg, mb] = colorAtPosition(mx, my, w, h);
+        const [mr, mg, mb] = colorAt(mx, my, w, h);
         for (const s of stars) {
           const dx = s.x - mx;
           const dy = s.y - my;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MOUSE_RADIUS) {
             const alpha = (1 - dist / MOUSE_RADIUS) * 0.25;
-            const [sr, sg, sb] = colorAtPosition(s.x, s.y, w, h);
+            const [sr, sg, sb] = colorAt(s.x, s.y, w, h);
 
             const grad = ctx.createLinearGradient(mx, my, s.x, s.y);
             grad.addColorStop(0, `rgba(${mr},${mg},${mb},${alpha})`);

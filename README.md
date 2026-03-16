@@ -1,43 +1,16 @@
 # ui-fx-kit
 
-64 composable React UI effects. Hooks · CSS · Components.
+64 composable React UI effects. Source code delivery, not npm dependency.
 
 [Live Demo & Playground](https://pptt3300.github.io/ui-fx-kit/) · [中文文档](./README.zh.md)
 
-## Try Before You Install
+## How It Works
 
-Every effect on the [demo site](https://pptt3300.github.io/ui-fx-kit/) has a **Playground panel** — adjust speed, colors, intensity, and other props in real-time. When you're happy with the result, the Install tab gives you the exact CLI command and JSX usage with your tuned props.
+You describe what you want. AI picks the effect, grabs the source code, and wires it into your project. You own the code — no runtime dependency.
 
-```
-1. Browse effects → click "Playground" button
-2. Tune sliders, toggle switches, pick colors
-3. Switch to "Install" tab → copy the CLI command
-4. The Usage snippet reflects your settings
-```
+### Setup (one time)
 
-No copy-pasting walls of code. One CLI command, one JSX line.
-
-## Get Started
-
-### Option 1: CLI (recommended)
-
-```bash
-# Use directly with npx (no install needed)
-npx ui-fx-kit add holographic-card --target ./src
-
-# Or install globally for faster repeated use
-npm install -g ui-fx-kit
-ui-fx-kit add holographic-card --target ./src
-
-# Add multiple effects at once
-ui-fx-kit add gradient-mesh silk-waves cursor-glow --target ./src
-```
-
-The CLI copies effect source code + hook dependencies + CSS into your project. You own the code, no runtime dependency on ui-fx-kit.
-
-### Option 2: MCP Server (for Claude Code users)
-
-Add to your Claude Code MCP settings:
+Add to your Claude Code MCP settings (`~/.claude.json` or project `.mcp.json`):
 
 ```json
 {
@@ -50,156 +23,126 @@ Add to your Claude Code MCP settings:
 }
 ```
 
-Then just tell Claude what you want:
+### Tell AI What You Want
+
+**Specific effects:**
 
 ```
-"Add a holographic card effect to my landing page"
-"I need a matrix rain background"
-"Give me a cursor glow trail"
+"Add a starfield background to my hero section, use neon palette"
+"Add a holographic card effect to the pricing section"
+"I need a typewriter effect on the homepage title"
 ```
 
-Claude will pick the right effect, copy the source code into your project, and wire up the imports.
-
-### Option 3: Manual copy
+**With constraints:**
 
 ```
-# Copy what you need
-cp -r ui-fx-kit/effects/holographic-card/ your-project/src/effects/
-cp ui-fx-kit/hooks/useTilt3D.ts your-project/src/hooks/
-cp ui-fx-kit/css/holographic.css your-project/src/css/
+"Add a background effect — must be mobile safe, low performance, no WebGL"
+"I need a cursor effect that works on touch devices"
+"Add some texture to my cards, keep it simple, CSS only"
 ```
 
-## CLI Commands
+**Compose custom effects:**
+
+```
+"Combine useCanvasSetup + useParticles + useMousePosition into a cursor particle trail"
+"Combine spring physics with 3D tilt for a card interaction"
+```
+
+### What AI Does Behind the Scenes
+
+```
+Your prompt
+  → find_effects (structured filtering by category/performance/mobile)
+  → get_effect_bundle (source code + all dependencies in one call)
+  → writes files into your project
+```
+
+One prompt, one round trip, complete source code.
+
+## AI Tool Reference
+
+The MCP server exposes 12 tools. You don't need to call them directly — AI picks the right one based on your prompt. But knowing what's available helps you write better prompts.
+
+| Tool | What AI uses it for |
+|------|-------------------|
+| `find_effects` | Filter by category, mobile_safe, performance_cost, complexity, runtime |
+| `get_effect_bundle` | Get effect + all hook/CSS/preset dependencies in one call |
+| `suggest_combination` | Describe an intent → get hook combination with source code |
+| `check_performance_budget` | Verify multiple effects can coexist on one page |
+| `list_effects` | Browse all effects (compact summaries) |
+| `search` | Keyword search across effects, hooks, and CSS |
+| `list_css` | Browse CSS snippets (quick wins — just add a class) |
+| `get_css` | Get a CSS snippet source |
+| `list_hooks` | Browse hooks with combinesWith graph |
+| `get_hook` | Get a hook's source code |
+| `get_preset` | Get color palettes or spring configs |
+| `get_effect` | Get a single effect's source (use bundle for full deps) |
+
+## Prompt Tips
+
+| Situation | Good prompt | Why it works |
+|-----------|------------|--------------|
+| Browsing | "What mobile-safe background effects are available?" | Maps to `find_effects(category="background", mobile_safe=true)` |
+| Specific need | "Replace hero background with a fluid gradient" | AI searches "fluid gradient background" → silk-waves or gradient-mesh |
+| Quick texture | "Add a glass texture to my cards, don't change the component" | AI picks CSS snippet `glass-card` — just a class name |
+| Performance | "I already have 3 canvas effects on this page, can I add more?" | AI calls `check_performance_budget` |
+| Custom | "Combine particles + mouse tracking + canvas into a custom effect" | AI calls `suggest_combination` with hook list |
+| Theming | "Use spotify palette for all effects" | AI passes `palette="spotify"` to each effect |
+
+**Avoid vague prompts** like "add some effects" or "use ui-fx-kit" — AI needs to know what kind of effect and where.
+
+## Color Palettes
+
+13 curated palettes. Pass `palette="name"` to any effect that supports it:
+
+`default` · `neon` · `pastel` · `warm` · `arctic` · `mono` · `stripe` · `vercel` · `linear` · `supabase` · `figma` · `discord` · `spotify`
+
+When using multiple effects on one page, use the same palette for visual consistency.
+
+## Also Works Without AI
+
+### CLI
 
 ```bash
-# List all 64 effects
-npx ui-fx-kit list
-
-# Filter by category
+npx ui-fx-kit add holographic-card --target ./src
+npx ui-fx-kit add gradient-mesh silk-waves --target ./src
 npx ui-fx-kit list background
-
-# See effect details before adding
 npx ui-fx-kit info silk-waves
+```
 
-# Add to your project
-npx ui-fx-kit add silk-waves --target ./src
+### Playground
+
+Every effect on the [demo site](https://pptt3300.github.io/ui-fx-kit/) has a Playground panel — tune props in real-time, then copy the CLI command with your settings.
+
+### Manual copy
+
+```bash
+cp -r ui-fx-kit/effects/holographic-card/ your-project/src/effects/
 ```
 
 ## What's Inside
 
-### Effects (64)
+| Layer | Count | Purpose |
+|-------|-------|---------|
+| Effects | 64 | Complete React components (background, text, card, cursor, shader, interactive) |
+| Hooks | 19 | Zero-dependency building blocks (physics, gestures, WebGL, canvas, particles) |
+| CSS | 13 | Drop-in animation classes (glass, holographic, neon, shimmer) |
+| Palettes | 13 | Curated color sets |
 
-| Category | Count | Examples |
-|----------|-------|---------|
-| Background | 14 | aurora-bg, gradient-mesh, matrix-rain, silk-waves, plasma-shader, liquid-chrome |
-| Text | 10 | scramble-text, split-flap, morphing-text, glitch-text, text-pressure |
-| Card | 9 | holographic-card, flip-card, stack-swipe, bento-grid, reflective-card |
-| Cursor | 6 | cursor-glow, blob-cursor, splash-cursor, pixel-trail, ghost-cursor |
-| Shader | 8 | metallic-paint, iridescence, liquid-ether, metaballs, noise-grain |
-| Interactive | 17 | dock-magnify, confetti-burst, drag-reorder, counter-ticker, parallax-hero |
-
-### Hooks (19)
-
-Each hook is zero-dependency and works standalone:
-
-| Hook | What it does |
-|------|-------------|
-| `useWebGL` | WebGL shader pipeline — compile, render loop, uniforms |
-| `useSpring` | Spring physics for smooth animations |
-| `useMousePosition` | Mouse tracking (ref mode for canvas, state mode for CSS) |
-| `useParticles` | Particle system with spawn/update/render |
-| `usePerlinNoise` | Perlin noise + FBM for organic motion |
-| `useGesture` | Drag/swipe via pointer events |
-| `useTilt3D` | 3D perspective tilt following cursor |
-| `useCanvasSetup` | DPI-aware canvas with rAF loop |
-| `useStagger` | Staggered animation timing |
-| `useInView` | Intersection Observer for scroll triggers |
-
-[Full hook list →](./hooks/)
-
-## Compose Your Own Effect
-
-The hooks layer is designed for composition. Mix and match hooks to create custom effects without starting from scratch.
-
-**Example: Custom cursor trail**
-
-```tsx
-import { useMousePosition, useCanvasSetup, useParticles } from "./hooks";
-
-// Three hooks → a complete cursor effect
-const { position } = useMousePosition({ scope: "window" });
-const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
-const particles = useParticles({
-  spawn: () => ({ x: position.current.x, y: position.current.y, alpha: 1 }),
-  update: (p) => { p.alpha *= 0.95; return p.alpha > 0.01; },
-});
-```
-
-**Example: Tilt card with spotlight**
-
-```tsx
-import { useTilt3D, useSpotlight } from "./hooks";
-
-// Two hooks → 3D tilt + cursor-tracking light
-const { ref, shineRef, handlers: tiltHandlers } = useTilt3D({ maxRotation: 12 });
-const { spotlightBg, handlers: spotHandlers } = useSpotlight({ radius: 400 });
-```
-
-**Example: Proximity-reactive grid**
-
-```tsx
-import { useCanvasSetup, useMousePosition } from "./hooks";
-import { proximity } from "./hooks";
-
-// Canvas + mouse + math → interactive force field
-const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
-const { position, handlers } = useMousePosition({ scope: "element" });
-// In draw loop: proximity(mouse, dot, { radius: 120 }) → displacement
-```
-
-### Common Combinations
-
-| Hooks | What You Get |
-|-------|-------------|
-| `useCanvasSetup` + `useParticles` + `useMousePosition` | Cursor-reactive particle effects |
-| `useTilt3D` + `useSpotlight` | 3D cards with dynamic lighting |
-| `useCanvasSetup` + `useMousePosition` + `proximity` | Interactive force-field grids |
-| `useScrollProgress` + `useStagger` | Scroll-triggered staggered animations |
-| `useCanvasSetup` + `usePerlinNoise` | Organic generative backgrounds |
-| `useWebGL` + `useMousePosition` | GPU shader effects with cursor interaction |
-
-### CSS Snippets (13)
-
-Drop-in animation classes: `glass-card`, `holographic`, `shimmer`, `neon-glow`, `glitch-effect`, `sticker-peel`, `iridescent`, `stagger-presets`, and more.
-
-### Color Palettes (13)
-
-Curated color sets you can pass as props: `default`, `neon`, `pastel`, `warm`, `arctic`, `mono`, `stripe`, `vercel`, `linear`, `supabase`, `figma`, `discord`, `spotify`.
+Effects are built from hooks. Hooks are composable. AI knows which hooks combine well via the `combinesWith` graph.
 
 ## Architecture
 
 ```
-effects/     → Complete React components (each in its own directory)
-  ├── holographic-card/
-  │   ├── HolographicCard.tsx
-  │   └── meta.json
-  ├── gradient-mesh/
-  └── ...
-hooks/       → Reusable React hooks (physics, gestures, WebGL)
-css/         → Standalone CSS animation snippets
-presets/     → Color palettes and spring configs
-bin/         → CLI tool
-mcp-server.js → MCP server for Claude Code
+effects/      → React components (source code, not compiled)
+hooks/        → Composable React hooks
+css/          → Standalone CSS classes
+presets/      → Color palettes + spring configs
+bin/          → CLI tool
+mcp-server.js → AI tool interface (12 tools)
 ```
 
-Effects import from `hooks/` and `css/`. The CLI resolves these dependencies automatically when you `add` an effect.
-
-## Tech Stack
-
-- React 18+, TypeScript
-- WebGL (shader effects)
-- framer-motion (optional, some effects)
-- Zero runtime dependencies for hooks
+Source code delivery: the CLI and MCP server copy files into your project. You own and can modify everything.
 
 ## License
 

@@ -1,20 +1,28 @@
 {
   "name": "Ripple Button",
   "description": "Material Design-style ripple effect button with multiple concurrent ripples expanding from click point.",
-  "tags": [
-    "interactive",
-    "button",
-    "ripple",
-    "click"
-  ],
+  "category": ["interactive", "button"],
   "framework": "react",
+  "runtime": ["css-animations", "pointer-events"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["ripple is decorative — button remains a standard interactive element", "preserves native button semantics"],
   "dependencies": [],
+  "files": ["RippleButton.tsx"],
+  "imports": ["../../presets/colors"],
   "hooks": [],
-  "files": [
-    "RippleButton.tsx"
-  ],
-  "presets": [
-    "colors"
-  ],
-  "css": []
+  "css": [],
+  "presets": ["colors"],
+  "props_schema": {
+    "rippleColor": {
+      "type": "enum",
+      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "description": "Ripple color as RGB tuple or palette name"
+    },
+    "onClick": { "type": "function", "description": "Click handler passed through to the button" },
+    "className": { "type": "string", "default": "", "description": "CSS class for the button element" }
+  },
+  "use_cases": ["primary CTA button", "Material Design style interactions", "form submit button", "navigation action button"],
+  "conflicts": ["overflow:hidden clips content outside button bounds", "inline keyframes style tag added per component instance"]
 }

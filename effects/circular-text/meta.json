@@ -1,22 +1,29 @@
 {
   "name": "Circular Text",
   "description": "Text rotates along a circular SVG path. Hover spring-animates the rotation direction to reverse, then eases back when mouse leaves.",
-  "tags": [
-    "text",
-    "circular",
-    "svg",
-    "animation",
-    "hover",
-    "spring"
-  ],
+  "category": ["text", "animation", "svg"],
   "framework": "react",
+  "runtime": ["css-animations", "pointer-events"],
+  "complexity": "low",
+  "performance_cost": "low",
+  "mobile_safe": true,
+  "accessibility_notes": ["SVG text is accessible to screen readers", "rotation is decorative"],
   "dependencies": [],
-  "hooks": [
-    "useSpring"
-  ],
   "files": [
     "CircularText.tsx"
   ],
-  "presets": [],
-  "css": []
+  "imports": ["../../hooks"],
+  "hooks": [
+    "useSpring"
+  ],
+  "css": [],
+  "props_schema": {
+    "text": { "type": "string", "description": "The text to display along the circular path" },
+    "radius": { "type": "number", "default": 100, "range": [40, 300], "description": "Circle radius in pixels" },
+    "speed": { "type": "number", "default": 30, "range": [5, 120], "description": "Rotation speed in degrees per second" },
+    "reverseOnHover": { "type": "boolean", "default": true, "description": "Reverse rotation direction on hover" },
+    "className": { "type": "string", "description": "CSS class for the wrapper div" }
+  },
+  "use_cases": ["badge or seal element", "decorative loading indicator", "creative call-to-action", "brand logo accent"],
+  "conflicts": ["long text may overlap itself if radius is too small"]
 }

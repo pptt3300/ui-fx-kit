@@ -1,23 +1,25 @@
 {
   "name": "Noise Grain",
   "description": "Canvas-based film grain overlay with optional mouse clear-radius, animated or static, mono or color noise.",
-  "tags": [
-    "canvas",
-    "grain",
-    "noise",
-    "film",
-    "texture",
-    "overlay"
-  ],
+  "category": ["overlay", "texture"],
   "framework": "react",
+  "runtime": ["canvas", "pointer-events"],
+  "complexity": "low",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["overlay only — does not obscure content at default intensity", "needs reduced-motion fallback for animated mode"],
   "dependencies": [],
-  "hooks": [
-    "useCanvasSetup",
-    "useMousePosition"
-  ],
-  "files": [
-    "NoiseGrain.tsx"
-  ],
-  "presets": [],
-  "css": []
+  "files": ["NoiseGrain.tsx"],
+  "imports": ["../../hooks"],
+  "hooks": ["useCanvasSetup", "useMousePosition"],
+  "css": [],
+  "props_schema": {
+    "intensity": { "type": "number", "default": 0.15, "range": [0, 1], "description": "Grain opacity — 0 invisible, 1 fully opaque" },
+    "animated": { "type": "boolean", "default": true, "description": "Whether grain regenerates every frame or is static" },
+    "clearRadius": { "type": "number", "default": 0, "range": [0, 300], "description": "Radius in px around cursor where grain fades out" },
+    "color": { "type": "enum", "options": ["mono", "color"], "description": "Monochrome or RGB color noise" },
+    "className": { "type": "string", "description": "CSS class for the canvas element" }
+  },
+  "use_cases": ["film grain texture overlay on photos", "retro/vintage aesthetic layer", "dark mode ambient noise", "editorial site texture"],
+  "conflicts": ["animated mode is CPU-heavy at high resolutions — createImageData per frame", "clearRadius requires mousemove tracking"]
 }

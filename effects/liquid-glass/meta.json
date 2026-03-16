@@ -1,21 +1,19 @@
 {
   "name": "Liquid Glass",
   "description": "Glassmorphism cards with animated gradient blobs, organic morphing canvas shapes, and frosted glass backdrop-blur effect.",
-  "tags": [
-    "glass",
-    "blur",
-    "canvas",
-    "morphing",
-    "gradient"
-  ],
+  "category": ["layout", "glass", "canvas"],
   "framework": "react",
-  "dependencies": [
-    "framer-motion"
-  ],
-  "files": [
-    "LiquidGlass.tsx"
-  ],
+  "runtime": ["canvas", "css-animations"],
+  "complexity": "high",
+  "performance_cost": "medium",
+  "mobile_safe": true,
+  "accessibility_notes": ["backdrop-blur may reduce text readability on some backgrounds", "needs reduced-motion fallback"],
+  "dependencies": ["framer-motion"],
+  "files": ["LiquidGlass.tsx"],
+  "imports": ["react", "framer-motion", "../../hooks"],
   "hooks": ["useCanvasSetup"],
-  "presets": [],
-  "css": []
+  "css": [],
+  "props_schema": {},
+  "use_cases": ["glassmorphism showcase section", "premium feature grid layout", "SaaS landing page hero section", "creative portfolio display"],
+  "conflicts": ["backdrop-blur performance varies across browsers", "hardcoded layout — not easily composable as a standalone effect"]
 }
