@@ -1,6 +1,5 @@
-import { useRef } from "react";
-import { useMousePosition, proximity } from "../../hooks";
-import type { RGB } from "../../presets/colors";
+import { useRef, useState, useCallback } from "react";
+import { useMousePosition } from "../../hooks";
 
 interface DockMagnifyProps {
   items: Array<{ icon: React.ReactNode; label?: string }>;
@@ -18,44 +17,47 @@ export default function DockMagnify({
   className = "",
 }: DockMagnifyProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { position, handlers } = useMousePosition({ scope: "element", mode: "state" });
+  const { handlers } = useMousePosition({ scope: "element", mode: "state" });
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [sizes, setSizes] = useState<number[]>(items.map(() => baseSize));
 
   // Sigma controls Gaussian spread — radius items each side
   const sigma = baseSize * radius * 0.6;
 
-  const getScale = (index: number): number => {
-    if (!containerRef.current) return baseSize;
-    const el = itemRefs.current[index];
-    if (!el) return baseSize;
-    const rect = el.getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const itemCenterX = rect.left - containerRect.left + rect.width / 2;
-    const itemCenterY = rect.top - containerRect.top + rect.height / 2;
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    handlers.onMouseMove(e);
+    const containerEl = containerRef.current;
+    if (!containerEl) return;
+    const containerRect = containerEl.getBoundingClientRect();
+    const mx = e.clientX - containerRect.left;
+    const my = e.clientY - containerRect.top;
+    const newSizes = items.map((_, index) => {
+      const el = itemRefs.current[index];
+      if (!el) return baseSize;
+      const rect = el.getBoundingClientRect();
+      const itemCenterX = rect.left - containerRect.left + rect.width / 2;
+      const itemCenterY = rect.top - containerRect.top + rect.height / 2;
+      const dist = Math.sqrt(Math.pow(mx - itemCenterX, 2) + Math.pow(my - itemCenterY, 2));
+      const gaussian = Math.exp(-(dist * dist) / (2 * sigma * sigma));
+      return baseSize + (maxSize - baseSize) * gaussian;
+    });
+    setSizes(newSizes);
+  }, [items, baseSize, maxSize, sigma, handlers]);
 
-    const { inRange, distance } = proximity(
-      { x: position.x, y: position.y },
-      { x: itemCenterX, y: itemCenterY },
-      { radius: baseSize * (radius + 1) },
-    );
-
-    if (!inRange && distance > baseSize * (radius + 1)) return baseSize;
-
-    const dist = Math.sqrt(
-      Math.pow(position.x - itemCenterX, 2) + Math.pow(position.y - itemCenterY, 2),
-    );
-    const gaussian = Math.exp(-(dist * dist) / (2 * sigma * sigma));
-    return baseSize + (maxSize - baseSize) * gaussian;
-  };
+  const handleMouseLeave = useCallback(() => {
+    handlers.onMouseLeave();
+    setSizes(items.map(() => baseSize));
+  }, [items, baseSize, handlers]);
 
   return (
     <div
       ref={containerRef}
       className={`flex items-end gap-2 px-5 py-4 rounded-2xl bg-white/[0.07] backdrop-blur-xl border border-white/15 shadow-2xl ${className}`}
-      {...handlers}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {items.map((item, i) => {
-        const size = getScale(i);
+        const size = sizes[i] ?? baseSize;
         return (
           <div
             key={i}

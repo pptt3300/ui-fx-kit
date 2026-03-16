@@ -63,7 +63,7 @@ export default function LightningBolts({
 }: LightningBoltsProps) {
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const boltsRef = useRef<Bolt[]>([]);
-  const lastBoltTime = useRef(0);
+
 
   const spawnBolt = useCallback((startX?: number, startY?: number) => {
     const w = size.width || window.innerWidth;

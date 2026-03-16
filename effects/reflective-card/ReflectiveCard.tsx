@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTilt3D, useMousePosition } from "../../hooks";
 import "../../css/iridescent.css";
 
@@ -25,12 +26,11 @@ export default function ReflectiveCard({
     scope: "element",
     mode: "state",
   });
+  const [dims, setDims] = useState({ w: 300, h: 200 });
 
   const pos = position as { x: number; y: number };
-  const cardW = ref.current?.offsetWidth ?? 300;
-  const cardH = ref.current?.offsetHeight ?? 200;
-  const nx = (pos?.x ?? cardW / 2) / cardW;
-  const ny = (pos?.y ?? cardH / 2) / cardH;
+  const nx = (pos?.x ?? dims.w / 2) / dims.w;
+  const ny = (pos?.y ?? dims.h / 2) / dims.h;
 
   // Angle from center, 0–360
   const angle = Math.atan2(ny - 0.5, nx - 0.5) * (180 / Math.PI) + 180;
@@ -65,6 +65,9 @@ export default function ReflectiveCard({
       onMouseMove={(e) => {
         tiltHandlers.onMouseMove(e);
         mouseHandlers.onMouseMove(e);
+        if (ref.current) {
+          setDims({ w: ref.current.offsetWidth || 300, h: ref.current.offsetHeight || 200 });
+        }
       }}
       onMouseLeave={() => {
         tiltHandlers.onMouseLeave();

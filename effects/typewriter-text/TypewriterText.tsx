@@ -13,7 +13,7 @@ export default function TypewriterText({
   deletingSpeed = 35,
   pauseDuration = 2000,
 }: Props) {
-  const { text, phase } = useTypewriter({
+  const { text } = useTypewriter({
     phrases,
     typingSpeed,
     deletingSpeed,

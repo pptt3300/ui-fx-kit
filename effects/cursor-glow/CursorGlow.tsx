@@ -31,7 +31,7 @@ export default function CursorGlow({ colors = DEFAULT_COLORS, maxParticles = 500
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const prevRef = useRef({ x: -100, y: -100 });
   const colorsRef = useRef(colors);
-  colorsRef.current = colors;
+  useEffect(() => { colorsRef.current = colors; });
 
   const particles = useParticles<Trail>({
     spawn: () => {

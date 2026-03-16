@@ -20,31 +20,6 @@ function getCornerPos(corner: Corner, rect: DOMRect): { cx: number; cy: number }
   };
 }
 
-function cornerToCSSVars(corner: Corner): {
-  before: string;
-  after: string;
-} {
-  const map: Record<Corner, { before: string; after: string }> = {
-    "bottom-right": {
-      before: "bottom: 0; right: 0;",
-      after: "bottom: 0; right: 0;",
-    },
-    "bottom-left": {
-      before: "bottom: 0; left: 0;",
-      after: "bottom: 0; left: 0;",
-    },
-    "top-right": {
-      before: "top: 0; right: 0;",
-      after: "top: 0; right: 0;",
-    },
-    "top-left": {
-      before: "top: 0; left: 0;",
-      after: "top: 0; left: 0;",
-    },
-  };
-  return map[corner];
-}
-
 export default function StickerPeel({
   front,
   behind,
@@ -76,7 +51,7 @@ export default function StickerPeel({
         const dist = Math.hypot((pos?.x ?? cx) - cx, (pos?.y ?? cy) - cy);
         const inside = dist < PEEL_RADIUS && pos?.x >= 0;
         const targetPeel = inside ? Math.max(40, PEEL_RADIUS - dist) : 0;
-        peelSize.target.current = targetPeel;
+        peelSize.setTarget(targetPeel);
       }
 
       const sz = peelSize.tick(dt);
@@ -96,7 +71,7 @@ export default function StickerPeel({
     lastTimeRef.current = 0;
     animRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animRef.current);
-  }, [corner]);
+  }, [corner, peelSize, position]);
 
   const gradDir = {
     "bottom-right": "225deg",
@@ -105,7 +80,6 @@ export default function StickerPeel({
     "top-left": "45deg",
   }[corner];
 
-  const cornerStyle = cornerToCSSVars(corner);
   const positionProps = corner.includes("right")
     ? { right: 0 }
     : { left: 0 };

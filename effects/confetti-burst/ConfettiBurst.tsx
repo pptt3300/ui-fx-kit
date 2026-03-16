@@ -44,11 +44,13 @@ export default function ConfettiBurst({
 }: ConfettiBurstProps) {
   const { canvasRef, startLoop } = useCanvasSetup();
   const colorsRef = useRef(colors);
-  colorsRef.current = colors;
   const spreadRef = useRef(spread);
-  spreadRef.current = spread;
   const countRef = useRef(count);
-  countRef.current = count;
+  useEffect(() => {
+    colorsRef.current = colors;
+    spreadRef.current = spread;
+    countRef.current = count;
+  });
 
   const particles = useParticles<ConfettiParticle>({
     spawn: () => {

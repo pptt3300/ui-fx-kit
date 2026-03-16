@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useGesture } from "../../hooks";
 
 interface DragReorderProps<T> {
@@ -33,7 +33,7 @@ export default function DragReorder<T>({
   const [dragState, setDragState] = useState<DragState>(NULL_DRAG);
   const dragRef = useRef<DragState>(NULL_DRAG);
   const itemsRef = useRef(items);
-  itemsRef.current = items;
+  useEffect(() => { itemsRef.current = items; });
 
   const startDrag = useCallback((index: number) => {
     const state: DragState = { active: true, originIndex: index, currentIndex: index, offsetY: 0 };

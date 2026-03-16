@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export interface UseScrollProgressOptions {
   /** 'element' = track element visibility, 'page' = track page scroll */

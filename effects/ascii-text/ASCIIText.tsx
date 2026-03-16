@@ -125,7 +125,7 @@ export default function ASCIIText({
     });
 
     return cleanup;
-  }, [text, fontSize, charset, revealRadius, color, startLoop, position]);
+  }, [text, fontSize, charset, revealRadius, color, startLoop, position, canvasRef]);
 
   return (
     <div

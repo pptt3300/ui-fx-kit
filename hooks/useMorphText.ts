@@ -39,8 +39,9 @@ export function useMorphText(options: UseMorphTextOptions) {
     morphing: false,
   });
   const animId = useRef(0);
+  const cycleRef = useRef<(() => (() => void)) | null>(null);
 
-  const cycle = useCallback(() => {
+  const cycle = useCallback((): (() => void) => {
     const nextIndex = (index.current + 1) % texts.length;
     const currentText = texts[index.current] ?? "";
     const nextText = texts[nextIndex] ?? "";
@@ -56,7 +57,7 @@ export function useMorphText(options: UseMorphTextOptions) {
           animId.current = requestAnimationFrame(animate);
         } else {
           index.current = nextIndex;
-          cycle();
+          cycleRef.current?.();
         }
       };
       animId.current = requestAnimationFrame(animate);
@@ -66,8 +67,15 @@ export function useMorphText(options: UseMorphTextOptions) {
   }, [texts, holdDuration, morphDuration]);
 
   useEffect(() => {
-    const cleanup = cycle();
-    return () => { cleanup(); cancelAnimationFrame(animId.current); };
+    cycleRef.current = cycle;
+  });
+
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    const id = requestAnimationFrame(() => {
+      cleanup = cycle();
+    });
+    return () => { cancelAnimationFrame(id); cleanup?.(); cancelAnimationFrame(animId.current); };
   }, [cycle]);
 
   return state;

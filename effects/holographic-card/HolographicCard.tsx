@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTilt3D, useMousePosition, useCanvasSetup, useParticles } from "../../hooks";
 import "../../css/holographic.css";
 
@@ -26,6 +26,7 @@ export default function HolographicCard({
 }: HolographicCardProps) {
   const { ref, shineRef, handlers: tiltHandlers } = useTilt3D({ maxRotation: tiltMax });
   const { position, handlers: mouseHandlers } = useMousePosition({ scope: "element", mode: "state" });
+  const [dims, setDims] = useState({ w: 1, h: 1 });
 
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 1 });
 
@@ -53,7 +54,7 @@ export default function HolographicCard({
     maxCount: 200,
   });
 
-  const lastMouseRef = { x: -1, y: -1 };
+  const lastMouseRef = useRef({ x: -1, y: -1 });
 
   useEffect(() => {
     if (!sparkles) return;
@@ -66,9 +67,9 @@ export default function HolographicCard({
       const my = pos?.y ?? -1;
 
       const moved =
-        Math.abs(mx - lastMouseRef.x) > 2 || Math.abs(my - lastMouseRef.y) > 2;
-      lastMouseRef.x = mx;
-      lastMouseRef.y = my;
+        Math.abs(mx - lastMouseRef.current.x) > 2 || Math.abs(my - lastMouseRef.current.y) > 2;
+      lastMouseRef.current.x = mx;
+      lastMouseRef.current.y = my;
 
       if (moved && mx > 0) {
         particles.emit(2);
@@ -86,10 +87,10 @@ export default function HolographicCard({
         c.restore();
       });
     });
-  }, [sparkles, startLoop, particles]);
+  }, [sparkles, startLoop, particles, position]);
 
-  const hx = `${((position as { x: number; y: number })?.x ?? 0) / ((ref.current?.offsetWidth ?? 1) || 1) * 100}%`;
-  const hy = `${((position as { x: number; y: number })?.y ?? 0) / ((ref.current?.offsetHeight ?? 1) || 1) * 100}%`;
+  const hx = `${((position as { x: number; y: number })?.x ?? 0) / dims.w * 100}%`;
+  const hy = `${((position as { x: number; y: number })?.y ?? 0) / dims.h * 100}%`;
 
   return (
     <div
@@ -98,8 +99,11 @@ export default function HolographicCard({
       onMouseMove={(e) => {
         tiltHandlers.onMouseMove(e);
         mouseHandlers.onMouseMove(e);
+        if (ref.current) {
+          setDims({ w: ref.current.offsetWidth || 1, h: ref.current.offsetHeight || 1 });
+        }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={() => {
         tiltHandlers.onMouseLeave();
         mouseHandlers.onMouseLeave();
       }}

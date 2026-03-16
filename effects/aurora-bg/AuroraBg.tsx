@@ -15,18 +15,18 @@ const DEFAULT_COLORS: RGB[] = [
   [167, 139, 250],
 ];
 
+const BANDS_META = [
+  { alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
+  { alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
+  { alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
+  { alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
+];
+
 export default function AuroraBg({ speed = 1, colors = DEFAULT_COLORS, className }: AuroraBgProps) {
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const tRef = useRef(0);
   const propsRef = useRef({ speed, colors });
-  propsRef.current = { speed, colors };
-
-  const BANDS_META = [
-    { alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
-    { alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
-    { alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
-    { alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
-  ];
+  useEffect(() => { propsRef.current = { speed, colors }; });
 
   useEffect(() => {
     return startLoop((ctx) => {

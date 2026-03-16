@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useSpring } from "../../hooks";
 
 interface CircularTextProps {
@@ -28,7 +28,8 @@ export default function CircularText({
   const cy = size / 2;
 
   // SVG circle path for textPath
-  const pathId = useRef(`circ-${Math.random().toString(36).slice(2)}`).current;
+  const reactId = useId();
+  const pathId = `circ-${reactId}`;
   const d = `M ${cx},${cy - radius} A ${radius},${radius} 0 1 1 ${cx - 0.001},${cy - radius}`;
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function CircularText({
       lastTimeRef.current = now;
 
       const targetSpeed = hoveredRef.current && reverseOnHover ? -speed : speed;
-      springSpeed.target.current = targetSpeed;
+      springSpeed.setTarget(targetSpeed);
       const currentSpeed = springSpeed.tick(dt);
 
       angle.current += currentSpeed * dt;
@@ -46,7 +47,7 @@ export default function CircularText({
     };
     rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [speed, reverseOnHover]);
+  }, [speed, reverseOnHover, springSpeed]);
 
   return (
     <div

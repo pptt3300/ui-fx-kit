@@ -23,7 +23,7 @@ export default function FlipCard({
   const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    spring.target.current = flipped ? 180 : 0;
+    spring.setTarget(flipped ? 180 : 0);
 
     const loop = (now: number) => {
       const dt = lastTimeRef.current ? (now - lastTimeRef.current) / 1000 : 1 / 60;
@@ -46,7 +46,7 @@ export default function FlipCard({
     lastTimeRef.current = 0;
     animRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animRef.current);
-  }, [flipped, direction]);
+  }, [flipped, direction, spring]);
 
   const containerHandlers =
     trigger === "hover"

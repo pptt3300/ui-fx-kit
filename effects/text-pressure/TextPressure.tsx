@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useMousePosition, proximity } from "../../hooks";
 
 interface TextPressureProps {
@@ -19,10 +19,46 @@ export default function TextPressure({
   className,
 }: TextPressureProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const { position, handlers } = useMousePosition({ scope: "element", mode: "state" });
-  const mousePos = position as { x: number; y: number };
+  const { handlers } = useMousePosition({ scope: "element", mode: "state" });
   const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const chars = text.split("");
+  const [charStyles, setCharStyles] = useState<{ weight: number; scale: number }[]>(
+    chars.map(() => ({ weight: minWeight, scale: 1 })),
+  );
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    handlers.onMouseMove(e);
+    const containerEl = containerRef.current;
+    if (!containerEl) return;
+    const containerRect = containerEl.getBoundingClientRect();
+    const mx = e.clientX - containerRect.left;
+    const my = e.clientY - containerRect.top;
+    const newStyles = chars.map((_, i) => {
+      const el = charRefs.current[i];
+      if (!el) return { weight: minWeight, scale: 1 };
+      const rect = el.getBoundingClientRect();
+      const charCenterX = rect.left - containerRect.left + rect.width / 2;
+      const charCenterY = rect.top - containerRect.top + rect.height / 2;
+      const result = proximity(
+        { x: mx, y: my },
+        { x: charCenterX, y: charCenterY },
+        { radius, easing: "quadratic" },
+      );
+      if (result.inRange) {
+        return {
+          weight: minWeight + result.force * (maxWeight - minWeight),
+          scale: 1 + result.force * 0.15,
+        };
+      }
+      return { weight: minWeight, scale: 1 };
+    });
+    setCharStyles(newStyles);
+  }, [chars, minWeight, maxWeight, radius, handlers]);
+
+  const handleMouseLeave = useCallback(() => {
+    handlers.onMouseLeave();
+    setCharStyles(chars.map(() => ({ weight: minWeight, scale: 1 })));
+  }, [chars, minWeight, handlers]);
 
   return (
     <span
@@ -35,33 +71,11 @@ export default function TextPressure({
         userSelect: "none",
         position: "relative",
       }}
-      onMouseMove={handlers.onMouseMove}
-      onMouseLeave={handlers.onMouseLeave}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {chars.map((char, i) => {
-        const el = charRefs.current[i];
-        let weight = minWeight;
-        let scale = 1;
-
-        if (el && mousePos.x !== -9999) {
-          const rect = el.getBoundingClientRect();
-          const containerRect = containerRef.current?.getBoundingClientRect();
-          if (containerRect) {
-            // Position relative to container
-            const charCenterX = rect.left - containerRect.left + rect.width / 2;
-            const charCenterY = rect.top - containerRect.top + rect.height / 2;
-            const result = proximity(
-              mousePos,
-              { x: charCenterX, y: charCenterY },
-              { radius, easing: "quadratic" },
-            );
-            if (result.inRange) {
-              weight = minWeight + result.force * (maxWeight - minWeight);
-              scale = 1 + result.force * 0.15;
-            }
-          }
-        }
-
+        const { weight, scale } = charStyles[i] ?? { weight: minWeight, scale: 1 };
         return (
           <span
             key={i}

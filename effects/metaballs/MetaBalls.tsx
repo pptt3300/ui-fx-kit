@@ -104,7 +104,7 @@ export default function MetaBalls({
     const canvas = canvasRef.current;
     const w = canvas ? canvas.getBoundingClientRect().width : 400;
     const h = canvas ? canvas.getBoundingClientRect().height : 300;
-    ballsRef.current = Array.from({ length: clampedCount }, (_, i) => ({
+    ballsRef.current = Array.from({ length: clampedCount }, () => ({
       x: w * (0.2 + Math.random() * 0.6),
       y: h * (0.2 + Math.random() * 0.6),
       vx: (Math.random() - 0.5) * 60,
@@ -198,7 +198,6 @@ export default function MetaBalls({
 
       // Push ball uniforms (WebGL 1 doesn't support array uniform setter directly)
       // Flatten into individual vec3 uniforms via u_balls[i]
-      const gl = (canvas as HTMLCanvasElement & { __gl?: WebGLRenderingContext }).__gl;
       // Use setUniform workaround: pass each ball as separate components
       for (let i = 0; i < Math.min(balls.length, MAX_BALLS); i++) {
         const b = balls[i];

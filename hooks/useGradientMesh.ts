@@ -19,6 +19,16 @@ const DEFAULT_COLORS: [number, number, number][] = [
   [99, 102, 241], [139, 92, 246], [34, 211, 238], [244, 114, 182],
 ];
 
+function createBlobs(count: number, colors: [number, number, number][], speed: number): GradientBlob[] {
+  return Array.from({ length: count }, (_, i) => ({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random() - 0.5) * speed * 0.01,
+    vy: (Math.random() - 0.5) * speed * 0.01,
+    color: colors[i % colors.length],
+    radius: 0.25 + Math.random() * 0.15,
+  }));
+}
+
 /**
  * Animated gradient mesh with drifting radial blobs.
  *
@@ -31,19 +41,13 @@ const DEFAULT_COLORS: [number, number, number][] = [
 export function useGradientMesh(options: UseGradientMeshOptions = {}) {
   const { count = 4, colors = DEFAULT_COLORS, speed = 0.3 } = options;
 
-  const blobs = useRef<GradientBlob[]>([]);
-  if (blobs.current.length === 0) {
-    blobs.current = Array.from({ length: count }, (_, i) => ({
-      x: Math.random(), y: Math.random(),
-      vx: (Math.random() - 0.5) * speed * 0.01,
-      vy: (Math.random() - 0.5) * speed * 0.01,
-      color: colors[i % colors.length],
-      radius: 0.25 + Math.random() * 0.15,
-    }));
+  const blobData = useRef<GradientBlob[] | null>(null);
+  if (blobData.current === null) {
+    blobData.current = createBlobs(count, colors, speed);
   }
 
   const tick = useCallback((dt: number) => {
-    for (const blob of blobs.current) {
+    for (const blob of blobData.current!) {
       blob.x += blob.vx * dt;
       blob.y += blob.vy * dt;
       if (blob.x < -0.1 || blob.x > 1.1) blob.vx *= -1;
@@ -57,12 +61,12 @@ export function useGradientMesh(options: UseGradientMeshOptions = {}) {
   }, [speed]);
 
   const toCSS = useCallback((opacity = 0.4): string => {
-    const gradients = blobs.current.map((b) => {
+    const gradients = blobData.current!.map((b) => {
       const [r, g, b_] = b.color;
       return `radial-gradient(ellipse at ${b.x * 100}% ${b.y * 100}%, rgba(${r},${g},${b_},${opacity}) 0%, transparent ${b.radius * 100}%)`;
     });
     return gradients.join(", ");
   }, []);
 
-  return { blobs, tick, toCSS };
+  return { tick, toCSS };
 }

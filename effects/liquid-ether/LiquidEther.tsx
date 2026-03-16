@@ -137,7 +137,7 @@ export default function LiquidEther({
     };
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
-  }, [position, setUniform]);
+  }, [position, setUniform, canvasRef]);
 
   return (
     <canvas

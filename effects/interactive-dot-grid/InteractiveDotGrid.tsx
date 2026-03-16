@@ -20,7 +20,9 @@ export default function InteractiveDotGrid({
 
   const dotRadius = 1.5;
   const propsRef = useRef({ gap, influenceRadius, maxDisplacement });
-  propsRef.current = { gap, influenceRadius, maxDisplacement };
+  useEffect(() => {
+    propsRef.current = { gap, influenceRadius, maxDisplacement };
+  });
 
   useEffect(() => {
     return startLoop((ctx) => {

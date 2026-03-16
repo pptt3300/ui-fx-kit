@@ -28,11 +28,13 @@ export default function ClickSpark({
 }: ClickSparkProps) {
   const { canvasRef, startLoop } = useCanvasSetup();
   const colorRef = useRef(color);
-  colorRef.current = color;
   const countRef = useRef(count);
-  countRef.current = count;
   const lengthRef = useRef(length);
-  lengthRef.current = length;
+  useEffect(() => {
+    colorRef.current = color;
+    countRef.current = count;
+    lengthRef.current = length;
+  });
 
   const pendingBursts = useRef<Array<{ x: number; y: number }>>([]);
 

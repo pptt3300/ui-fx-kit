@@ -61,7 +61,6 @@ export default function ImageTrail({
           const next = [...prev, { id, src, x: mx, y: my, rotation, visible: true }];
           // Keep max trailLength — schedule removal of oldest if over limit
           if (next.length > trailLength) {
-            const oldest = next[0];
             return next.slice(1).concat();
           }
           return next;
@@ -84,8 +83,9 @@ export default function ImageTrail({
 
   // Cleanup timers on unmount
   useEffect(() => {
+    const timers = timersRef.current;
     return () => {
-      timersRef.current.forEach((t) => clearTimeout(t));
+      timers.forEach((t) => clearTimeout(t));
     };
   }, []);
 

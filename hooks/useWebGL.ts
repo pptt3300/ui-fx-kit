@@ -121,11 +121,12 @@ export function useWebGL(options: UseWebGLOptions) {
     }
     pendingUniforms.current.clear();
 
+    const locs = uniformLocations.current;
     return () => {
       readyRef.current = false;
       programRef.current = null;
       glRef.current = null;
-      uniformLocations.current.clear();
+      locs.clear();
       gl.deleteProgram(program);
       gl.deleteShader(vs);
       gl.deleteShader(fs);

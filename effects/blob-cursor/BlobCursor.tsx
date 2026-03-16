@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets/colors";
 

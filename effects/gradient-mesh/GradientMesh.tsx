@@ -20,7 +20,7 @@ export default function GradientMesh({
   const mesh = useGradientMesh({ count, colors: resolvedColors, speed });
   const divRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
-  const lastTimeRef = useRef<number>(performance.now());
+  const lastTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const el = divRef.current;

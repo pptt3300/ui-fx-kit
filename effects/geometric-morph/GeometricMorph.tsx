@@ -152,7 +152,7 @@ export default function GeometricMorph({
         r,
       );
       spring.set(0);
-      spring.target.current = 1;
+      spring.setTarget(1);
       setShapeIndex(nextIndexRef.current);
     }, duration);
     return () => clearInterval(interval);
@@ -161,7 +161,7 @@ export default function GeometricMorph({
 
   // Initial target
   useEffect(() => {
-    spring.target.current = 1;
+    spring.setTarget(1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -192,7 +192,7 @@ export default function GeometricMorph({
         my = mousePos.current.y - rect.top;
       }
 
-      const distorted: [number, number][] = base.map(([px, py], i) => {
+      const distorted: [number, number][] = base.map(([px, py]) => {
         // Perlin noise distortion
         const nx =
           noise2D(px + timeRef.current * 30, py) * 8;

@@ -38,7 +38,7 @@ export default function SplashCursor({
   const { position } = useMousePosition({ scope: "window" });
   const prevPos = useRef({ x: -9999, y: -9999 });
   const colorsRef = useRef(colors);
-  colorsRef.current = colors;
+  useEffect(() => { colorsRef.current = colors; });
 
   const particles = useParticles<SplashParticle>({
     spawn: () => {

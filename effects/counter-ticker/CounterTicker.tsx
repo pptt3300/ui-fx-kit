@@ -84,13 +84,13 @@ export default function CounterTicker({
   const rafRef = useRef<number>(0);
   const lastTime = useRef<number>(0);
   const [displayVal, setDisplayVal] = useState(0);
-  const prevDisplayStr = useRef("");
+  const [prevDisplayStr, setPrevDisplayStr] = useState("");
 
   const shouldStart = scrollTrigger ? inView : true;
 
   useEffect(() => {
     if (!shouldStart) return;
-    spring.target.current = value;
+    spring.setTarget(value);
 
     let running = true;
     const loop = (now: number) => {
@@ -98,7 +98,11 @@ export default function CounterTicker({
       const dt = lastTime.current ? Math.min((now - lastTime.current) / 1000, 0.05) : 0.016;
       lastTime.current = now;
       const current = spring.tick(dt);
-      setDisplayVal(current);
+      setDisplayVal((prev) => {
+        const prevStr = formatNumber(prev, format);
+        setPrevDisplayStr(prevStr);
+        return current;
+      });
       if (!spring.settled()) {
         rafRef.current = requestAnimationFrame(loop);
       }
@@ -109,11 +113,10 @@ export default function CounterTicker({
       running = false;
       cancelAnimationFrame(rafRef.current);
     };
-  }, [shouldStart, value, spring]);
+  }, [shouldStart, value, spring, format]);
 
   const displayStr = formatNumber(displayVal, format);
-  const prevStr = prevDisplayStr.current.padStart(displayStr.length, " ");
-  prevDisplayStr.current = displayStr;
+  const prevStr = prevDisplayStr.padStart(displayStr.length, " ");
 
   return (
     <div ref={ref} className={`inline-flex items-baseline font-mono tabular-nums ${className}`}>
@@ -124,6 +127,7 @@ export default function CounterTicker({
             key={i}
             digit={char}
             prevDigit={prevStr[i] ?? char}
+
           />
         ))}
       </span>

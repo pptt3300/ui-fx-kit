@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
 export interface ParticleConfig<T> {
   /** Factory function to create a new particle */
@@ -33,7 +33,7 @@ export function useParticles<T>(config: ParticleConfig<T>) {
   const { maxCount = 2000 } = config;
   const items = useRef<T[]>([]);
   const configRef = useRef(config);
-  configRef.current = config;
+  useEffect(() => { configRef.current = config; });
 
   /** Emit `count` new particles using the current spawn function */
   const emit = useCallback(

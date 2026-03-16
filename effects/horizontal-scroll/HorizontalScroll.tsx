@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { useScrollProgress } from "../../hooks";
 
 interface HorizontalScrollProps {
@@ -14,10 +13,10 @@ export default function HorizontalScroll({
   gap = 24,
   className = "",
 }: HorizontalScrollProps) {
-  const viewportRef = useRef<number>(typeof window !== "undefined" ? window.innerWidth : 1200);
+  const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1200;
 
   const totalWidth = items.length * (cardWidth + gap) - gap;
-  const scrollDistance = Math.max(0, totalWidth - viewportRef.current);
+  const scrollDistance = Math.max(0, totalWidth - viewportWidth);
 
   // Container needs to be tall enough so the scroll distance equals content overflow
   const containerHeight = `calc(100vh + ${scrollDistance}px)`;

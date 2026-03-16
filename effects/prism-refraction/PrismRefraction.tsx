@@ -9,60 +9,6 @@ interface PrismRefractionProps {
   className?: string;
 }
 
-const FRAGMENT_SHADER = `
-precision mediump float;
-
-uniform float u_time;
-uniform vec2 u_resolution;
-uniform vec2 u_mouse;
-uniform float u_strength;
-uniform float u_dispersion;
-uniform sampler2D u_texture;
-
-void main() {
-  vec2 uv = gl_FragCoord.xy / u_resolution;
-  // Flip Y for canvas coordinate system
-  vec2 texUV = vec2(uv.x, 1.0 - uv.y);
-
-  float aspect = u_resolution.x / u_resolution.y;
-
-  // Mouse position in normalized UV space
-  vec2 mouseUV = u_mouse / u_resolution;
-  mouseUV.y = 1.0 - mouseUV.y;
-
-  // Direction from mouse (prism position) to pixel
-  vec2 toPixel = texUV - mouseUV;
-  float dist = length(toPixel);
-
-  // Refraction offset direction — radiates from mouse/prism position
-  vec2 refractDir = dist > 0.001 ? normalize(toPixel) : vec2(0.0);
-
-  // Chromatic aberration: each channel offset by slightly different amount
-  float baseOffset = u_strength * smoothstep(0.8, 0.0, dist);
-
-  vec2 offsetR = refractDir * (baseOffset - u_dispersion);
-  vec2 offsetG = refractDir * baseOffset;
-  vec2 offsetB = refractDir * (baseOffset + u_dispersion);
-
-  // Edge-of-screen falloff to prevent wrapping artifacts
-  float edgeFade = smoothstep(0.0, 0.05, texUV.x)
-    * smoothstep(1.0, 0.95, texUV.x)
-    * smoothstep(0.0, 0.05, texUV.y)
-    * smoothstep(1.0, 0.95, texUV.y);
-
-  offsetR *= edgeFade;
-  offsetG *= edgeFade;
-  offsetB *= edgeFade;
-
-  float r = texture2D(u_texture, clamp(texUV + offsetR, 0.0, 1.0)).r;
-  float g = texture2D(u_texture, clamp(texUV + offsetG, 0.0, 1.0)).g;
-  float b = texture2D(u_texture, clamp(texUV + offsetB, 0.0, 1.0)).b;
-  float a = texture2D(u_texture, texUV).a;
-
-  gl_FragColor = vec4(r, g, b, a);
-}
-`;
-
 // When no texture is available we still show the chromatic split as a tint overlay
 const FALLBACK_FRAGMENT_SHADER = `
 precision mediump float;

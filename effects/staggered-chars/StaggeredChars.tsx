@@ -32,15 +32,16 @@ export default function StaggeredChars({
     if (trigger === "mount") {
       stagger.start();
     }
-  }, []);
+  }, [stagger, trigger]);
 
   useEffect(() => {
     if (trigger === "inView" && inView && !startedRef.current) {
       startedRef.current = true;
       stagger.start();
-      setPlaying(true);
+      const id = requestAnimationFrame(() => setPlaying(true));
+      return () => cancelAnimationFrame(id);
     }
-  }, [trigger, inView]);
+  }, [stagger, trigger, inView]);
 
   const handleMouseEnter = () => {
     if (trigger === "hover") {

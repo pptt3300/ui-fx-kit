@@ -50,5 +50,5 @@ export function useScramble(options: UseScrambleOptions) {
     return stop;
   }, [autoStart, start, stop]);
 
-  return { displayText, start, stop, isComplete: revealedCount.current >= text.length };
+  return { displayText, start, stop, isComplete: displayText === text };
 }

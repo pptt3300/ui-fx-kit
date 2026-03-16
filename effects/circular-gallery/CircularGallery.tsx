@@ -17,13 +17,15 @@ export default function CircularGallery({
   className = "",
 }: CircularGalleryProps) {
   const angleRef = useRef(0);
+  const [angle, setAngle] = useState(0);
   const autoSpeedRef = useRef(autoSpeed);
-  autoSpeedRef.current = autoSpeed;
   const radiusRef = useRef(radius);
-  radiusRef.current = radius;
+  useEffect(() => {
+    autoSpeedRef.current = autoSpeed;
+    radiusRef.current = radius;
+  });
 
   const velocitySpring = useSpring(0, { stiffness: 60, damping: 18 });
-  const [, forceUpdate] = useState(0);
   const rafRef = useRef<number>(0);
   const lastTime = useRef(0);
   const isDragging = useRef(false);
@@ -31,7 +33,7 @@ export default function CircularGallery({
   const gesture = useGesture({
     onDragStart: () => {
       isDragging.current = true;
-      velocitySpring.target.current = 0;
+      velocitySpring.setTarget(0);
     },
     onDragMove: (s) => {
       // Map dx to angle change — 1px = 0.3 degrees
@@ -44,7 +46,7 @@ export default function CircularGallery({
       // Momentum from fling velocity
       const flingAngle = s.vx * 0.003;
       velocitySpring.set(flingAngle * 60);
-      velocitySpring.target.current = 0;
+      velocitySpring.setTarget(0);
     },
   });
 
@@ -62,7 +64,7 @@ export default function CircularGallery({
         angleRef.current += vel * dt + autoSpeedRef.current * dt;
       }
 
-      forceUpdate((n) => n + 1);
+      setAngle(angleRef.current);
       rafRef.current = requestAnimationFrame(loop);
     };
 
@@ -96,7 +98,7 @@ export default function CircularGallery({
       >
         {items.map((item, i) => {
           const baseAngle = (i / count) * 360;
-          const totalAngle = baseAngle + angleRef.current;
+          const totalAngle = baseAngle + angle;
           const rad = (totalAngle * Math.PI) / 180;
           const x = Math.sin(rad) * radius;
           const z = Math.cos(rad) * radius;

@@ -52,7 +52,7 @@ export default function ParticleTitle({ text, collapsed }: Props) {
   const animRef = useRef<number>(0);
   const collapsedRef = useRef(collapsed);
   const frameRef = useRef(0);
-  collapsedRef.current = collapsed;
+  useEffect(() => { collapsedRef.current = collapsed; });
 
   const initParticles = useCallback(() => {
     const canvas = canvasRef.current;

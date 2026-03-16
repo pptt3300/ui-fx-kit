@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import type { SpringConfig } from "../presets/springs";
 
 const DEFAULTS: Required<SpringConfig> = {
@@ -23,7 +23,9 @@ const DEFAULTS: Required<SpringConfig> = {
  */
 export function useSpring(initial: number, config?: Partial<SpringConfig>) {
   const cfgRef = useRef({ ...DEFAULTS, ...config });
-  cfgRef.current = { ...DEFAULTS, ...config };
+  useEffect(() => {
+    cfgRef.current = { ...DEFAULTS, ...config };
+  });
   const value = useRef(initial);
   const velocity = useRef(0);
   const target = useRef(initial);
@@ -64,5 +66,9 @@ export function useSpring(initial: number, config?: Partial<SpringConfig>) {
     velocity.current = 0;
   }, []);
 
-  return { value, velocity, target, tick, settled, set };
+  const setTarget = useCallback((v: number) => {
+    target.current = v;
+  }, []);
+
+  return { value, velocity, target, tick, settled, set, setTarget };
 }

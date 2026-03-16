@@ -81,7 +81,8 @@ export default function NoiseGrain({
 
       ctx.putImageData(imgData, 0, 0);
     },
-    [intensity, color, clearRadius, position, canvasRef],
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- position and canvasRef are stable refs, intentionally omitted
+    [intensity, color, clearRadius],
   );
 
   // Static grain: draw once on mount or when props change

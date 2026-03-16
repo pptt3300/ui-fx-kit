@@ -64,18 +64,22 @@ export function useTypewriter(options: UseTypewriterOptions): TypewriterState {
       } else {
         // Full text reached
         if (!loop && phrases.length === 1) {
-          setDone(true);
-          setPhase("pausing");
+          requestAnimationFrame(() => {
+            setDone(true);
+            setPhase("pausing");
+          });
           return;
         }
-        setPhase("pausing");
         timeoutRef.current = setTimeout(() => {
-          if (!loop && phraseIdx === phrases.length - 1) {
-            setDone(true);
-          } else {
-            setPhase("deleting");
-          }
-        }, pauseDuration);
+          setPhase("pausing");
+          setTimeout(() => {
+            if (!loop && phraseIdx === phrases.length - 1) {
+              setDone(true);
+            } else {
+              setPhase("deleting");
+            }
+          }, pauseDuration);
+        }, 0);
       }
     } else if (phase === "deleting") {
       if (text.length > 0) {
@@ -83,8 +87,10 @@ export function useTypewriter(options: UseTypewriterOptions): TypewriterState {
           setText(text.slice(0, -1));
         }, deletingSpeed);
       } else {
-        setPhase("typing");
-        setPhraseIdx((phraseIdx + 1) % phrases.length);
+        timeoutRef.current = setTimeout(() => {
+          setPhase("typing");
+          setPhraseIdx((phraseIdx + 1) % phrases.length);
+        }, 0);
       }
     }
 

@@ -95,7 +95,7 @@ export function useGesture(options: UseGestureOptions = {}) {
   );
 
   const onPointerUp = useCallback(
-    (_e: React.PointerEvent) => {
+    () => {
       state.current = { ...state.current, dragging: false };
       onDragEnd?.(state.current);
     },

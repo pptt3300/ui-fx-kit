@@ -39,10 +39,13 @@ export function useSpotlight(options: UseSpotlightOptions = {}) {
   const ref = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [elWidth, setElWidth] = useState(400);
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    setElWidth(rect.width || 400);
   }, []);
 
   const onMouseEnter = useCallback(() => setIsHovered(true), []);
@@ -62,7 +65,7 @@ export function useSpotlight(options: UseSpotlightOptions = {}) {
 
   /** Conic rotating gradient border (for focused/active states) */
   const conicBorderBg = (() => {
-    const w = ref.current?.offsetWidth || 400;
+    const w = elWidth;
     const deg = Math.round((x / w) * 360);
     return `conic-gradient(from ${deg}deg at ${x}px ${y}px, ${rgba(color, 1)}, ${rgba(secondaryColor, 1)}, ${rgba([34, 211, 238], 1)}, ${rgba(secondaryColor, 1)}, ${rgba(color, 1)})`;
   })();

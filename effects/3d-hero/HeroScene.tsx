@@ -1,4 +1,4 @@
-import { useRef, useMemo } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, MeshDistortMaterial, Stars } from "@react-three/drei";
 import * as THREE from "three";
@@ -39,7 +39,9 @@ function FloatingParticles() {
   const ref = useRef<THREE.Points>(null);
   const count = 800;
 
-  const [positions, speeds] = useMemo(() => {
+  const [particleData, setParticleData] = useState<{ positions: Float32Array; speeds: Float32Array } | null>(null);
+
+  useEffect(() => {
     const pos = new Float32Array(count * 3);
     const spd = new Float32Array(count);
     for (let i = 0; i < count; i++) {
@@ -48,11 +50,14 @@ function FloatingParticles() {
       pos[i * 3 + 2] = (Math.random() - 0.5) * 12;
       spd[i] = 0.2 + Math.random() * 0.8;
     }
-    return [pos, spd];
+    requestAnimationFrame(() => setParticleData({ positions: pos, speeds: spd }));
   }, []);
 
+  const positions = particleData?.positions ?? null;
+  const speeds = particleData?.speeds ?? null;
+
   useFrame((_, delta) => {
-    if (!ref.current) return;
+    if (!ref.current || !speeds) return;
     const pos = ref.current.geometry.attributes.position;
     for (let i = 0; i < count; i++) {
       const y = pos.getY(i);
@@ -62,6 +67,8 @@ function FloatingParticles() {
     pos.needsUpdate = true;
     ref.current.rotation.y += delta * 0.02;
   });
+
+  if (!positions) return null;
 
   return (
     <points ref={ref}>

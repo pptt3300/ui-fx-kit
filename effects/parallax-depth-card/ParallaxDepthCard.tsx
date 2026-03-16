@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTilt3D, useMousePosition } from "../../hooks";
 
 interface ParallaxDepthCardProps {
@@ -23,12 +24,11 @@ export default function ParallaxDepthCard({
     scope: "element",
     mode: "state",
   });
+  const [dims, setDims] = useState({ w: 300, h: 200 });
 
   const pos = position as { x: number; y: number };
-  const cardW = ref.current?.offsetWidth ?? 300;
-  const cardH = ref.current?.offsetHeight ?? 200;
-  const nx = (pos?.x ?? cardW / 2) / cardW - 0.5;
-  const ny = (pos?.y ?? cardH / 2) / cardH - 0.5;
+  const nx = (pos?.x ?? dims.w / 2) / dims.w - 0.5;
+  const ny = (pos?.y ?? dims.h / 2) / dims.h - 0.5;
 
   return (
     <div
@@ -37,6 +37,9 @@ export default function ParallaxDepthCard({
       onMouseMove={(e) => {
         tiltHandlers.onMouseMove(e);
         mouseHandlers.onMouseMove(e);
+        if (ref.current) {
+          setDims({ w: ref.current.offsetWidth || 300, h: ref.current.offsetHeight || 200 });
+        }
       }}
       onMouseLeave={() => {
         tiltHandlers.onMouseLeave();

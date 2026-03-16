@@ -32,6 +32,21 @@ function VelocityText({ text, baseVelocity = 1 }: { text: string; baseVelocity: 
   );
 }
 
+function CounterItem({ item, scrollYProgress }: { item: { label: string; end: number; suffix: string }; scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
+  const value = useTransform(scrollYProgress, [0.1, 0.5], [0, item.end]);
+  const rounded = useSpring(value, { stiffness: 50, damping: 20 });
+
+  return (
+    <div className="text-center">
+      <motion.span className="text-5xl font-black text-indigo-600 tabular-nums block">
+        <AnimatedNumber value={rounded} />
+        {item.suffix}
+      </motion.span>
+      <span className="text-sm text-slate-500 mt-2 block">{item.label}</span>
+    </div>
+  );
+}
+
 function CounterSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -48,21 +63,9 @@ function CounterSection() {
 
   return (
     <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-      {nums.map((item, i) => {
-        const value = useTransform(scrollYProgress, [0.1, 0.5], [0, item.end]);
-        const rounded = useSpring(value, { stiffness: 50, damping: 20 });
-
-        return (
-          <div key={i} className="text-center">
-            <motion.span className="text-5xl font-black text-indigo-600 tabular-nums block">
-              {/* We need to render the spring value */}
-              <AnimatedNumber value={rounded} />
-              {item.suffix}
-            </motion.span>
-            <span className="text-sm text-slate-500 mt-2 block">{item.label}</span>
-          </div>
-        );
-      })}
+      {nums.map((item, i) => (
+        <CounterItem key={i} item={item} scrollYProgress={scrollYProgress} />
+      ))}
     </div>
   );
 }

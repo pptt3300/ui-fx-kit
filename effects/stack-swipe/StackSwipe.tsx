@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useGesture, useSpring } from "../../hooks";
 
 interface StackSwipeProps {
@@ -58,15 +58,15 @@ export default function StackSwipe({
     lastTimeRef.current = 0;
     animRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animRef.current);
-  }, [dismissed]);
+  }, [dismissed, onSwipe, rotation, translateX]);
 
   const gesture = useGesture({
     onDragStart: () => {
       dragging.current = true;
     },
     onDragMove: (s) => {
-      translateX.target.current = s.dx;
-      rotation.target.current = s.dx * 0.08;
+      translateX.setTarget(s.dx);
+      rotation.setTarget(s.dx * 0.08);
     },
     onDragEnd: (s) => {
       dragging.current = false;
@@ -75,12 +75,12 @@ export default function StackSwipe({
 
       if (shouldDismiss) {
         const dir = s.dx > 0 || s.vx > 0 ? 1 : -1;
-        translateX.target.current = dir * 600;
-        rotation.target.current = dir * 25;
+        translateX.setTarget(dir * 600);
+        rotation.setTarget(dir * 25);
         setDismissed({ index: topIndex, dir });
       } else {
-        translateX.target.current = 0;
-        rotation.target.current = 0;
+        translateX.setTarget(0);
+        rotation.setTarget(0);
       }
     },
   });

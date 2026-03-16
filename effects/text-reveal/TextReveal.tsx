@@ -21,6 +21,21 @@ function RevealWord({ children, progress, range }: {
   );
 }
 
+function RevealChar({ char, progress, range }: { char: string; progress: ReturnType<typeof useScroll>["scrollYProgress"]; range: [number, number] }) {
+  const opacity = useTransform(progress, range, [0, 1]);
+  const color = useTransform(
+    progress,
+    range,
+    ["rgb(203 213 225)", "rgb(99 102 241)"]
+  );
+
+  return (
+    <motion.span style={{ opacity, color }} className="inline-block">
+      {char === " " ? "\u00A0" : char}
+    </motion.span>
+  );
+}
+
 function CharacterReveal({ text, progress, startRange }: {
   text: string;
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
@@ -32,22 +47,7 @@ function CharacterReveal({ text, progress, startRange }: {
       {chars.map((char, i) => {
         const start = startRange[0] + (i / chars.length) * (startRange[1] - startRange[0]) * 0.5;
         const end = start + (startRange[1] - startRange[0]) * 0.5;
-        const opacity = useTransform(progress, [start, end], [0, 1]);
-        const color = useTransform(
-          progress,
-          [start, end],
-          ["rgb(203 213 225)", "rgb(99 102 241)"] // slate-300 -> indigo-500
-        );
-
-        return (
-          <motion.span
-            key={i}
-            style={{ opacity, color }}
-            className="inline-block"
-          >
-            {char === " " ? "\u00A0" : char}
-          </motion.span>
-        );
+        return <RevealChar key={i} char={char} progress={progress} range={[start, end]} />;
       })}
     </span>
   );
