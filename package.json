@@ -18,7 +18,8 @@
     "README.zh.md"
   ],
   "scripts": {
-    "mcp": "node mcp-server.js"
+    "mcp": "node mcp-server.js",
+    "test": "node --test test/cli.test.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
