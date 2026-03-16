@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import CodePanel from "./CodePanel";
-import { useI18n } from "@demo/lib/i18n";
+import PlaygroundDrawer from "./PlaygroundDrawer";
+import type { ControlDef } from "./PlaygroundDrawer";
 
 interface EffectSectionProps {
   id: string;
@@ -12,7 +12,12 @@ interface EffectSectionProps {
   hooks?: string[];
   css?: string[];
   children: React.ReactNode;
-  showCode?: boolean;
+  // Playground props
+  controls?: ControlDef[];
+  values?: Record<string, number | string | boolean>;
+  defaultValues?: Record<string, number | string | boolean>;
+  onChange?: (key: string, value: number | string | boolean) => void;
+  propGroups?: Record<string, string[]>;
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -35,12 +40,15 @@ export default function EffectSection({
   hooks = [],
   css = [],
   children,
-  showCode = true,
+  controls,
+  values,
+  defaultValues,
+  onChange,
+  propGroups,
 }: EffectSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [codePanelOpen, setCodePanelOpen] = useState(false);
 
   // Mount effect when near viewport (1 screen ahead), unmount when far away
   useEffect(() => {
@@ -71,8 +79,6 @@ export default function EffectSection({
       visibleObserver.disconnect();
     };
   }, [id]);
-
-  const { t } = useI18n();
 
   const categoryClass =
     CATEGORY_COLORS[category] ??
@@ -115,31 +121,19 @@ export default function EffectSection({
           <h2 className="text-2xl font-bold text-white mb-1">{title}</h2>
           <p className="text-sm text-white/50 leading-relaxed">{description}</p>
         </div>
-
-        {/* View Code button */}
-        {showCode && (
-          <button
-            onClick={() => setCodePanelOpen(true)}
-            className="absolute bottom-8 right-6 z-10 flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium text-white/70 hover:text-white transition-colors"
-            style={{
-              background: "rgba(255,255,255,0.07)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              backdropFilter: "blur(12px)",
-            }}
-          >
-            {"</>"}
-            {" "}{t("effect.viewCode")}
-          </button>
-        )}
       </section>
 
-      <CodePanel
-        effectId={id}
-        hooks={hooks}
-        css={css}
-        isOpen={codePanelOpen}
-        onClose={() => setCodePanelOpen(false)}
-      />
+      {mounted && (
+        <PlaygroundDrawer
+          effectId={id}
+          active={isVisible}
+          controls={controls}
+          values={values}
+          defaultValues={defaultValues}
+          onChange={onChange}
+          propGroups={propGroups}
+        />
+      )}
     </>
   );
 }
