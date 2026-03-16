@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readdir, readFile, copyFile, mkdir, stat } from "fs/promises";
-import { join, dirname, basename, resolve } from "path";
+import { join, dirname, basename, resolve, relative } from "path";
 import { fileURLToPath } from "url";
 import { existsSync } from "fs";
 
@@ -269,13 +269,17 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
     console.log(`  ${GREEN}✓${RESET} Import paths ${DIM}(would adjust)${RESET}`);
   } else {
     console.log(`\n${BOLD}Fixing imports...${RESET}`);
+    // Compute actual relative paths from effect dir to hooks/presets/css dirs
+    const relHooks = relative(effectsTarget, hooksTarget).replace(/\\/g, "/");
+    const relPresets = relative(effectsTarget, presetsTarget).replace(/\\/g, "/");
+    const relCss = relative(effectsTarget, cssTarget).replace(/\\/g, "/");
     for (const file of effectFiles) {
       const destPath = join(effectsTarget, file);
       let code = await readFile(destPath, "utf-8");
-      code = code.replace(/from\s+["']\.\.\/\.\.\/hooks["']/g, 'from "../../hooks"');
-      code = code.replace(/from\s+["']\.\.\/\.\.\/presets\/(\w+)["']/g, 'from "../../presets/$1"');
-      code = code.replace(/from\s+["']\.\.\/\.\.\/presets["']/g, 'from "../../presets"');
-      code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, 'import "../../css/');
+      code = code.replace(/from\s+["']\.\.\/\.\.\/hooks(\/[^"']*)?["']/g, `from "${relHooks}$1"`);
+      code = code.replace(/from\s+["']\.\.\/\.\.\/presets\/(\w+)["']/g, `from "${relPresets}/$1"`);
+      code = code.replace(/from\s+["']\.\.\/\.\.\/presets["']/g, `from "${relPresets}"`);
+      code = code.replace(/import\s+["']\.\.\/\.\.\/css\//g, `import "${relCss}/`);
       const { writeFile } = await import("fs/promises");
       await writeFile(destPath, code);
     }
