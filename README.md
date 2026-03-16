@@ -2,7 +2,20 @@
 
 64 composable React UI effects. Hooks · CSS · Components.
 
-[Live Demo](https://pptt3300.github.io/ui-fx-kit/) · [中文文档](./README.zh.md)
+[Live Demo & Playground](https://pptt3300.github.io/ui-fx-kit/) · [中文文档](./README.zh.md)
+
+## Try Before You Install
+
+Every effect on the [demo site](https://pptt3300.github.io/ui-fx-kit/) has a **Playground panel** — adjust speed, colors, intensity, and other props in real-time. When you're happy with the result, the Install tab gives you the exact CLI command and JSX usage with your tuned props.
+
+```
+1. Browse effects → click "Playground" button
+2. Tune sliders, toggle switches, pick colors
+3. Switch to "Install" tab → copy the CLI command
+4. The Usage snippet reflects your settings
+```
+
+No copy-pasting walls of code. One CLI command, one JSX line.
 
 ## Get Started
 
