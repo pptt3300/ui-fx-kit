@@ -118,6 +118,12 @@ server.tool(
 
     const result = [`# ${meta.name}\n`, `${meta.description}\n`];
 
+    if (meta.dependencies?.length > 0) {
+      result.push(
+        `> ⚠️ **Run:** \`npm install ${meta.dependencies.join(" ")}\`\n`,
+      );
+    }
+
     if (meta.usage) {
       result.push(`## Usage\n\`\`\`tsx\n${meta.usage}\n\`\`\`\n`);
     }
@@ -137,12 +143,6 @@ server.tool(
     if (meta.css?.length > 0) {
       result.push(
         `## CSS\nRequires: ${meta.css.join(", ")}\nUse \`get_css(id)\` to fetch each CSS file. (Strip .css extension for the id)\n`,
-      );
-    }
-
-    if (meta.dependencies?.length > 0) {
-      result.push(
-        `## Dependencies\nnpm install ${meta.dependencies.join(" ")}\n`,
       );
     }
 
