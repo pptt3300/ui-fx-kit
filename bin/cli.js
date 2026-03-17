@@ -106,6 +106,16 @@ async function copyWithLog(src, dest, label, { force = false, dryRun = false } =
   return true;
 }
 
+/** Walk up from dir to find project root (has package.json) */
+function findProjectRoot(dir) {
+  let current = resolve(dir);
+  while (current !== dirname(current)) {
+    if (existsSync(join(current, "package.json"))) return current;
+    current = dirname(current);
+  }
+  return null;
+}
+
 // ── Commands ────────────────────────────────────────────
 
 async function cmdList(tag) {
@@ -130,7 +140,7 @@ async function cmdList(tag) {
   }
 }
 
-async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
+async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {}) {
   // Validate effect exists
   let meta;
   try {
@@ -195,7 +205,7 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
       const hookFile = hook === "proximity" ? "useProximity.ts" : `${hook}.ts`;
       const src = join(HOOKS_DIR, hookFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`, { dryRun });
+        await copyWithLog(src, join(hooksTarget, hookFile), `hooks/${hookFile}`, { force, dryRun });
       }
     }
     // Merge hooks/index.ts — append new exports without destroying existing content
@@ -243,7 +253,7 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
     for (const cssFile of allCss) {
       const src = join(CSS_DIR, cssFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(cssTarget, cssFile), `css/${cssFile}`, { dryRun });
+        await copyWithLog(src, join(cssTarget, cssFile), `css/${cssFile}`, { force, dryRun });
       }
     }
   }
@@ -255,7 +265,7 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
       const tsFile = `${preset}.ts`;
       const src = join(PRESETS_DIR, tsFile);
       if (existsSync(src)) {
-        await copyWithLog(src, join(presetsTarget, tsFile), `presets/${tsFile}`, { dryRun });
+        await copyWithLog(src, join(presetsTarget, tsFile), `presets/${tsFile}`, { force, dryRun });
       }
     }
   }
@@ -291,6 +301,56 @@ async function cmdAdd(effectId, targetDir, { dryRun = false } = {}) {
       await writeFile(destPath, code);
     }
     console.log(`  ${GREEN}✓${RESET} Import paths adjusted`);
+  }
+
+  // Detect Next.js / Remix — inject 'use client' if needed
+  const projectRoot2 = findProjectRoot(root);
+  let isNextOrRemix = false;
+  if (projectRoot2) {
+    isNextOrRemix = existsSync(join(projectRoot2, "next.config.js")) ||
+      existsSync(join(projectRoot2, "next.config.mjs")) ||
+      existsSync(join(projectRoot2, "next.config.ts"));
+    if (!isNextOrRemix) {
+      try {
+        const projPkg = JSON.parse(await readFile(join(projectRoot2, "package.json"), "utf-8"));
+        const allDeps = { ...projPkg.dependencies, ...projPkg.devDependencies };
+        isNextOrRemix = Object.keys(allDeps).some(d => d.startsWith("@remix-run/"));
+      } catch { /* no package.json or parse error */ }
+    }
+  }
+
+  if (isNextOrRemix && !dryRun) {
+    for (const file of effectFiles) {
+      if (!file.endsWith(".tsx") && !file.endsWith(".ts")) continue;
+      const destPath = join(effectsTarget, file);
+      let code = await readFile(destPath, "utf-8");
+      if (!code.startsWith("'use client'") && !code.startsWith('"use client"')) {
+        code = "'use client';\n\n" + code;
+        await writeFile(destPath, code);
+      }
+    }
+    console.log(`  ${GREEN}✓${RESET} Added 'use client' ${DIM}(Next.js detected)${RESET}`);
+  }
+
+  // Write manifest to project root (where package.json lives)
+  if (!dryRun) {
+    const projectRoot = findProjectRoot(root);
+    const manifestDir = projectRoot || root;
+    const manifestPath = join(manifestDir, ".ui-fx-kit.json");
+    let manifest = { version: 1, effects: {} };
+    if (existsSync(manifestPath)) {
+      try {
+        manifest = JSON.parse(await readFile(manifestPath, "utf-8"));
+      } catch { /* start fresh */ }
+    }
+    const pkgJson = JSON.parse(await readFile(join(LIB_ROOT, "package.json"), "utf-8"));
+    manifest.effects[effectId] = {
+      fromPackageVersion: pkgJson.version,
+      installedAt: new Date().toISOString(),
+      hooks: [...allHooks],
+      css: [...allCss],
+    };
+    await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
   }
 
   // 9. Summary
@@ -370,6 +430,20 @@ async function cmdRemove(effectId, targetDir, { dryRun = false } = {}) {
     await rm(effectsTarget, { recursive: true });
   }
 
+  // Clean manifest
+  const projectRoot = findProjectRoot(root);
+  const manifestDir = projectRoot || root;
+  const manifestPath = join(manifestDir, ".ui-fx-kit.json");
+  if (existsSync(manifestPath)) {
+    try {
+      const manifest = JSON.parse(await readFile(manifestPath, "utf-8"));
+      delete manifest.effects[effectId];
+      if (!dryRun) {
+        await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
+      }
+    } catch { /* ignore */ }
+  }
+
   // 2. Check which hooks are still needed by remaining effects
   const remainingEffectsDir = join(root, "effects");
   if (existsSync(remainingEffectsDir)) {
@@ -416,6 +490,59 @@ async function cmdRemove(effectId, targetDir, { dryRun = false } = {}) {
   }
 }
 
+async function cmdStatus(targetDir) {
+  const target = resolve(targetDir || ".");
+  const normalized = target.replace(/\/+$/, "");
+  const base = basename(normalized);
+  const root = ["effects", "hooks", "css", "presets"].includes(base) ? dirname(normalized) : normalized;
+  const projectRoot = findProjectRoot(root);
+  const manifestDir = projectRoot || root;
+  const manifestPath = join(manifestDir, ".ui-fx-kit.json");
+
+  if (!existsSync(manifestPath)) {
+    console.log(`\n${DIM}No effects installed (no .ui-fx-kit.json found).${RESET}\n`);
+    return;
+  }
+
+  const manifest = JSON.parse(await readFile(manifestPath, "utf-8"));
+  const effects = Object.entries(manifest.effects || {});
+
+  if (effects.length === 0) {
+    console.log(`\n${DIM}No effects installed.${RESET}\n`);
+    return;
+  }
+
+  // Get latest version from npm
+  let latestVersion = null;
+  try {
+    const { execFile } = await import("child_process");
+    const { promisify } = await import("util");
+    const execAsync = promisify(execFile);
+    const { stdout: ver } = await execAsync("npm", ["view", "ui-fx-kit", "version"], { timeout: 5000 });
+    latestVersion = ver.trim();
+  } catch {
+    latestVersion = null;
+  }
+
+  console.log(`\n${BOLD}ui-fx-kit status${RESET}\n`);
+
+  if (latestVersion) {
+    console.log(`${DIM}Latest version: ${latestVersion}${RESET}\n`);
+  }
+
+  for (const [id, info] of effects) {
+    const fromVer = info.fromPackageVersion || "unknown";
+    const hasUpdate = latestVersion && fromVer !== latestVersion;
+    const arrow = hasUpdate ? ` ${YELLOW}→ ${latestVersion} ⬆${RESET}` : ` ${GREEN}✓${RESET}`;
+    console.log(`  ${BOLD}${id}${RESET}  ${DIM}${fromVer}${RESET}${arrow}`);
+  }
+
+  console.log();
+  if (latestVersion && effects.some(([, info]) => info.fromPackageVersion !== latestVersion)) {
+    console.log(`${DIM}Run ${CYAN}npx ui-fx-kit add <effect> --target <dir> --force${RESET}${DIM} to update.${RESET}\n`);
+  }
+}
+
 // ── Arg parsing ─────────────────────────────────────────
 
 function parseArgs(argv) {
@@ -456,9 +583,10 @@ ${BOLD}ui-fx-kit${RESET} — 64 composable React UI effects
 
 ${BOLD}Commands:${RESET}
   ${CYAN}list${RESET} [tag]                    List all effects (optionally filter by tag)
-  ${CYAN}add${RESET} <name> [--target dir] [--dry-run]  Add an effect to your project
+  ${CYAN}add${RESET} <name> [--target dir] [--force] [--dry-run]  Add an effect to your project
   ${CYAN}remove${RESET} <name> --target dir [--dry-run]  Remove an effect from your project
   ${CYAN}info${RESET} <name>                   Show effect details and dependencies
+  ${CYAN}status${RESET} [--target dir]              Show installed effects and available updates
 
 ${BOLD}Examples:${RESET}
   npx ui-fx-kit list
@@ -495,8 +623,9 @@ if (wantsHelp || command === "help" || !command) {
     process.exit(1);
   }
   const dryRun = flags["dry-run"] === true;
+  const force = flags["force"] === true;
   for (const name of effectNames) {
-    await cmdAdd(name, targetDir, { dryRun });
+    await cmdAdd(name, targetDir, { dryRun, force });
     if (effectNames.length > 1) console.log(`${DIM}${"─".repeat(50)}${RESET}\n`);
   }
 } else if (command === "remove" || command === "rm") {
@@ -511,6 +640,8 @@ if (wantsHelp || command === "help" || !command) {
   }
   const dryRun = flags["dry-run"] === true;
   await cmdRemove(positional[1], flags.target, { dryRun });
+} else if (command === "status") {
+  await cmdStatus(flags.target);
 } else if (command === "info") {
   if (!positional[1]) {
     console.error(`\n${RED}Usage:${RESET} npx ui-fx-kit info <effect-name>\n`);

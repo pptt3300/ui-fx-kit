@@ -61,7 +61,7 @@ One prompt, one round trip, complete source code.
 
 ## AI Tool Reference
 
-The MCP server exposes 12 tools. You don't need to call them directly — AI picks the right one based on your prompt. But knowing what's available helps you write better prompts.
+The MCP server exposes 13 tools. You don't need to call them directly — AI picks the right one based on your prompt. But knowing what's available helps you write better prompts.
 
 | Tool | What AI uses it for |
 |------|-------------------|
@@ -77,6 +77,7 @@ The MCP server exposes 12 tools. You don't need to call them directly — AI pic
 | `get_hook` | Get a hook's source code |
 | `get_preset` | Get color palettes or spring configs |
 | `get_effect` | Get a single effect's source (use bundle for full deps) |
+| `check_updates` | Check if installed effects have upstream updates available |
 
 ## Prompt Tips
 
@@ -106,6 +107,8 @@ When using multiple effects on one page, use the same palette for visual consist
 ```bash
 npx ui-fx-kit add holographic-card --target ./src
 npx ui-fx-kit add gradient-mesh silk-waves --target ./src
+npx ui-fx-kit add holographic-card --target ./src --force  # re-install latest version
+npx ui-fx-kit status --target ./src                        # check for updates
 npx ui-fx-kit list background
 npx ui-fx-kit info silk-waves
 ```
@@ -139,7 +142,7 @@ hooks/        → Composable React hooks
 css/          → Standalone CSS classes
 presets/      → Color palettes + spring configs
 bin/          → CLI tool
-mcp-server.js → AI tool interface (12 tools)
+mcp-server.js → AI tool interface (13 tools)
 ```
 
 Source code delivery: the CLI and MCP server copy files into your project. You own and can modify everything.

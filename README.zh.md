@@ -61,7 +61,7 @@
 
 ## AI 工具速查
 
-MCP 服务器提供 12 个工具。你不需要直接调用——AI 会根据你的 prompt 自动选择。但了解有什么可以帮你写出更好的 prompt。
+MCP 服务器提供 13 个工具。你不需要直接调用——AI 会根据你的 prompt 自动选择。但了解有什么可以帮你写出更好的 prompt。
 
 | 工具 | AI 用它来做什么 |
 |------|---------------|
@@ -77,6 +77,7 @@ MCP 服务器提供 12 个工具。你不需要直接调用——AI 会根据你
 | `get_hook` | 获取 hook 源码 |
 | `get_preset` | 获取调色板或弹簧配置 |
 | `get_effect` | 获取单个效果源码（要完整依赖用 bundle） |
+| `check_updates` | 检查已安装效果是否有上游更新 |
 
 ## Prompt 技巧
 
@@ -106,6 +107,8 @@ MCP 服务器提供 12 个工具。你不需要直接调用——AI 会根据你
 ```bash
 npx ui-fx-kit add holographic-card --target ./src
 npx ui-fx-kit add gradient-mesh silk-waves --target ./src
+npx ui-fx-kit add holographic-card --target ./src --force  # 重新安装最新版
+npx ui-fx-kit status --target ./src                        # 检查可用更新
 npx ui-fx-kit list background
 npx ui-fx-kit info silk-waves
 ```
@@ -139,7 +142,7 @@ hooks/        → 可组合的 React hooks
 css/          → 独立 CSS 动画类
 presets/      → 调色板 + 弹簧配置
 bin/          → CLI 命令行工具
-mcp-server.js → AI 工具接口（12 个工具）
+mcp-server.js → AI 工具接口（13 个工具）
 ```
 
 源码交付：CLI 和 MCP 服务器把文件复制到你的项目。你拥有并可以修改所有代码。

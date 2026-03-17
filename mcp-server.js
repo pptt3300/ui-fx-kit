@@ -740,6 +740,58 @@ server.tool(
   },
 );
 
+server.tool(
+  "check_updates",
+  "Check if installed effects have upstream updates available. Pass the contents of the project's .ui-fx-kit.json manifest.",
+  {
+    manifest: z.object({
+      version: z.number(),
+      effects: z.record(z.object({
+        fromPackageVersion: z.string(),
+        installedAt: z.string().optional(),
+        hooks: z.array(z.string()).optional(),
+        css: z.array(z.string()).optional(),
+      })),
+    }).describe("Contents of the project's .ui-fx-kit.json file"),
+  },
+  async ({ manifest }) => {
+    const pkgJson = JSON.parse(
+      await readFile(join(__dirname, "package.json"), "utf-8")
+    );
+    const currentVersion = pkgJson.version;
+
+    const updatesAvailable = [];
+    const upToDate = [];
+
+    for (const [id, info] of Object.entries(manifest.effects)) {
+      if (info.fromPackageVersion !== currentVersion) {
+        updatesAvailable.push({
+          id,
+          fromVersion: info.fromPackageVersion,
+          latestVersion: currentVersion,
+          installedAt: info.installedAt,
+        });
+      } else {
+        upToDate.push(id);
+      }
+    }
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          currentVersion,
+          updatesAvailable,
+          upToDate,
+          hint: updatesAvailable.length > 0
+            ? "Tell the user which effects have updates. They can re-install with: npx ui-fx-kit add <effect> --target <dir> --force"
+            : "All effects are up to date.",
+        }, null, 2),
+      }],
+    };
+  }
+);
+
 // ── Start ──────────────────────────────────────────────────────────
 
 const transport = new StdioServerTransport();

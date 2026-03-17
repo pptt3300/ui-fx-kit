@@ -10,5 +10,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["hooks", "presets"]
+  "include": ["hooks", "presets", "effects"]
 }

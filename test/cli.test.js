@@ -159,6 +159,74 @@ describe("add", () => {
     await rm(tmpDir, { recursive: true });
   });
 
+  it("creates .ui-fx-kit.json manifest on add", async () => {
+    await writeFile(join(tmpDir, "package.json"), '{"name":"test"}');
+    await run(["add", "cursor-glow", "--target", join(tmpDir, "src")]);
+    const manifest = JSON.parse(
+      await readFile(join(tmpDir, ".ui-fx-kit.json"), "utf-8")
+    );
+    assert.equal(manifest.version, 1);
+    assert.ok(manifest.effects["cursor-glow"]);
+    assert.equal(typeof manifest.effects["cursor-glow"].fromPackageVersion, "string");
+    assert.equal(typeof manifest.effects["cursor-glow"].installedAt, "string");
+    assert.ok(Array.isArray(manifest.effects["cursor-glow"].hooks));
+
+    await rm(tmpDir, { recursive: true });
+  });
+
+  it("merges manifest when adding second effect", async () => {
+    await writeFile(join(tmpDir, "package.json"), '{"name":"test"}');
+    await run(["add", "cursor-glow", "--target", join(tmpDir, "src")]);
+    await run(["add", "glitch-text", "--target", join(tmpDir, "src")]);
+    const manifest = JSON.parse(
+      await readFile(join(tmpDir, ".ui-fx-kit.json"), "utf-8")
+    );
+    assert.ok(manifest.effects["cursor-glow"]);
+    assert.ok(manifest.effects["glitch-text"]);
+
+    await rm(tmpDir, { recursive: true });
+  });
+
+  it("--force overwrites existing hook files", async () => {
+    await run(["add", "cursor-glow", "--target", tmpDir]);
+    // Modify a hook file
+    const hookPath = join(tmpDir, "hooks", "useMousePosition.ts");
+    await writeFile(hookPath, "// user modified");
+    // Re-add with --force
+    await run(["add", "cursor-glow", "--target", tmpDir, "--force"]);
+    const content = await readFile(hookPath, "utf-8");
+    assert.notEqual(content, "// user modified");
+
+    await rm(tmpDir, { recursive: true });
+  });
+
+  it("injects 'use client' when next.config.js exists", async () => {
+    await mkdir(tmpDir, { recursive: true });
+    await writeFile(join(tmpDir, "package.json"), '{"name":"test"}');
+    await writeFile(join(tmpDir, "next.config.js"), "module.exports = {}");
+    await run(["add", "cursor-glow", "--target", join(tmpDir, "src")]);
+    const effectFile = (await readdir(join(tmpDir, "src", "effects", "cursor-glow")))
+      .find(f => f.endsWith(".tsx"));
+    const content = await readFile(
+      join(tmpDir, "src", "effects", "cursor-glow", effectFile), "utf-8"
+    );
+    assert.match(content, /^['"]use client['"];?\s*\n/);
+
+    await rm(tmpDir, { recursive: true });
+  });
+
+  it("does NOT inject 'use client' without next.config", async () => {
+    await run(["add", "cursor-glow", "--target", tmpDir]);
+    const effectFile = (await readdir(join(tmpDir, "effects", "cursor-glow")))
+      .find(f => f.endsWith(".tsx"));
+    const content = await readFile(
+      join(tmpDir, "effects", "cursor-glow", effectFile), "utf-8"
+    );
+    assert.doesNotMatch(content, /use client/);
+
+    await rm(tmpDir, { recursive: true });
+  });
+
   it("batch add works", async () => {
     await run(["add", "aurora-bg", "typewriter-text", "--target", tmpDir]);
 
@@ -263,5 +331,45 @@ describe("remove", () => {
 
   it("requires --target", async () => {
     await assert.rejects(() => run(["remove", "aurora-bg"]), /--target is required/);
+  });
+
+  it("removes effect from manifest on remove", async () => {
+    await writeFile(join(tmpDir, "package.json"), '{"name":"test"}');
+    await run(["add", "cursor-glow", "--target", join(tmpDir, "src")]);
+    await run(["add", "glitch-text", "--target", join(tmpDir, "src")]);
+    await run(["remove", "cursor-glow", "--target", join(tmpDir, "src")]);
+    const manifest = JSON.parse(
+      await readFile(join(tmpDir, ".ui-fx-kit.json"), "utf-8")
+    );
+    assert.equal(manifest.effects["cursor-glow"], undefined);
+    assert.ok(manifest.effects["glitch-text"]);
+
+    await rm(tmpDir, { recursive: true });
+  });
+});
+
+// ── status ──────────────────────────────────────────────
+
+describe("status", () => {
+  let tmpDir;
+
+  beforeEach(async () => {
+    tmpDir = await mkdtemp(join(tmpdir(), "uifx-test-"));
+  });
+
+  it("shows installed effects from manifest", async () => {
+    await writeFile(join(tmpDir, "package.json"), '{"name":"test"}');
+    await run(["add", "cursor-glow", "--target", join(tmpDir, "src")]);
+    const { stdout } = await run(["status", "--target", join(tmpDir, "src")]);
+    assert.match(stdout, /cursor-glow/);
+
+    await rm(tmpDir, { recursive: true });
+  });
+
+  it("reports no manifest found", async () => {
+    const { stdout } = await run(["status", "--target", tmpDir]);
+    assert.match(stdout, /No effects installed/i);
+
+    await rm(tmpDir, { recursive: true });
   });
 });
