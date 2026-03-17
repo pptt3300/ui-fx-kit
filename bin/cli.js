@@ -191,6 +191,15 @@ async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {
   const cssTarget = join(root, "css");
   const presetsTarget = join(root, "presets");
 
+  // 2b. Warn if target subdirs already exist and weren't created by ui-fx-kit
+  if (!existsSync(join(root, ".ui-fx-kit.json"))) {
+    const existing = ["hooks", "effects", "css", "presets"].filter(d => existsSync(join(root, d)));
+    if (existing.length > 0) {
+      console.log(`${YELLOW}${BOLD}Warning:${RESET} Target already contains ${existing.join("/, ")}/ — may conflict with your own files.`);
+      console.log(`  Consider: ${CYAN}npx ui-fx-kit add ${effectId} --target ${join(root, "lib")}${RESET}\n`);
+    }
+  }
+
   // 3. Copy effect files (always overwrite — user explicitly asked for this effect)
   console.log(`${BOLD}Effect:${RESET}`);
   for (const file of effectFiles) {
