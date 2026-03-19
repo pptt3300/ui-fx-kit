@@ -163,7 +163,8 @@ export default function LightningBolts({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full pointer-events-auto cursor-crosshair"}
+      className={className}
+      style={className ? { pointerEvents: "auto", cursor: "crosshair" } : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "auto", cursor: "crosshair" }}
     />
   );
 }

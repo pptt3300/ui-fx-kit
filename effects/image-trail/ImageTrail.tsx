@@ -90,7 +90,10 @@ export default function ImageTrail({
   }, []);
 
   return (
-    <div className={`fixed inset-0 pointer-events-none z-50 overflow-hidden ${className}`}>
+    <div
+      className={className}
+      style={className ? undefined : { position: "fixed", inset: 0, pointerEvents: "none", zIndex: 50, overflow: "hidden" }}
+    >
       {items.map((item) => (
         <div
           key={item.id}

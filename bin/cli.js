@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readdir, readFile, copyFile, mkdir, stat, writeFile } from "fs/promises";
+import { readdir, readFile, copyFile, mkdir, stat, writeFile, rm } from "fs/promises";
 import { join, dirname, basename, resolve, relative } from "path";
 import { fileURLToPath } from "url";
 import { existsSync } from "fs";
@@ -233,26 +233,34 @@ async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {
     }
 
     const newHooks = Array.from(allHooks).filter(h => !existingExportNames.has(h));
-    if (newHooks.length > 0 || !existsSync(indexPath)) {
+    if (!existsSync(indexPath)) {
+      // Create new index.ts with all hooks
+      const allLines = Array.from(allHooks).map(h => {
+        const file = h === "proximity" ? "useProximity" : h;
+        return `export { ${h} } from "./${file}";`;
+      });
       if (dryRun) {
-        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(would ${newHooks.length > 0 ? "merge " + newHooks.length + " new exports" : "create"})${RESET}`);
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(would create with ${allHooks.size} exports)${RESET}`);
       } else {
         await mkdir(hooksTarget, { recursive: true });
-        // Append new export lines to existing content instead of overwriting
-        const newLines = newHooks.map(h => {
-          const file = h === "proximity" ? "useProximity" : h;
-          return `export { ${h} } from "./${file}";`;
-        });
-        if (existingContent) {
-          const appended = existingContent.trimEnd() + "\n" + newLines.join("\n") + "\n";
-          await writeFile(indexPath, appended);
-        } else {
-          await writeFile(indexPath, newLines.join("\n") + "\n");
-        }
-        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(${newHooks.length > 0 ? "merged " + newHooks.length + " new exports" : "created"})${RESET}`);
+        await writeFile(indexPath, allLines.join("\n") + "\n");
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(created with ${allHooks.size} exports)${RESET}`);
+      }
+    } else if (newHooks.length > 0) {
+      // Append only truly new exports
+      const newLines = newHooks.map(h => {
+        const file = h === "proximity" ? "useProximity" : h;
+        return `export { ${h} } from "./${file}";`;
+      });
+      if (dryRun) {
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(would add ${newHooks.length} new: ${newHooks.join(", ")})${RESET}`);
+      } else {
+        const appended = existingContent.trimEnd() + "\n" + newLines.join("\n") + "\n";
+        await writeFile(indexPath, appended);
+        console.log(`  ${GREEN}+${RESET} hooks/index.ts ${DIM}(added ${newHooks.length} new: ${newHooks.join(", ")})${RESET}`);
       }
     } else {
-      console.log(`  ${DIM}~${RESET} hooks/index.ts ${DIM}(no new exports needed)${RESET}`);
+      console.log(`  ${DIM}~${RESET} hooks/index.ts ${DIM}(all exports already present)${RESET}`);
     }
   }
 
@@ -472,21 +480,46 @@ async function cmdRemove(effectId, targetDir, { dryRun = false } = {}) {
     if (existsSync(indexPath)) {
       const content = await readFile(indexPath, "utf-8");
       const removedHooks = (meta.hooks || []).filter(h => !stillUsedHooks.has(h));
+      const keptHooks = (meta.hooks || []).filter(h => stillUsedHooks.has(h));
       if (removedHooks.length > 0) {
         let newContent = content;
+        const actuallyRemoved = [];
         for (const hook of removedHooks) {
           const file = hook === "proximity" ? "useProximity" : hook;
           const re = new RegExp(`^export\\s+\\{\\s*${hook}\\s*\\}\\s+from\\s+[\"']./${file}[\"'];?\\n?`, "m");
+          const before = newContent;
           newContent = newContent.replace(re, "");
+          if (newContent !== before) actuallyRemoved.push(hook);
         }
-        if (newContent !== content) {
+        if (actuallyRemoved.length > 0) {
           console.log(`\n${BOLD}Hooks index:${RESET}`);
-          for (const h of removedHooks) {
+          for (const h of actuallyRemoved) {
             console.log(`  ${RED}-${RESET} export { ${h} } ${DIM}(no longer used)${RESET}`);
           }
           if (!dryRun) {
             await writeFile(indexPath, newContent);
           }
+        }
+
+        // Delete orphaned hook files from disk
+        const hooksDir = join(root, "hooks");
+        for (const hook of actuallyRemoved) {
+          const file = hook === "proximity" ? "useProximity" : hook;
+          const hookPath = join(hooksDir, `${file}.ts`);
+          if (existsSync(hookPath)) {
+            if (dryRun) {
+              console.log(`  ${RED}-${RESET} hooks/${file}.ts ${DIM}(would delete)${RESET}`);
+            } else {
+              await rm(hookPath);
+              console.log(`  ${RED}-${RESET} hooks/${file}.ts ${DIM}(deleted)${RESET}`);
+            }
+          }
+        }
+      }
+      if (keptHooks.length > 0) {
+        console.log(`\n${BOLD}Shared hooks kept:${RESET}`);
+        for (const h of keptHooks) {
+          console.log(`  ${DIM}~${RESET} ${h} ${DIM}(still used by other effects)${RESET}`);
         }
       }
     }

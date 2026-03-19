@@ -19,7 +19,8 @@ function GlassCard({ children, className = "" }: { children: React.ReactNode; cl
 function AnimatedBlob({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
     <motion.div
-      className={`absolute rounded-full blur-3xl opacity-60 ${className}`}
+      className={className}
+      style={{ position: "absolute", borderRadius: "9999px", filter: "blur(48px)", opacity: 0.6 }}
       animate={{
         x: [0, 30, -20, 10, 0],
         y: [0, -20, 15, -10, 0],

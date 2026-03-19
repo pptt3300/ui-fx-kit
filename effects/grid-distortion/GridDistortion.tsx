@@ -150,10 +150,10 @@ export default function GridDistortion({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full pointer-events-none"}
+      className={className}
       onMouseMove={handlers.onMouseMove}
       onMouseLeave={handlers.onMouseLeave}
-      style={{ pointerEvents: "auto" }}
+      style={className ? { pointerEvents: "auto" } : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "auto" }}
     />
   );
 }

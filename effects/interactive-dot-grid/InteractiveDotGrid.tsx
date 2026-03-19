@@ -85,7 +85,8 @@ export default function InteractiveDotGrid({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full cursor-crosshair"}
+      className={className}
+      style={className ? { cursor: "crosshair" } : { position: "absolute", inset: 0, width: "100%", height: "100%", cursor: "crosshair" }}
       onMouseMove={handlers.onMouseMove}
       onMouseLeave={handlers.onMouseLeave}
     />

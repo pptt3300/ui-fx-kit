@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { readdir, readFile } from "fs/promises";
-import { join, dirname } from "path";
+import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -113,7 +113,7 @@ server.tool(
       .string()
       .optional()
       .describe(
-        "Base directory for import rewriting (e.g. '@/lib/ui-fx' or '../shared'). When set, ../../hooks becomes {baseDir}/hooks, etc.",
+        "Base directory for import rewriting. Infer from tsconfig.json paths or existing import conventions in the user's project (e.g. '@/components/ui-fx'). When set, ../../hooks becomes {baseDir}/hooks, etc. If unknown, omit.",
       ),
   },
   async ({ id, baseDir }) => {
@@ -192,7 +192,7 @@ server.tool(
     baseDir: z
       .string()
       .optional()
-      .describe("Base directory for import rewriting (e.g. '@/lib/ui-fx')"),
+      .describe("Base directory for import rewriting. Infer from tsconfig.json paths or existing import conventions in the user's project. If unknown, omit."),
   },
   async ({ id, baseDir }) => {
     const metaPath = join(EFFECTS_DIR, id, "meta.json");
@@ -260,6 +260,31 @@ server.tool(
     }
 
     sections.push(`\n## Install via CLI\n\`\`\`bash\nnpx ui-fx-kit add ${id} --target ./src\n\`\`\``);
+
+    // Integration notes
+    const notes = [];
+    const isBackground = meta.category?.some((c) => ["background", "ambient"].includes(c));
+    if (isBackground) {
+      notes.push("**Layout:** This is a background effect. The parent container MUST have `position: relative` and the effect needs `position: absolute; inset: 0`. Content on top must have a higher z-index.");
+      notes.push("**Visibility:** The parent/page background must be transparent or dark enough for the effect to show through. A solid opaque background will completely hide this effect.");
+    }
+    if (meta.category?.includes("cursor")) {
+      notes.push("**Overlay:** This renders as a fixed full-page overlay with `pointer-events: none`. Just render it at the top level of your page.");
+    }
+    if (meta.hooks?.length > 0) {
+      notes.push(`**Barrel export:** If the project has a hooks/index.ts barrel file, add: ${meta.hooks.map((h) => `\`export { ${h} } from "./${h}";\``).join(", ")}`);
+    }
+    if (meta.mobile_safe === false) {
+      notes.push("**Mobile:** Not mobile-safe. Wrap in a responsive container: `<div className=\"hidden md:block\">...</div>`");
+    }
+    const needsPresets = meta.imports?.some((i) => i.includes("presets"));
+    if (needsPresets) {
+      notes.push("**Presets:** This effect imports from `presets/`. Make sure `presets/colors.ts` (and `palettes.ts` if using palette prop) are copied to the project.");
+    }
+    if (notes.length > 0) {
+      sections.push(`\n## Integration Notes\n`);
+      notes.forEach((n) => sections.push(`- ${n}`));
+    }
 
     // Palette consistency hint
     if (meta.props_schema?.palette) {
@@ -790,6 +815,289 @@ server.tool(
       }],
     };
   }
+);
+
+// ── Examples ──────────────────────────────────────────────────────
+
+server.tool(
+  "get_examples",
+  "Get complete, runnable usage examples for an effect. Returns full integration code showing how to import, compose with layout, and configure props. Use after get_effect to understand how to wire it into a real page.",
+  {
+    id: z.string().describe("Effect ID (e.g. 'aurora-bg', 'cursor-glow')"),
+    baseDir: z.string().optional().describe("Import base path for the user's project. Infer from tsconfig.json paths or existing import conventions in the project (e.g. '@/components/ui-fx', '@/lib/effects'). If unknown, omit and examples will use relative paths."),
+  },
+  async ({ id, baseDir }) => {
+    const metaPath = join(EFFECTS_DIR, id, "meta.json");
+    let meta;
+    try {
+      meta = JSON.parse(await readFile(metaPath, "utf-8"));
+    } catch {
+      return {
+        content: [{ type: "text", text: `Effect "${id}" not found. Use list_effects to see available effects.` }],
+      };
+    }
+
+    // Derive component name from main file
+    const mainFile = meta.files[0];
+    const componentName = mainFile.replace(/\.(tsx|ts|jsx|js)$/, "");
+    const importBase = baseDir ? `${baseDir.replace(/\/+$/, "")}/effects/${id}` : `./effects/${id}`;
+
+    const sections = [`# Examples: ${meta.name}\n`];
+
+    // Basic usage
+    sections.push(`## Basic Usage\n\`\`\`tsx\nimport ${componentName} from "${importBase}/${componentName}";\n`);
+    if (meta.usage) {
+      sections.push(`${meta.usage}\n\`\`\`\n`);
+    } else {
+      // Generate from props_schema
+      const defaultProps = Object.entries(meta.props_schema || {})
+        .filter(([, v]) => v.default !== undefined && v.type !== "string")
+        .map(([k, v]) => `${k}={${JSON.stringify(v.default)}}`)
+        .join(" ");
+      sections.push(`<${componentName} ${defaultProps} />\n\`\`\`\n`);
+    }
+
+    // Full page integration based on category
+    const isBackground = meta.category?.some((c) => ["background", "ambient"].includes(c));
+    const isCursor = meta.category?.includes("cursor");
+    const isText = meta.category?.includes("text");
+    const isCard = meta.category?.includes("card");
+
+    sections.push(`## Full Page Integration\n\`\`\`tsx\n"use client";\n\nimport ${componentName} from "${importBase}/${componentName}";\n`);
+
+    if (isBackground) {
+      sections.push(`export default function Page() {
+  return (
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      {/* No className needed — default style fills the container */}
+      <${componentName} />
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: 700, color: "#fff" }}>Your Content</h1>
+      </div>
+    </div>
+  );
+}\n\`\`\`\n`);
+    } else if (isCursor) {
+      sections.push(`export default function Page() {
+  return (
+    <>
+      <${componentName} />
+      <main style={{ minHeight: "100vh" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: 700 }}>Your Content</h1>
+        <p>The cursor effect renders as a fixed overlay.</p>
+      </main>
+    </>
+  );
+}\n\`\`\`\n`);
+    } else if (isText) {
+      sections.push(`export default function Page() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+      <${componentName}>Hello World</${componentName}>
+    </div>
+  );
+}\n\`\`\`\n`);
+    } else if (isCard) {
+      sections.push(`export default function Page() {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", padding: "3rem" }}>
+      <${componentName}>Card content</${componentName}>
+      <${componentName}>Card content</${componentName}>
+      <${componentName}>Card content</${componentName}>
+    </div>
+  );
+}\n\`\`\`\n`);
+    } else {
+      sections.push(`export default function Page() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+      <${componentName} />
+    </div>
+  );
+}\n\`\`\`\n`);
+    }
+
+    // Props reference with recommended values
+    if (meta.props_schema && Object.keys(meta.props_schema).length > 0) {
+      sections.push(`## Props Reference\n`);
+      for (const [prop, schema] of Object.entries(meta.props_schema)) {
+        let line = `- **${prop}**`;
+        if (schema.type) line += ` (${schema.type})`;
+        if (schema.default !== undefined) line += ` — default: \`${JSON.stringify(schema.default)}\``;
+        if (schema.range) line += `, range: ${schema.range[0]}–${schema.range[1]}`;
+        if (schema.options) line += `, options: ${schema.options.map((o) => `\`"${o}"\``).join(", ")}`;
+        if (schema.description) line += ` — ${schema.description}`;
+        sections.push(line);
+      }
+      sections.push("");
+    }
+
+    // Gotchas based on meta
+    const tips = [];
+    if (isBackground) tips.push("The effect fills its container by default (position:absolute + inset:0). Just make sure the parent has `position: relative`.");
+    if (meta.mobile_safe === false) tips.push("Not mobile-safe. Hide on mobile with a media query or conditional rendering.");
+    if (meta.accessibility_notes?.length > 0) tips.push(...meta.accessibility_notes.map((n) => `A11y: ${n}`));
+    if (meta.conflicts?.length > 0) tips.push(...meta.conflicts);
+    if (meta.hooks?.length > 0) tips.push(`Requires hooks: ${meta.hooks.join(", ")}. These must be copied alongside the effect.`);
+    if (meta.dependencies?.length > 0) tips.push(`Run: \`npm install ${meta.dependencies.join(" ")}\``);
+
+    if (tips.length > 0) {
+      sections.push(`## Tips & Gotchas\n`);
+      tips.forEach((t) => sections.push(`- ${t}`));
+    }
+
+    return {
+      content: [{ type: "text", text: sections.join("\n") }],
+    };
+  },
+);
+
+// ── Audit Checklist ──────────────────────────────────────────────
+
+server.tool(
+  "audit_install",
+  "Run after adding an effect to a user's project. Returns a checklist of things to verify. The AI agent should go through each item and fix any issues found.",
+  {
+    id: z.string().describe("Effect ID that was just installed"),
+    targetDir: z.string().describe("Absolute path where the effect was installed (e.g. '/Users/me/project/src')"),
+    framework: z.enum(["nextjs", "vite", "remix", "other"]).optional().describe("User's framework, affects specific checks"),
+  },
+  async ({ id, targetDir, framework }) => {
+    const metaPath = join(EFFECTS_DIR, id, "meta.json");
+    let meta;
+    try {
+      meta = JSON.parse(await readFile(metaPath, "utf-8"));
+    } catch {
+      return {
+        content: [{ type: "text", text: `Effect "${id}" not found.` }],
+      };
+    }
+
+    // Normalize targetDir — strip trailing known subdirs to get the root
+    const normalized = targetDir.replace(/\/+$/, "");
+    const tail = basename(normalized);
+    const root = ["effects", "hooks", "css", "presets"].includes(tail) ? dirname(normalized) : normalized;
+
+    const checks = [];
+
+    // 1. File existence checks
+    for (const file of meta.files) {
+      checks.push({
+        check: `Effect file exists: ${id}/${file}`,
+        verify: `Check that ${join(root, "effects", id, file)} exists`,
+      });
+    }
+
+    for (const hook of meta.hooks || []) {
+      checks.push({
+        check: `Hook dependency exists: hooks/${hook}.ts`,
+        verify: `Check that ${join(root, "hooks", hook + ".ts")} exists. If missing, copy from registry with get_hook("${hook}")`,
+      });
+    }
+
+    for (const css of meta.css || []) {
+      checks.push({
+        check: `CSS dependency exists: css/${css}.css`,
+        verify: `Check that ${join(root, "css", css + ".css")} exists and is imported`,
+      });
+    }
+
+    // 2. "use client" directive
+    if (framework === "nextjs" || framework === "remix") {
+      for (const file of meta.files) {
+        checks.push({
+          check: `"use client" directive in ${file}`,
+          verify: `Verify first line of ${join(root, "effects", id, file)} is "use client";. The CLI auto-injects this for detected ${framework} projects — just confirm it's present.`,
+        });
+      }
+    }
+
+    // 3. npm dependencies
+    if (meta.dependencies?.length > 0) {
+      checks.push({
+        check: `npm dependencies installed: ${meta.dependencies.join(", ")}`,
+        verify: `Run: npm install ${meta.dependencies.join(" ")}`,
+      });
+    }
+
+    // 4. Import path correctness
+    checks.push({
+      check: "Import paths resolve correctly",
+      verify: `Open the effect file and verify all relative imports (../../hooks, ../../presets) have been rewritten to match the project's directory structure. Common fix: adjust paths or use baseDir param in get_effect.`,
+    });
+
+    // 4b. Barrel export (hooks/index.ts)
+    if ((meta.hooks || []).length > 0) {
+      const hookExports = (meta.hooks || []).map((h) => `export { ${h} } from "./${h}";`).join("\\n");
+      checks.push({
+        check: "hooks/index.ts barrel exports include all required hooks",
+        verify: `Check ${join(root, "hooks", "index.ts")} exists and re-exports: ${(meta.hooks || []).join(", ")}. If the effect imports from the barrel ("../hooks" or "hooks/index"), missing exports will cause build errors. Add these lines if missing:\n${hookExports}`,
+      });
+    }
+
+    // 5. Presets dependency
+    const needsPresets = meta.imports?.some((i) => i.includes("presets"));
+    if (needsPresets) {
+      checks.push({
+        check: "Preset files exist (colors.ts / palettes.ts)",
+        verify: `Check that ${join(root, "presets")} directory contains the needed preset files. Use get_preset("colors") or get_preset("palettes") to fetch them.`,
+      });
+    }
+
+    // 6. Performance
+    if (meta.performance_cost === "high") {
+      checks.push({
+        check: "Performance budget",
+        verify: `This effect has HIGH performance cost. Check if the page already has other heavy effects using check_performance_budget.`,
+      });
+    }
+
+    // 7. Mobile safety
+    if (meta.mobile_safe === false) {
+      checks.push({
+        check: "Mobile fallback",
+        verify: `This effect is NOT mobile-safe. Add responsive hiding (e.g. className="hidden md:block") or provide a lightweight fallback.`,
+      });
+    }
+
+    // 8. Accessibility
+    for (const note of meta.accessibility_notes || []) {
+      checks.push({
+        check: `Accessibility: ${note}`,
+        verify: `Ensure this is addressed in the implementation.`,
+      });
+    }
+
+    // 9. Visual integration
+    const isBackground = meta.category?.some((c) => ["background", "ambient"].includes(c));
+    if (isBackground) {
+      checks.push({
+        check: "Background effect visibility",
+        verify: "Background effects need: (1) parent container with position:relative, (2) the effect with position:absolute + inset:0 + negative z-index, (3) parent/page background must NOT be opaque — use transparent or semi-transparent background so the effect shows through.",
+      });
+    }
+
+    // 10. CSS import check
+    if (meta.css?.length > 0) {
+      checks.push({
+        check: "CSS imported in layout/page",
+        verify: `Verify that ${meta.css.map((c) => `css/${c}.css`).join(", ")} is imported in the page or global layout file.`,
+      });
+    }
+
+    const output = [`# Audit: ${meta.name} (${id})\n`, `## Checklist (${checks.length} items)\n`];
+    checks.forEach((c, i) => {
+      output.push(`### ${i + 1}. ${c.check}`);
+      output.push(`${c.verify}\n`);
+    });
+
+    output.push(`## After all checks pass`);
+    output.push(`Tell the user: "${meta.name}" is installed and ready. Run the dev server to verify visually.`);
+
+    return {
+      content: [{ type: "text", text: output.join("\n") }],
+    };
+  },
 );
 
 // ── Start ──────────────────────────────────────────────────────────

@@ -116,7 +116,8 @@ export default function ClickSpark({
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed inset-0 w-full h-full pointer-events-none z-[9998] ${className}`}
+      className={className}
+      style={className ? undefined : { position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 9998 }}
     />
   );
 }

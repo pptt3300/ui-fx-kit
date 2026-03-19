@@ -110,10 +110,8 @@ export default function NoiseFlowField({
   return (
     <canvas
       ref={canvasRef}
-      className={
-        className ?? "absolute inset-0 w-full h-full pointer-events-none"
-      }
-      style={{ background: "#000" }}
+      className={className}
+      style={className ? { background: "#000" } : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", background: "#000" }}
     />
   );
 }

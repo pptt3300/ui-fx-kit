@@ -118,8 +118,8 @@ export default function CursorGlow({ colors = DEFAULT_COLORS, maxParticles = 500
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed inset-0 w-full h-full pointer-events-none z-50${className ? ` ${className}` : ""}`}
-      style={{ mixBlendMode: "screen" }}
+      className={className}
+      style={className ? { mixBlendMode: "screen" } : { position: "fixed", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 50, mixBlendMode: "screen" }}
     />
   );
 }

@@ -101,8 +101,8 @@ export default function PrismRefraction({
     return (
       <canvas
         ref={canvasRef}
-        className={className ?? "absolute inset-0 w-full h-full pointer-events-none"}
-        style={{ mixBlendMode: "screen" }}
+        className={className}
+        style={className ? { mixBlendMode: "screen" } : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", mixBlendMode: "screen" }}
       />
     );
   }
