@@ -767,7 +767,7 @@ server.tool(
 
 server.tool(
   "check_updates",
-  "Check if installed effects have upstream updates available. Pass the contents of the project's .ui-fx-kit.json manifest.",
+  "Check if installed effects have upstream updates available. Pass the contents of the project's .ui-fx-kit.json manifest. See also get_project_status for a complete project overview including hook sharing and performance hints.",
   {
     manifest: z.object({
       version: z.number(),
@@ -815,6 +815,122 @@ server.tool(
       }],
     };
   }
+);
+
+// ── Project Status ────────────────────────────────────────────────
+
+server.tool(
+  "get_project_status",
+  "Analyze the user's installed effects and return a structured project overview with actionable hints. Pass the contents of the project's .ui-fx-kit.json manifest. Use this BEFORE suggesting new effects to understand what the user already has.",
+  {
+    manifest: z.object({
+      version: z.number(),
+      effects: z.record(z.object({
+        fromPackageVersion: z.string(),
+        installedAt: z.string().optional(),
+        hooks: z.array(z.string()).optional(),
+        css: z.array(z.string()).optional(),
+      })),
+    }).describe("Contents of the project's .ui-fx-kit.json file"),
+  },
+  async ({ manifest }) => {
+    const pkgJson = JSON.parse(
+      await readFile(join(__dirname, "package.json"), "utf-8")
+    );
+    const currentVersion = pkgJson.version;
+
+    const effects = [];
+    const allCategories = new Set();
+    const allHooks = new Set();
+    const hookUsageMap = {};
+    const hints = [];
+
+    for (const [id, info] of Object.entries(manifest.effects || {})) {
+      let meta;
+      try {
+        meta = JSON.parse(
+          await readFile(join(EFFECTS_DIR, id, "meta.json"), "utf-8")
+        );
+      } catch {
+        meta = null;
+      }
+
+      const hooks = info.hooks || [];
+      const hasUpdate = info.fromPackageVersion !== currentVersion;
+
+      if (meta) {
+        (meta.category ?? []).forEach((c) => allCategories.add(c));
+        effects.push({
+          id,
+          name: meta.name,
+          category: meta.category ?? [],
+          hooks,
+          performance_cost: meta.performance_cost ?? "unknown",
+          mobile_safe: meta.mobile_safe ?? null,
+          installedAt: info.installedAt,
+          hasUpdate,
+        });
+      } else {
+        hints.push(`❓ ${id} not found in current registry. May have been removed or renamed.`);
+        effects.push({
+          id,
+          name: id,
+          category: [],
+          hooks,
+          performance_cost: "unknown",
+          mobile_safe: null,
+          installedAt: info.installedAt,
+          hasUpdate: false,
+        });
+      }
+
+      for (const hook of hooks) {
+        allHooks.add(hook);
+        if (!hookUsageMap[hook]) hookUsageMap[hook] = [];
+        hookUsageMap[hook].push(id);
+      }
+    }
+
+    if (effects.length === 0) {
+      hints.push("No effects installed. Use find_effects or list_effects to discover effects.");
+    }
+
+    const highCost = effects.filter((e) => e.performance_cost === "high");
+    if (highCost.length >= 2) {
+      hints.push(`⚠️ ${highCost.length} high-perf-cost effects co-exist (${highCost.map((e) => e.id).join(", ")}). Run check_performance_budget to evaluate.`);
+    }
+
+    for (const [hook, ids] of Object.entries(hookUsageMap)) {
+      if (ids.length >= 2) {
+        hints.push(`🔗 ${hook} is shared by ${ids.join(", ")}. Verify before removing any of these effects.`);
+      }
+    }
+
+    const notMobileSafe = effects.filter((e) => e.mobile_safe === false);
+    if (notMobileSafe.length > 0) {
+      hints.push(`📱 ${notMobileSafe.map((e) => e.id).join(", ")} are not mobile-safe. Add responsive fallbacks.`);
+    }
+
+    const updatable = effects.filter((e) => e.hasUpdate);
+    if (updatable.length > 0) {
+      hints.push(`🔄 ${updatable.length} effects have updates available.`);
+    }
+
+    const result = {
+      summary: {
+        totalEffects: effects.length,
+        totalHooks: allHooks.size,
+        categories: [...allCategories].sort(),
+      },
+      effects,
+      hookUsageMap,
+      hints,
+    };
+
+    return {
+      content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+    };
+  },
 );
 
 // ── Examples ──────────────────────────────────────────────────────
