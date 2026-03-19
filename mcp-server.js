@@ -868,10 +868,11 @@ server.tool(
     if (isBackground) {
       sections.push(`export default function Page() {
   return (
-    <div className="relative min-h-screen">
-      <${componentName} className="absolute inset-0 -z-10" />
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <h1 className="text-5xl font-bold text-white">Your Content</h1>
+    <div style={{ position: "relative", minHeight: "100vh" }}>
+      {/* No className needed — default style fills the container */}
+      <${componentName} />
+      <div style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: 700, color: "#fff" }}>Your Content</h1>
       </div>
     </div>
   );
@@ -881,8 +882,8 @@ server.tool(
   return (
     <>
       <${componentName} />
-      <main className="min-h-screen">
-        <h1 className="text-5xl font-bold">Your Content</h1>
+      <main style={{ minHeight: "100vh" }}>
+        <h1 style={{ fontSize: "3rem", fontWeight: 700 }}>Your Content</h1>
         <p>The cursor effect renders as a fixed overlay.</p>
       </main>
     </>
@@ -891,7 +892,7 @@ server.tool(
     } else if (isText) {
       sections.push(`export default function Page() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
       <${componentName}>Hello World</${componentName}>
     </div>
   );
@@ -899,7 +900,7 @@ server.tool(
     } else if (isCard) {
       sections.push(`export default function Page() {
   return (
-    <div className="grid grid-cols-3 gap-6 p-12">
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", padding: "3rem" }}>
       <${componentName}>Card content</${componentName}>
       <${componentName}>Card content</${componentName}>
       <${componentName}>Card content</${componentName}>
@@ -909,7 +910,7 @@ server.tool(
     } else {
       sections.push(`export default function Page() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh" }}>
       <${componentName} />
     </div>
   );
@@ -933,8 +934,8 @@ server.tool(
 
     // Gotchas based on meta
     const tips = [];
-    if (isBackground) tips.push("Wrap in a `relative` container and add `absolute inset-0 -z-10` to the effect for background use.");
-    if (meta.mobile_safe === false) tips.push("Not mobile-safe. Hide on mobile: `<div className=\"hidden md:block\"><" + componentName + " /></div>`");
+    if (isBackground) tips.push("The effect fills its container by default (position:absolute + inset:0). Just make sure the parent has `position: relative`.");
+    if (meta.mobile_safe === false) tips.push("Not mobile-safe. Hide on mobile with a media query or conditional rendering.");
     if (meta.accessibility_notes?.length > 0) tips.push(...meta.accessibility_notes.map((n) => `A11y: ${n}`));
     if (meta.conflicts?.length > 0) tips.push(...meta.conflicts);
     if (meta.hooks?.length > 0) tips.push(`Requires hooks: ${meta.hooks.join(", ")}. These must be copied alongside the effect.`);
@@ -1006,7 +1007,7 @@ server.tool(
       for (const file of meta.files) {
         checks.push({
           check: `"use client" directive in ${file}`,
-          verify: `First line of ${join(root, "effects", id, file)} must be "use client"; (required for ${framework} client components using hooks/refs)`,
+          verify: `Verify first line of ${join(root, "effects", id, file)} is "use client";. The CLI auto-injects this for detected ${framework} projects — just confirm it's present.`,
         });
       }
     }

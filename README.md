@@ -61,7 +61,7 @@ One prompt, one round trip, complete source code.
 
 ## AI Tool Reference
 
-The MCP server exposes 13 tools. You don't need to call them directly — AI picks the right one based on your prompt. But knowing what's available helps you write better prompts.
+The MCP server exposes 15 tools. You don't need to call them directly — AI picks the right one based on your prompt. But knowing what's available helps you write better prompts.
 
 | Tool | What AI uses it for |
 |------|-------------------|
@@ -77,6 +77,8 @@ The MCP server exposes 13 tools. You don't need to call them directly — AI pic
 | `get_hook` | Get a hook's source code |
 | `get_preset` | Get color palettes or spring configs |
 | `get_effect` | Get a single effect's source (use bundle for full deps) |
+| `get_examples` | Get complete, runnable usage examples for an effect |
+| `audit_install` | Post-install checklist — verify files, imports, deps, a11y |
 | `check_updates` | Check if installed effects have upstream updates available |
 
 ## Prompt Tips
@@ -142,7 +144,7 @@ hooks/        → Composable React hooks
 css/          → Standalone CSS classes
 presets/      → Color palettes + spring configs
 bin/          → CLI tool
-mcp-server.js → AI tool interface (13 tools)
+mcp-server.js → AI tool interface (15 tools)
 ```
 
 Source code delivery: the CLI and MCP server copy files into your project. You own and can modify everything.

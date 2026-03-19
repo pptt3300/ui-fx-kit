@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readdir, readFile, copyFile, mkdir, stat, writeFile } from "fs/promises";
+import { readdir, readFile, copyFile, mkdir, stat, writeFile, rm } from "fs/promises";
 import { join, dirname, basename, resolve, relative } from "path";
 import { fileURLToPath } from "url";
 import { existsSync } from "fs";
@@ -498,6 +498,21 @@ async function cmdRemove(effectId, targetDir, { dryRun = false } = {}) {
           }
           if (!dryRun) {
             await writeFile(indexPath, newContent);
+          }
+        }
+
+        // Delete orphaned hook files from disk
+        const hooksDir = join(root, "hooks");
+        for (const hook of actuallyRemoved) {
+          const file = hook === "proximity" ? "useProximity" : hook;
+          const hookPath = join(hooksDir, `${file}.ts`);
+          if (existsSync(hookPath)) {
+            if (dryRun) {
+              console.log(`  ${RED}-${RESET} hooks/${file}.ts ${DIM}(would delete)${RESET}`);
+            } else {
+              await rm(hookPath);
+              console.log(`  ${RED}-${RESET} hooks/${file}.ts ${DIM}(deleted)${RESET}`);
+            }
           }
         }
       }

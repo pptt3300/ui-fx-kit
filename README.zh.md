@@ -61,7 +61,7 @@
 
 ## AI 工具速查
 
-MCP 服务器提供 13 个工具。你不需要直接调用——AI 会根据你的 prompt 自动选择。但了解有什么可以帮你写出更好的 prompt。
+MCP 服务器提供 15 个工具。你不需要直接调用——AI 会根据你的 prompt 自动选择。但了解有什么可以帮你写出更好的 prompt。
 
 | 工具 | AI 用它来做什么 |
 |------|---------------|
@@ -77,6 +77,8 @@ MCP 服务器提供 13 个工具。你不需要直接调用——AI 会根据你
 | `get_hook` | 获取 hook 源码 |
 | `get_preset` | 获取调色板或弹簧配置 |
 | `get_effect` | 获取单个效果源码（要完整依赖用 bundle） |
+| `get_examples` | 获取效果的完整可运行示例代码 |
+| `audit_install` | 安装后检查清单——验证文件、导入路径、依赖、无障碍 |
 | `check_updates` | 检查已安装效果是否有上游更新 |
 
 ## Prompt 技巧
@@ -142,7 +144,7 @@ hooks/        → 可组合的 React hooks
 css/          → 独立 CSS 动画类
 presets/      → 调色板 + 弹簧配置
 bin/          → CLI 命令行工具
-mcp-server.js → AI 工具接口（13 个工具）
+mcp-server.js → AI 工具接口（15 个工具）
 ```
 
 源码交付：CLI 和 MCP 服务器把文件复制到你的项目。你拥有并可以修改所有代码。
