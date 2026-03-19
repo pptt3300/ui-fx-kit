@@ -223,7 +223,8 @@ export default function SilkWaves({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full"}
+      className={className}
+      style={className ? undefined : { position: "absolute", inset: 0, width: "100%", height: "100%" }}
     />
   );
 }

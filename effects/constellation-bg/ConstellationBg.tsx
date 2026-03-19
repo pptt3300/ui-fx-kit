@@ -210,7 +210,8 @@ export default function ConstellationBg({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full pointer-events-auto"}
+      className={className}
+      style={className ? { pointerEvents: "auto" } : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "auto" }}
       onMouseMove={handleMouse}
       onMouseLeave={() => { mouseRef.current = { x: -9999, y: -9999 }; }}
     />

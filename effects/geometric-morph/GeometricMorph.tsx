@@ -231,8 +231,8 @@ export default function GeometricMorph({
     <svg
       ref={svgRef}
       viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}
-      className={className ?? "w-full h-full"}
-      style={{ display: "block" }}
+      className={className}
+      style={className ? { display: "block" } : { width: "100%", height: "100%", display: "block" }}
     >
       <defs>
         <filter id="glow-morph">

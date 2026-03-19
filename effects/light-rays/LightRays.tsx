@@ -124,7 +124,8 @@ export default function LightRays({
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full pointer-events-none"}
+      className={className}
+      style={className ? undefined : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
     />
   );
 }

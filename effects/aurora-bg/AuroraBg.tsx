@@ -16,10 +16,10 @@ const DEFAULT_COLORS: RGB[] = [
 ];
 
 const BANDS_META = [
-  { alpha: 0.035, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
-  { alpha: 0.03,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
-  { alpha: 0.025, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
-  { alpha: 0.02,  yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
+  { alpha: 0.25, yOffset: 0.3,  amplitude: 40, frequency: 0.002,  speed: 0.08,  phase: 0 },
+  { alpha: 0.2,  yOffset: 0.45, amplitude: 35, frequency: 0.0025, speed: -0.06, phase: 2 },
+  { alpha: 0.18, yOffset: 0.55, amplitude: 30, frequency: 0.003,  speed: 0.1,   phase: 4 },
+  { alpha: 0.15, yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
 ];
 
 export default function AuroraBg({ speed = 1, colors = DEFAULT_COLORS, className }: AuroraBgProps) {
@@ -72,7 +72,8 @@ export default function AuroraBg({ speed = 1, colors = DEFAULT_COLORS, className
   return (
     <canvas
       ref={canvasRef}
-      className={className ?? "absolute inset-0 w-full h-full pointer-events-none"}
+      className={className}
+      style={className ? undefined : { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
     />
   );
 }
