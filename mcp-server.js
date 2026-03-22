@@ -1123,7 +1123,7 @@ server.tool(
       for (const file of meta.files) {
         checks.push({
           check: `"use client" directive in ${file}`,
-          verify: `Verify first line of ${join(root, "effects", id, file)} is "use client";. The CLI auto-injects this for detected ${framework} projects — just confirm it's present.`,
+          verify: `Verify first line of ${join(root, "effects", id, file)} is "use client";. The CLI auto-injects this on \`add\` when ${framework} is detected (skipped in dry-run).`,
         });
       }
     }

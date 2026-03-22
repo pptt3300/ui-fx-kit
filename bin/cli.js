@@ -120,7 +120,7 @@ function findProjectRoot(dir) {
 
 async function cmdList(tag) {
   const effects = await listEffects();
-  const filtered = tag ? effects.filter(e => e.tags?.includes(tag)) : effects;
+  const filtered = tag ? effects.filter(e => e.category?.includes(tag)) : effects;
 
   console.log(`\n${BOLD}ui-fx-kit${RESET} ${DIM}— ${filtered.length} effects${tag ? ` (tag: ${tag})` : ""}${RESET}\n`);
 
@@ -336,17 +336,21 @@ async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {
     }
   }
 
-  if (isNextOrRemix && !dryRun) {
-    for (const file of effectFiles) {
-      if (!file.endsWith(".tsx") && !file.endsWith(".ts")) continue;
-      const destPath = join(effectsTarget, file);
-      let code = await readFile(destPath, "utf-8");
-      if (!code.startsWith("'use client'") && !code.startsWith('"use client"')) {
-        code = "'use client';\n\n" + code;
-        await writeFile(destPath, code);
+  if (isNextOrRemix) {
+    if (dryRun) {
+      console.log(`  ${GREEN}✓${RESET} 'use client' ${DIM}(would inject — ${projectRoot2 ? "Next.js" : "Remix"} detected)${RESET}`);
+    } else {
+      for (const file of effectFiles) {
+        if (!file.endsWith(".tsx") && !file.endsWith(".ts")) continue;
+        const destPath = join(effectsTarget, file);
+        let code = await readFile(destPath, "utf-8");
+        if (!code.startsWith("'use client'") && !code.startsWith('"use client"')) {
+          code = "'use client';\n\n" + code;
+          await writeFile(destPath, code);
+        }
       }
+      console.log(`  ${GREEN}✓${RESET} Added 'use client' ${DIM}(Next.js detected)${RESET}`);
     }
-    console.log(`  ${GREEN}✓${RESET} Added 'use client' ${DIM}(Next.js detected)${RESET}`);
   }
 
   // Write manifest to project root (where package.json lives)
