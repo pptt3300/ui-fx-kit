@@ -1,26 +1,91 @@
 {
   "name": "Matrix Rain",
   "description": "Classic matrix rain effect with falling character columns. Supports katakana, latin, binary, or custom charsets with configurable speed, density, and color.",
-  "category": ["background", "canvas", "ambient"],
+  "category": [
+    "background",
+    "canvas",
+    "ambient",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["canvas"],
+  "runtime": [
+    "canvas"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": true,
-  "accessibility_notes": ["rapid character changes may affect photosensitive users", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "rapid character changes may affect photosensitive users",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["MatrixRain.tsx"],
-  "imports": ["react", "../../hooks", "../../presets"],
-  "hooks": ["useCanvasSetup"],
+  "files": [
+    "MatrixRain.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks",
+    "../../presets"
+  ],
+  "hooks": [
+    "useCanvasSetup"
+  ],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "charset": { "type": "enum", "options": ["katakana", "latin", "binary"], "description": "Character set for rain columns, or a custom string of characters" },
-    "speed": { "type": "number", "default": 1, "range": [0.2, 5], "description": "Fall speed multiplier" },
-    "density": { "type": "number", "default": 0.7, "range": [0.1, 1], "description": "Column density — higher means more active columns" },
-    "color": { "type": "string", "default": "[34,211,153]", "description": "RGB color array for trail characters" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "charset": {
+      "type": "enum",
+      "options": [
+        "katakana",
+        "latin",
+        "binary"
+      ],
+      "description": "Character set for rain columns, or a custom string of characters"
+    },
+    "speed": {
+      "type": "number",
+      "default": 1,
+      "range": [
+        0.2,
+        5
+      ],
+      "description": "Fall speed multiplier"
+    },
+    "density": {
+      "type": "number",
+      "default": 0.7,
+      "range": [
+        0.1,
+        1
+      ],
+      "description": "Column density — higher means more active columns"
+    },
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "color": {
+      "type": "string",
+      "default": "[34,211,153]",
+      "description": "RGB color array for trail characters"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["cyberpunk/hacker themed background", "loading screen or splash page", "developer portfolio decoration", "gaming site ambient backdrop"],
-  "conflicts": ["semi-transparent fade causes ghosting — canvas never fully clears", "many columns with high density may impact performance on large screens"]
+  "use_cases": [
+    "cyberpunk/hacker themed background",
+    "loading screen or splash page",
+    "developer portfolio decoration",
+    "gaming site ambient backdrop"
+  ],
+  "conflicts": [
+    "semi-transparent fade causes ghosting — canvas never fully clears",
+    "many columns with high density may impact performance on large screens"
+  ],
+  "usage_tip": "Best for cyberpunk or hacker-themed backgrounds; needs dark background."
 }

@@ -1,24 +1,69 @@
 {
   "name": "Stack Swipe",
   "description": "Tinder-style swipeable card stack with drag gesture, spring snap-back, velocity-based dismiss, and stacked depth effect.",
-  "category": ["card", "gesture", "interactive"],
+  "category": [
+    "card",
+    "gesture",
+    "interactive",
+    "navigation",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["needs keyboard alternative for swipe actions", "announce card changes via aria-live"],
+  "accessibility_notes": [
+    "needs keyboard alternative for swipe actions",
+    "announce card changes via aria-live"
+  ],
   "dependencies": [],
-  "files": ["StackSwipe.tsx"],
-  "imports": ["react", "../../hooks"],
-  "hooks": ["useGesture", "useSpring"],
+  "files": [
+    "StackSwipe.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks"
+  ],
+  "hooks": [
+    "useGesture",
+    "useSpring"
+  ],
   "css": [],
   "props_schema": {
-    "items": { "type": "array", "description": "Array of ReactNode items to render as cards" },
-    "onSwipe": { "type": "function", "description": "Callback with direction ('left'|'right') and index on dismiss" },
-    "stackDepth": { "type": "number", "default": 3, "range": [1, 5], "description": "Number of visible cards in the stack" },
-    "className": { "type": "string", "description": "CSS class for the container" }
+    "items": {
+      "type": "array",
+      "description": "Array of ReactNode items to render as cards"
+    },
+    "onSwipe": {
+      "type": "function",
+      "description": "Callback with direction ('left'|'right') and index on dismiss"
+    },
+    "stackDepth": {
+      "type": "number",
+      "default": 3,
+      "range": [
+        1,
+        5
+      ],
+      "description": "Number of visible cards in the stack"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container"
+    }
   },
-  "use_cases": ["dating app card stack", "flashcard quiz interface", "image gallery browser", "decision-making UI"],
-  "conflicts": ["drag gesture conflicts with page scroll on mobile", "no undo/restore mechanism built in"]
+  "use_cases": [
+    "dating app card stack",
+    "flashcard quiz interface",
+    "image gallery browser",
+    "decision-making UI"
+  ],
+  "conflicts": [
+    "drag gesture conflicts with page scroll on mobile",
+    "no undo/restore mechanism built in"
+  ],
+  "usage_tip": "Best for decision UIs or flashcard quizzes; add keyboard fallback for a11y."
 }

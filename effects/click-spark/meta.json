@@ -1,33 +1,90 @@
 {
   "name": "Click Spark",
   "description": "Global click micro-interaction — emits short spark lines from click position that fade out in 300ms.",
-  "category": ["interactive", "particles", "global"],
+  "category": [
+    "interactive",
+    "particles",
+    "global",
+    "feedback",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["decorative overlay — pointer-events-none", "no impact on content accessibility"],
+  "accessibility_notes": [
+    "decorative overlay — pointer-events-none",
+    "no impact on content accessibility"
+  ],
   "dependencies": [],
   "files": [
     "ClickSpark.tsx"
   ],
-  "imports": ["../../hooks", "../../presets/colors"],
+  "imports": [
+    "../../hooks",
+    "../../presets/colors"
+  ],
   "hooks": [
     "useCanvasSetup",
     "useParticles"
   ],
   "css": [],
   "props_schema": {
-    "count": { "type": "number", "default": 8, "range": [3, 24], "description": "Number of spark lines per click" },
+    "count": {
+      "type": "number",
+      "default": 8,
+      "range": [
+        3,
+        24
+      ],
+      "description": "Number of spark lines per click"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "length": { "type": "number", "default": 15, "range": [5, 40], "description": "Initial length of each spark line in pixels" },
-    "className": { "type": "string", "description": "CSS class for the canvas overlay" }
+    "length": {
+      "type": "number",
+      "default": 15,
+      "range": [
+        5,
+        40
+      ],
+      "description": "Initial length of each spark line in pixels"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas overlay"
+    }
   },
-  "use_cases": ["global click feedback", "gamified UI micro-interaction", "celebration button feedback", "form submit spark"],
-  "conflicts": ["z-index 9998 — may overlap modals", "fires on every window click including outside the app"]
+  "use_cases": [
+    "global click feedback",
+    "gamified UI micro-interaction",
+    "celebration button feedback",
+    "form submit spark"
+  ],
+  "conflicts": [
+    "z-index 9998 — may overlap modals",
+    "fires on every window click including outside the app"
+  ],
+  "usage_tip": "Best for global click feedback on playful or gamified UIs."
 }

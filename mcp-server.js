@@ -27,7 +27,10 @@ async function loadEffectsMeta(category) {
       const meta = JSON.parse(
         await readFile(join(EFFECTS_DIR, dir.name, "meta.json"), "utf-8"),
       );
-      if (category && !meta.category?.includes(category)) continue;
+      if (category) {
+        const tokens = category.split(/\s+/);
+        if (!tokens.every((t) => (meta.category || []).includes(t))) continue;
+      }
       effects.push({
         id: dir.name,
         name: meta.name,
@@ -45,6 +48,7 @@ async function loadEffectsMeta(category) {
         files: meta.files,
         props_schema: meta.props_schema || {},
         use_cases: meta.use_cases || [],
+        usage_tip: meta.usage_tip || "",
         conflicts: meta.conflicts || [],
       });
     } catch {
@@ -84,6 +88,7 @@ server.tool(
       complexity: e.complexity,
       performance_cost: e.performance_cost,
       mobile_safe: e.mobile_safe,
+      usage_tip: e.usage_tip,
     }));
     return {
       content: [{ type: "text", text: JSON.stringify(summary, null, 2) }],
@@ -453,9 +458,9 @@ server.tool(
 
 server.tool(
   "find_effects",
-  "Find effects by structured criteria: category, mobile safety, complexity, performance cost, runtime requirements. More precise than keyword search.",
+  "Find effects by structured criteria. Category supports space-separated AND queries (e.g. 'button emphasis'). Returns usage_tip for AI decision guidance.",
   {
-    category: z.string().optional().describe("Category filter (e.g. 'background', 'text', 'card', 'cursor', 'shader', 'interactive')"),
+    category: z.string().optional().describe("Category filter. Space-separated for AND query (e.g. 'card emphasis', 'background ambient')"),
     mobile_safe: z.boolean().optional().describe("Only return mobile-safe effects"),
     max_complexity: z.enum(["low", "medium", "high"]).optional().describe("Maximum complexity level"),
     max_performance_cost: z.enum(["low", "medium", "high"]).optional().describe("Maximum performance cost"),
@@ -466,7 +471,10 @@ server.tool(
     const LEVEL = { low: 1, medium: 2, high: 3 };
     const all = await loadEffectsMeta();
     const filtered = all.filter((e) => {
-      if (category && !e.category.includes(category)) return false;
+      if (category) {
+        const tokens = category.split(/\s+/);
+        if (!tokens.every((t) => e.category.includes(t))) return false;
+      }
       if (mobile_safe !== undefined && e.mobile_safe !== mobile_safe) return false;
       if (max_complexity && LEVEL[e.complexity] > LEVEL[max_complexity]) return false;
       if (max_performance_cost && LEVEL[e.performance_cost] > LEVEL[max_performance_cost]) return false;
@@ -485,6 +493,7 @@ server.tool(
       mobile_safe: e.mobile_safe,
       props_schema: e.props_schema,
       use_cases: e.use_cases,
+      usage_tip: e.usage_tip,
     }));
 
     return {

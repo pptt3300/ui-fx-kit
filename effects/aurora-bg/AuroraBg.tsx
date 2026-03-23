@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface AuroraBgProps {
   speed?: number;    // multiplier on animation speed, default 1
+  palette?: string;
   colors?: RGB[];    // band colors, default [[99,102,241],[139,92,246],[34,211,238],[167,139,250]]
   className?: string;
 }
@@ -22,11 +24,12 @@ const BANDS_META = [
   { alpha: 0.15, yOffset: 0.35, amplitude: 45, frequency: 0.0015, speed: -0.04, phase: 1 },
 ];
 
-export default function AuroraBg({ speed = 1, colors = DEFAULT_COLORS, className }: AuroraBgProps) {
+export default function AuroraBg({ speed = 1, palette, colors, className }: AuroraBgProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'background', DEFAULT_COLORS);
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const tRef = useRef(0);
-  const propsRef = useRef({ speed, colors });
-  useEffect(() => { propsRef.current = { speed, colors }; });
+  const propsRef = useRef({ speed, colors: resolvedColors });
+  useEffect(() => { propsRef.current = { speed, colors: resolvedColors }; });
 
   useEffect(() => {
     return startLoop((ctx) => {

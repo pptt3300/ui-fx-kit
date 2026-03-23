@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useCanvasSetup, useParticles, usePerlinNoise } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface NoiseFlowFieldProps {
   count?: number;
   noiseScale?: number;
   speed?: number;
   turbulence?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -32,9 +34,11 @@ export default function NoiseFlowField({
   noiseScale = 0.005,
   speed = 1,
   turbulence = 3,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className,
 }: NoiseFlowFieldProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const { noise2D } = usePerlinNoise({ scale: noiseScale });
 
@@ -42,7 +46,7 @@ export default function NoiseFlowField({
     spawn: () => {
       const w = size.width || 800;
       const h = size.height || 600;
-      const color = colors[Math.floor(Math.random() * colors.length)];
+      const color = resolvedColors[Math.floor(Math.random() * resolvedColors.length)];
       const x = Math.random() * w;
       const y = Math.random() * h;
       return { x, y, prevX: x, prevY: y, speed: 0.5 + Math.random() * 1.5, color };

@@ -1,29 +1,94 @@
 {
   "name": "Constellation Background",
   "description": "Floating particles with connecting lines that form a constellation network. Particles are repelled by the cursor, and lines connect nearby particles with position-based gradient colors.",
-  "category": ["background", "interactive", "particles"],
+  "category": [
+    "background",
+    "interactive",
+    "particles",
+    "ambient",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "medium",
   "mobile_safe": true,
-  "accessibility_notes": ["needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["ConstellationBg.tsx"],
-  "imports": ["../../presets/colors", "../../presets/palettes"],
+  "files": [
+    "ConstellationBg.tsx"
+  ],
+  "imports": [
+    "../../presets/colors",
+    "../../presets/palettes"
+  ],
   "hooks": [],
   "css": [],
   "props_schema": {
-    "count": { "type": "number", "default": 70, "range": [20, 200], "description": "Number of stars" },
-    "linkDist": { "type": "number", "default": 140, "range": [50, 300], "description": "Max distance for connecting lines" },
-    "mouseRadius": { "type": "number", "default": 160, "range": [50, 400], "description": "Cursor repulsion radius" },
+    "count": {
+      "type": "number",
+      "default": 70,
+      "range": [
+        20,
+        200
+      ],
+      "description": "Number of stars"
+    },
+    "linkDist": {
+      "type": "number",
+      "default": 140,
+      "range": [
+        50,
+        300
+      ],
+      "description": "Max distance for connecting lines"
+    },
+    "mouseRadius": {
+      "type": "number",
+      "default": 160,
+      "range": [
+        50,
+        400
+      ],
+      "description": "Cursor repulsion radius"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["hero section", "landing page background", "dashboard ambient", "portfolio backdrop"],
-  "conflicts": ["performance drops if count > 150 on low-end devices"]
+  "use_cases": [
+    "hero section",
+    "landing page background",
+    "dashboard ambient",
+    "portfolio backdrop"
+  ],
+  "conflicts": [
+    "performance drops if count > 150 on low-end devices"
+  ],
+  "usage_tip": "Good for dark hero sections; avoid with count above 150 on low-end devices."
 }

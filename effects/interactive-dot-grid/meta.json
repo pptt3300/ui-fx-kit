@@ -1,24 +1,88 @@
 {
   "name": "Interactive Dot Grid",
   "description": "Grid of dots that reacts to cursor proximity. Dots are displaced with quadratic easing, connecting lines form between affected dots.",
-  "category": ["background", "interactive", "canvas"],
+  "category": [
+    "background",
+    "interactive",
+    "canvas",
+    "ambient",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": false,
-  "accessibility_notes": ["purely decorative, no semantic content", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "purely decorative, no semantic content",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["InteractiveDotGrid.tsx"],
-  "imports": ["react", "../../hooks"],
-  "hooks": ["useCanvasSetup", "useMousePosition", "proximity"],
+  "files": [
+    "InteractiveDotGrid.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks",
+    "../../presets/colors",
+    "../../presets/resolve"
+  ],
+  "hooks": [
+    "useCanvasSetup",
+    "useMousePosition",
+    "proximity"
+  ],
   "css": [],
   "props_schema": {
-    "gap": { "type": "number", "default": 28, "range": [12, 60], "description": "Spacing between dot centers in pixels" },
-    "influenceRadius": { "type": "number", "default": 120, "range": [40, 300], "description": "Cursor influence radius in pixels" },
-    "maxDisplacement": { "type": "number", "default": 14, "range": [4, 40], "description": "Maximum dot displacement in pixels" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "gap": {
+      "type": "number",
+      "default": 28,
+      "range": [
+        12,
+        60
+      ],
+      "description": "Spacing between dot centers in pixels"
+    },
+    "influenceRadius": {
+      "type": "number",
+      "default": 120,
+      "range": [
+        40,
+        300
+      ],
+      "description": "Cursor influence radius in pixels"
+    },
+    "maxDisplacement": {
+      "type": "number",
+      "default": 14,
+      "range": [
+        4,
+        40
+      ],
+      "description": "Maximum dot displacement in pixels"
+    },
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["hero section interactive background", "tech company landing page", "dashboard ambient decoration", "about page visual flair"],
-  "conflicts": ["small gap on large screens creates many dots — may lag on low-end devices", "relies on mouse hover, no touch fallback"]
+  "use_cases": [
+    "hero section interactive background",
+    "tech company landing page",
+    "dashboard ambient decoration",
+    "about page visual flair"
+  ],
+  "conflicts": [
+    "small gap on large screens creates many dots — may lag on low-end devices",
+    "relies on mouse hover, no touch fallback"
+  ],
+  "usage_tip": "Good for tech landing page backgrounds; desktop only, no touch fallback."
 }

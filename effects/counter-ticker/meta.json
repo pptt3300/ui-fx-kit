@@ -1,31 +1,80 @@
 {
   "name": "Counter Ticker",
   "description": "Slot-machine style number counter — each digit column rolls to its target value on scroll-into-view.",
-  "category": ["text", "animation", "scroll"],
+  "category": [
+    "text",
+    "animation",
+    "scroll",
+    "data-display",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["intersection-observer", "css-animations"],
+  "runtime": [
+    "intersection-observer",
+    "css-animations"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["final number value is in DOM and readable by screen readers", "animation is decorative"],
+  "accessibility_notes": [
+    "final number value is in DOM and readable by screen readers",
+    "animation is decorative"
+  ],
   "dependencies": [],
   "files": [
     "CounterTicker.tsx"
   ],
-  "imports": ["../../hooks"],
+  "imports": [
+    "../../hooks"
+  ],
   "hooks": [
     "useInView",
     "useSpring"
   ],
   "css": [],
   "props_schema": {
-    "value": { "type": "number", "description": "Target number to count up to" },
-    "format": { "type": "enum", "options": ["integer", "decimal", "currency", "percent"], "description": "Number formatting type" },
-    "prefix": { "type": "string", "default": "", "description": "Text prefix before the number (e.g. '$')" },
-    "suffix": { "type": "string", "default": "", "description": "Text suffix after the number (e.g. '%')" },
-    "scrollTrigger": { "type": "boolean", "default": true, "description": "Start counting when scrolled into view" },
-    "className": { "type": "string", "description": "CSS class for the counter container" }
+    "value": {
+      "type": "number",
+      "description": "Target number to count up to"
+    },
+    "format": {
+      "type": "enum",
+      "options": [
+        "integer",
+        "decimal",
+        "currency",
+        "percent"
+      ],
+      "description": "Number formatting type"
+    },
+    "prefix": {
+      "type": "string",
+      "default": "",
+      "description": "Text prefix before the number (e.g. '$')"
+    },
+    "suffix": {
+      "type": "string",
+      "default": "",
+      "description": "Text suffix after the number (e.g. '%')"
+    },
+    "scrollTrigger": {
+      "type": "boolean",
+      "default": true,
+      "description": "Start counting when scrolled into view"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the counter container"
+    }
   },
-  "use_cases": ["stats/metrics display", "pricing page numbers", "dashboard KPI counters", "landing page social proof"],
-  "conflicts": ["rapid value changes may cause jittery digit rolls"]
+  "use_cases": [
+    "stats/metrics display",
+    "pricing page numbers",
+    "dashboard KPI counters",
+    "landing page social proof"
+  ],
+  "conflicts": [
+    "rapid value changes may cause jittery digit rolls"
+  ],
+  "usage_tip": "Best for stats sections and KPI dashboards; pair with scroll trigger."
 }

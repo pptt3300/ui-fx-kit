@@ -1,4 +1,6 @@
 import { useRef, useEffect, useCallback } from "react";
+import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface Particle {
   x: number;
@@ -19,32 +21,35 @@ interface Ghost {
   alpha: number;
 }
 
-function gradientColor(t: number): [number, number, number] {
-  const left: [number, number, number] = [99, 102, 241];
-  const mid: [number, number, number] = [139, 92, 246];
-  const right: [number, number, number] = [34, 211, 238];
+const DEFAULT_PARTICLES: RGB[] = [
+  [99, 102, 241],
+  [139, 92, 246],
+  [34, 211, 238],
+];
 
-  let r: number, g: number, b: number;
-  if (t < 0.5) {
-    const s = t * 2;
-    r = left[0] + (mid[0] - left[0]) * s;
-    g = left[1] + (mid[1] - left[1]) * s;
-    b = left[2] + (mid[2] - left[2]) * s;
-  } else {
-    const s = (t - 0.5) * 2;
-    r = mid[0] + (right[0] - mid[0]) * s;
-    g = mid[1] + (right[1] - mid[1]) * s;
-    b = mid[2] + (right[2] - mid[2]) * s;
-  }
-  return [Math.round(r), Math.round(g), Math.round(b)];
+function gradientColor(t: number, colors: RGB[]): [number, number, number] {
+  if (colors.length === 1) return [...colors[0]];
+  // Map t (0..1) across color stops evenly
+  const segments = colors.length - 1;
+  const seg = Math.min(Math.floor(t * segments), segments - 1);
+  const s = (t * segments) - seg;
+  const left = colors[seg];
+  const right = colors[seg + 1];
+  return [
+    Math.round(left[0] + (right[0] - left[0]) * s),
+    Math.round(left[1] + (right[1] - left[1]) * s),
+    Math.round(left[2] + (right[2] - left[2]) * s),
+  ];
 }
 
 interface Props {
   text: string;
   collapsed: boolean;
+  palette?: string;
 }
 
-export default function ParticleTitle({ text, collapsed }: Props) {
+export default function ParticleTitle({ text, collapsed, palette }: Props) {
+  const particleColors = resolvePalette(palette, 'particles', DEFAULT_PARTICLES);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const ghostsRef = useRef<Ghost[]>([]);
@@ -169,7 +174,7 @@ export default function ParticleTitle({ text, collapsed }: Props) {
         );
 
         const currentT = w > 0 ? Math.max(0, Math.min(1, p.x / w)) : p.colorIdx;
-        const [cr, cg, cb] = gradientColor(currentT);
+        const [cr, cg, cb] = gradientColor(currentT, particleColors);
 
         // Spawn ghost trail when moving fast
         const speed = Math.sqrt((p.x - prevX) ** 2 + (p.y - prevY) ** 2);

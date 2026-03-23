@@ -1,22 +1,61 @@
 {
   "name": "Iridescence",
   "description": "Thin-film interference shader producing soap-bubble rainbow color shifts driven by mouse viewing angle.",
-  "category": ["overlay", "shader", "interactive"],
+  "category": [
+    "overlay",
+    "shader",
+    "interactive",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["rapid color shifting may affect photosensitive users", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "rapid color shifting may affect photosensitive users",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["Iridescence.tsx"],
-  "imports": ["react", "../../hooks"],
-  "hooks": ["useMousePosition", "useWebGL"],
+  "files": [
+    "Iridescence.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks"
+  ],
+  "hooks": [
+    "useMousePosition",
+    "useWebGL"
+  ],
   "css": [],
   "props_schema": {
-    "intensity": { "type": "number", "default": 1, "range": [0, 2], "description": "Iridescence effect strength — controls color saturation and overlay alpha" },
-    "className": { "type": "string", "description": "CSS class for the container or canvas element" }
+    "intensity": {
+      "type": "number",
+      "default": 1,
+      "range": [
+        0,
+        2
+      ],
+      "description": "Iridescence effect strength — controls color saturation and overlay alpha"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container or canvas element"
+    }
   },
-  "use_cases": ["holographic overlay on product images", "premium card iridescent sheen", "background shimmer effect", "creative portfolio page accent"],
-  "conflicts": ["WebGL required — no fallback for unsupported browsers", "GPU-intensive on large viewports"]
+  "use_cases": [
+    "holographic overlay on product images",
+    "premium card iridescent sheen",
+    "background shimmer effect",
+    "creative portfolio page accent"
+  ],
+  "conflicts": [
+    "WebGL required — no fallback for unsupported browsers",
+    "GPU-intensive on large viewports"
+  ],
+  "usage_tip": "Best for holographic overlay on product images or premium cards."
 }

@@ -1,24 +1,70 @@
 {
   "name": "Parallax Depth Card",
   "description": "Multi-layer card where each layer shifts by a different amount based on mouse position, creating a parallax depth illusion with optional 3D tilt.",
-  "category": ["card", "interactive", "3d"],
+  "category": [
+    "card",
+    "interactive",
+    "3d",
+    "emphasis",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["parallax is decorative — content should be accessible without mouse", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "parallax is decorative — content should be accessible without mouse",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["ParallaxDepthCard.tsx"],
-  "imports": ["../../hooks"],
-  "hooks": ["useMousePosition", "useTilt3D"],
+  "files": [
+    "ParallaxDepthCard.tsx"
+  ],
+  "imports": [
+    "../../hooks"
+  ],
+  "hooks": [
+    "useMousePosition",
+    "useTilt3D"
+  ],
   "css": [],
   "props_schema": {
-    "layers": { "type": "ReactNode[]", "description": "Array of React nodes — layer 0 is deepest, last is topmost" },
-    "depthScale": { "type": "number", "default": 10, "range": [1, 50], "description": "Max pixel shift per layer on mouse move" },
-    "tilt": { "type": "boolean", "default": true, "description": "Enable 3D perspective tilt on hover" },
-    "className": { "type": "string", "default": "", "description": "CSS class for the card container" }
+    "layers": {
+      "type": "ReactNode[]",
+      "description": "Array of React nodes — layer 0 is deepest, last is topmost"
+    },
+    "depthScale": {
+      "type": "number",
+      "default": 10,
+      "range": [
+        1,
+        50
+      ],
+      "description": "Max pixel shift per layer on mouse move"
+    },
+    "tilt": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable 3D perspective tilt on hover"
+    },
+    "className": {
+      "type": "string",
+      "default": "",
+      "description": "CSS class for the card container"
+    }
   },
-  "use_cases": ["product showcase card", "gaming UI card with depth layers", "portfolio project card", "interactive pricing card"],
-  "conflicts": ["requires mouse/hover — no effect on touch devices", "many layers with high depthScale can cause overflow clipping"]
+  "use_cases": [
+    "product showcase card",
+    "gaming UI card with depth layers",
+    "portfolio project card",
+    "interactive pricing card"
+  ],
+  "conflicts": [
+    "requires mouse/hover — no effect on touch devices",
+    "many layers with high depthScale can cause overflow clipping"
+  ],
+  "usage_tip": "Best for product or portfolio showcase cards; desktop hover only."
 }

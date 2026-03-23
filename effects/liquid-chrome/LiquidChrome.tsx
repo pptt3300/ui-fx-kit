@@ -1,11 +1,23 @@
 import { useEffect, useCallback } from "react";
 import { useWebGL } from "../../hooks";
+import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface LiquidChromeProps {
   speed?: number;
   mouseStrength?: number;
+  palette?: string;
+  baseColor?: RGB;
+  highlightColor?: RGB;
+  shadowColor?: RGB;
+  accentColor?: RGB;
   className?: string;
 }
+
+const DEFAULT_BASE: RGB = [140, 140, 153];
+const DEFAULT_HIGHLIGHT: RGB = [230, 235, 255];
+const DEFAULT_SHADOW: RGB = [26, 26, 38];
+const DEFAULT_ACCENT: RGB = [115, 128, 204];
 
 const FRAGMENT_SHADER = `
 precision mediump float;
@@ -15,6 +27,10 @@ uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_speed;
 uniform float u_mouseStrength;
+uniform vec3 u_base;
+uniform vec3 u_highlight;
+uniform vec3 u_shadow;
+uniform vec3 u_accent;
 
 // Hash noise
 float hash(vec2 p) {
@@ -45,11 +61,10 @@ float fbm(vec2 p) {
 
 // Metallic environment gradient lookup
 vec3 envGradient(vec2 r) {
-  // Chrome-like: dark grays + subtle blue-purple reflections
-  vec3 base = vec3(0.55, 0.55, 0.6);
-  vec3 highlight = vec3(0.9, 0.92, 1.0);
-  vec3 shadow = vec3(0.1, 0.1, 0.15);
-  vec3 accent = vec3(0.45, 0.5, 0.8);
+  vec3 base = u_base;
+  vec3 highlight = u_highlight;
+  vec3 shadow = u_shadow;
+  vec3 accent = u_accent;
 
   float t = r.x * 0.5 + 0.5;
   float s = r.y * 0.5 + 0.5;
@@ -99,7 +114,7 @@ void main() {
 
   // Fresnel-like edge darkening
   float fresnel = pow(1.0 - abs(dot(normal, viewDir)), 2.0);
-  vec3 fresnelColor = vec3(0.3, 0.35, 0.5) * fresnel * 0.5;
+  vec3 fresnelColor = u_accent * fresnel * 0.5;
 
   vec3 finalColor = envColor + specColor + fresnelColor;
 
@@ -110,14 +125,28 @@ void main() {
 export default function LiquidChrome({
   speed = 0.5,
   mouseStrength = 0.3,
+  palette,
+  baseColor,
+  highlightColor,
+  shadowColor,
+  accentColor,
   className,
 }: LiquidChromeProps) {
+  const resolvedBase = baseColor ?? resolvePalette(palette, 'surface', DEFAULT_BASE);
+  const resolvedHighlight = highlightColor ?? resolvePalette(palette, 'text', DEFAULT_HIGHLIGHT);
+  const resolvedShadow = shadowColor ?? resolvePalette(palette, 'muted', DEFAULT_SHADOW);
+  const resolvedAccent = accentColor ?? resolvePalette(palette, 'accent', DEFAULT_ACCENT);
+
   const { canvasRef, setUniform, startLoop } = useWebGL({ fragmentShader: FRAGMENT_SHADER });
 
   const updateUniforms = useCallback(() => {
     setUniform("u_speed", speed);
     setUniform("u_mouseStrength", mouseStrength);
-  }, [speed, mouseStrength, setUniform]);
+    setUniform("u_base", [resolvedBase[0] / 255, resolvedBase[1] / 255, resolvedBase[2] / 255]);
+    setUniform("u_highlight", [resolvedHighlight[0] / 255, resolvedHighlight[1] / 255, resolvedHighlight[2] / 255]);
+    setUniform("u_shadow", [resolvedShadow[0] / 255, resolvedShadow[1] / 255, resolvedShadow[2] / 255]);
+    setUniform("u_accent", [resolvedAccent[0] / 255, resolvedAccent[1] / 255, resolvedAccent[2] / 255]);
+  }, [speed, mouseStrength, resolvedBase, resolvedHighlight, resolvedShadow, resolvedAccent, setUniform]);
 
   useEffect(() => {
     updateUniforms();

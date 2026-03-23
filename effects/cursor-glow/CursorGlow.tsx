@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useMousePosition, useCanvasSetup, useParticles } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface Trail {
   x: number;
@@ -13,6 +14,7 @@ interface Trail {
 }
 
 interface CursorGlowProps {
+  palette?: string;
   colors?: RGB[];
   maxParticles?: number;
   className?: string;
@@ -26,12 +28,13 @@ const DEFAULT_COLORS: RGB[] = [
   [129, 140, 248],
 ];
 
-export default function CursorGlow({ colors = DEFAULT_COLORS, maxParticles = 500, className }: CursorGlowProps) {
+export default function CursorGlow({ palette, colors, maxParticles = 500, className }: CursorGlowProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { position } = useMousePosition({ scope: "window" });
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 2 });
   const prevRef = useRef({ x: -100, y: -100 });
-  const colorsRef = useRef(colors);
-  useEffect(() => { colorsRef.current = colors; });
+  const colorsRef = useRef(resolvedColors);
+  useEffect(() => { colorsRef.current = resolvedColors; });
 
   const particles = useParticles<Trail>({
     spawn: () => {

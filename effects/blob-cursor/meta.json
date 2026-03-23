@@ -1,32 +1,88 @@
 {
   "name": "Blob Cursor",
   "description": "WebGL metaball cursor with elastic spring-lag blob that deforms on click.",
-  "category": ["cursor", "interactive", "webgl"],
+  "category": [
+    "cursor",
+    "interactive",
+    "webgl",
+    "decoration",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative overlay — pointer-events-none", "no impact on content accessibility"],
+  "accessibility_notes": [
+    "decorative overlay — pointer-events-none",
+    "no impact on content accessibility"
+  ],
   "dependencies": [],
   "files": [
     "BlobCursor.tsx"
   ],
-  "imports": ["../../hooks", "../../presets/colors"],
+  "imports": [
+    "../../hooks",
+    "../../presets/colors"
+  ],
   "hooks": [
     "useMousePosition"
   ],
   "css": [],
   "props_schema": {
-    "radius": { "type": "number", "default": 40, "range": [15, 100], "description": "Blob radius in pixels" },
-    "stiffness": { "type": "number", "default": 120, "range": [30, 400], "description": "Spring stiffness for the lag blob" },
+    "radius": {
+      "type": "number",
+      "default": 40,
+      "range": [
+        15,
+        100
+      ],
+      "description": "Blob radius in pixels"
+    },
+    "stiffness": {
+      "type": "number",
+      "default": 120,
+      "range": [
+        30,
+        400
+      ],
+      "description": "Spring stiffness for the lag blob"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["creative portfolio cursor effect", "interactive art installation", "experimental landing page"],
-  "conflicts": ["full-screen WebGL shader runs every frame — expensive on integrated GPUs", "z-index 50 may overlap modals or dropdowns"]
+  "use_cases": [
+    "creative portfolio cursor effect",
+    "interactive art installation",
+    "experimental landing page"
+  ],
+  "conflicts": [
+    "full-screen WebGL shader runs every frame — expensive on integrated GPUs",
+    "z-index 50 may overlap modals or dropdowns"
+  ],
+  "usage_tip": "Best for creative portfolios; avoid on content-heavy pages with many clickables."
 }

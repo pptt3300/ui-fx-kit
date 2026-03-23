@@ -33,6 +33,14 @@ Add to your Claude Code MCP settings (`~/.claude.json` or project `.mcp.json`):
 "I need a typewriter effect on the homepage title"
 ```
 
+**By intent:**
+
+```
+"I need a subtle background effect for a SaaS dashboard — low performance, mobile safe"
+"Add something to emphasize the pricing card, but keep it classy"
+"I need loading state feedback while content fetches"
+```
+
 **With constraints:**
 
 ```
@@ -65,11 +73,11 @@ The MCP server exposes 16 tools. You don't need to call them directly — AI pic
 
 | Tool | What AI uses it for |
 |------|-------------------|
-| `find_effects` | Filter by category, mobile_safe, performance_cost, complexity, runtime |
+| `find_effects` | Filter by intent + target (e.g. `'button emphasis'`, `'background ambient'`), mobile_safe, performance_cost. Returns usage_tip for each match |
 | `get_effect_bundle` | Get effect + all hook/CSS/preset dependencies in one call |
 | `suggest_combination` | Describe an intent → get hook combination with source code |
 | `check_performance_budget` | Verify multiple effects can coexist on one page |
-| `list_effects` | Browse all effects (compact summaries) |
+| `list_effects` | Browse all effects with usage_tip guidance. Supports multi-category AND filter |
 | `search` | Keyword search across effects, hooks, and CSS |
 | `list_css` | Browse CSS snippets (quick wins — just add a class) |
 | `get_css` | Get a CSS snippet source |
@@ -92,6 +100,7 @@ The MCP server exposes 16 tools. You don't need to call them directly — AI pic
 | Performance | "I already have 3 canvas effects on this page, can I add more?" | AI calls `check_performance_budget` |
 | Custom | "Combine particles + mouse tracking + canvas into a custom effect" | AI calls `suggest_combination` with hook list |
 | Theming | "Use spotify palette for all effects" | AI passes `palette="spotify"` to each effect |
+| Intent-based | "I need something to draw attention to the CTA button" | AI queries `find_effects(category="button emphasis")` → gets magnetic-button, ripple-button with usage_tips |
 
 **Avoid vague prompts** like "add some effects" or "use ui-fx-kit" — AI needs to know what kind of effect and where.
 

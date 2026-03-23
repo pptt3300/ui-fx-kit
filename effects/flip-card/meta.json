@@ -1,29 +1,75 @@
 {
   "name": "3D Flip Card",
   "description": "Card that flips between front and back faces with spring-physics rotation, supporting hover or click triggers and horizontal/vertical directions.",
-  "category": ["card", "animation", "3d"],
+  "category": [
+    "card",
+    "animation",
+    "3d",
+    "transition",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["css-animations", "pointer-events"],
+  "runtime": [
+    "css-animations",
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["back face content is in DOM but visually hidden — ensure aria-hidden toggles with flip state", "click trigger is more accessible than hover"],
+  "accessibility_notes": [
+    "back face content is in DOM but visually hidden — ensure aria-hidden toggles with flip state",
+    "click trigger is more accessible than hover"
+  ],
   "dependencies": [],
   "files": [
     "FlipCard.tsx"
   ],
-  "imports": ["../../hooks"],
+  "imports": [
+    "../../hooks"
+  ],
   "hooks": [
     "useSpring"
   ],
   "css": [],
   "props_schema": {
-    "front": { "type": "ReactNode", "description": "Content for the front face" },
-    "back": { "type": "ReactNode", "description": "Content for the back face" },
-    "trigger": { "type": "enum", "options": ["hover", "click"], "description": "What triggers the flip" },
-    "direction": { "type": "enum", "options": ["horizontal", "vertical"], "description": "Flip rotation axis" },
-    "className": { "type": "string", "description": "CSS class for the card wrapper" }
+    "front": {
+      "type": "ReactNode",
+      "description": "Content for the front face"
+    },
+    "back": {
+      "type": "ReactNode",
+      "description": "Content for the back face"
+    },
+    "trigger": {
+      "type": "enum",
+      "options": [
+        "hover",
+        "click"
+      ],
+      "description": "What triggers the flip"
+    },
+    "direction": {
+      "type": "enum",
+      "options": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "Flip rotation axis"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the card wrapper"
+    }
   },
-  "use_cases": ["info card with reveal", "team member bio card", "flashcard quiz UI", "pricing card with details"],
-  "conflicts": ["backface-visibility may not work in some older browsers", "hover trigger not usable on touch devices"]
+  "use_cases": [
+    "info card with reveal",
+    "team member bio card",
+    "flashcard quiz UI",
+    "pricing card with details"
+  ],
+  "conflicts": [
+    "backface-visibility may not work in some older browsers",
+    "hover trigger not usable on touch devices"
+  ],
+  "usage_tip": "Good for info reveal cards or flashcards; prefer click trigger on mobile."
 }

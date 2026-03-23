@@ -1,30 +1,82 @@
 {
   "name": "Dock Magnify",
   "description": "macOS-style dock with Gaussian magnification on hover — items scale up based on cursor proximity.",
-  "category": ["interactive", "navigation", "hover"],
+  "category": [
+    "interactive",
+    "navigation",
+    "hover",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["labels are hidden by default — add aria-label to icons", "magnification is visual-only, does not affect tab order"],
+  "accessibility_notes": [
+    "labels are hidden by default — add aria-label to icons",
+    "magnification is visual-only, does not affect tab order"
+  ],
   "dependencies": [],
   "files": [
     "DockMagnify.tsx"
   ],
-  "imports": ["../../hooks", "../../presets/colors"],
+  "imports": [
+    "../../hooks",
+    "../../presets/colors"
+  ],
   "hooks": [
     "proximity",
     "useMousePosition"
   ],
   "css": [],
   "props_schema": {
-    "items": { "type": "array", "description": "Array of { icon: ReactNode, label?: string }" },
-    "baseSize": { "type": "number", "default": 48, "range": [24, 96], "description": "Default icon size in pixels" },
-    "maxSize": { "type": "number", "default": 80, "range": [48, 160], "description": "Maximum magnified icon size in pixels" },
-    "radius": { "type": "number", "default": 3, "range": [1, 6], "description": "Number of neighboring items affected by magnification" },
-    "className": { "type": "string", "description": "CSS class for the dock container" }
+    "items": {
+      "type": "array",
+      "description": "Array of { icon: ReactNode, label?: string }"
+    },
+    "baseSize": {
+      "type": "number",
+      "default": 48,
+      "range": [
+        24,
+        96
+      ],
+      "description": "Default icon size in pixels"
+    },
+    "maxSize": {
+      "type": "number",
+      "default": 80,
+      "range": [
+        48,
+        160
+      ],
+      "description": "Maximum magnified icon size in pixels"
+    },
+    "radius": {
+      "type": "number",
+      "default": 3,
+      "range": [
+        1,
+        6
+      ],
+      "description": "Number of neighboring items affected by magnification"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the dock container"
+    }
   },
-  "use_cases": ["app launcher dock", "bottom navigation bar", "toolbar with icon magnification", "floating action menu"],
-  "conflicts": ["hover-dependent — no magnification on touch devices", "Gaussian calculation runs on every mouse move within the dock"]
+  "use_cases": [
+    "app launcher dock",
+    "bottom navigation bar",
+    "toolbar with icon magnification",
+    "floating action menu"
+  ],
+  "conflicts": [
+    "hover-dependent — no magnification on touch devices",
+    "Gaussian calculation runs on every mouse move within the dock"
+  ],
+  "usage_tip": "Best for app launcher docks or icon toolbars; desktop only."
 }

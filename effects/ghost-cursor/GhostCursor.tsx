@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useMousePosition, useSpring } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface GhostCursorProps {
   count?: number;
   stiffness?: number;
+  palette?: string;
   color?: RGB;
   size?: number;
   className?: string;
@@ -13,10 +15,12 @@ interface GhostCursorProps {
 export default function GhostCursor({
   count = 5,
   stiffness = 100,
-  color = [255, 255, 255],
+  palette,
+  color,
   size = 20,
   className = "",
 }: GhostCursorProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [255, 255, 255] as RGB);
   const { position } = useMousePosition({ scope: "window" });
   const containerRef = useRef<HTMLDivElement>(null);
   const dotsRef = useRef<HTMLDivElement[]>([]);
@@ -85,7 +89,7 @@ export default function GhostCursor({
           width: size * scale,
           height: size * scale,
           borderRadius: "50%",
-          backgroundColor: `rgba(${color[0]},${color[1]},${color[2]},${opacity})`,
+          backgroundColor: `rgba(${resolvedColor[0]},${resolvedColor[1]},${resolvedColor[2]},${opacity})`,
           pointerEvents: "none",
           willChange: "transform",
           marginTop: (size - size * scale) / 2,

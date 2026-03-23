@@ -20,6 +20,8 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useCanvasSetup, useParticles, useSpotlight } from "../../hooks";
+import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface Sparkle {
   x: number; y: number;
@@ -35,7 +37,7 @@ interface Shockwave {
   color: [number, number, number];
 }
 
-const SPARK_COLORS: [number, number, number][] = [
+const DEFAULT_SPARK_COLORS: RGB[] = [
   [99, 102, 241],
   [139, 92, 246],
   [34, 211, 238],
@@ -49,6 +51,7 @@ interface Props {
   placeholder?: string;
   buttonLabel?: string;
   loading?: boolean;
+  palette?: string;
 }
 
 export default function SpotlightInput({
@@ -57,7 +60,9 @@ export default function SpotlightInput({
   placeholder = "Type here...",
   buttonLabel = "Submit",
   loading = false,
+  palette,
 }: Props) {
+  const sparkColors = resolvePalette(palette, 'particles', DEFAULT_SPARK_COLORS);
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -69,7 +74,7 @@ export default function SpotlightInput({
     spawn: () => ({
       x: 0, y: 0, vx: 0, vy: 0,
       size: 1 + Math.random() * 2, alpha: 0.8 + Math.random() * 0.2,
-      color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
+      color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
     }),
     update: (s) => {
       s.x += s.vx; s.y += s.vy;
@@ -82,7 +87,7 @@ export default function SpotlightInput({
   const shockwaves = useParticles<Shockwave>({
     spawn: () => ({
       x: 0, y: 0, radius: 5, maxRadius: 200, alpha: 0.5,
-      color: SPARK_COLORS[0],
+      color: sparkColors[0],
     }),
     update: (w) => {
       w.radius += (w.maxRadius - w.radius) * 0.06;
@@ -105,7 +110,7 @@ export default function SpotlightInput({
       shockwaves.emitWith(1, () => ({
         x: cx, y: cy, radius: 5 + i * 3,
         maxRadius: 200 + i * 80, alpha: 0.5 - i * 0.1,
-        color: SPARK_COLORS[i % SPARK_COLORS.length],
+        color: sparkColors[i % sparkColors.length],
       }));
     }
     for (let i = 0; i < 30; i++) {
@@ -114,7 +119,7 @@ export default function SpotlightInput({
       sparkles.emitWith(1, () => ({
         x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
         size: 1.5 + Math.random() * 2.5, alpha: 0.9,
-        color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
+        color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
       }));
     }
   }, [canvasRef, containerRef, sparkles, shockwaves]);
@@ -127,7 +132,7 @@ export default function SpotlightInput({
       sparkles.emitWith(1, () => ({
         x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - 1.5,
         size: 1 + Math.random() * 2, alpha: 0.8 + Math.random() * 0.2,
-        color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)],
+        color: sparkColors[Math.floor(Math.random() * sparkColors.length)],
       }));
     }
   }, [sparkles]);

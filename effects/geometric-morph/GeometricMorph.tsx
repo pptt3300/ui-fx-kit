@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useSpring, usePerlinNoise, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface GeometricMorphProps {
   shapes?: string[];
   duration?: number;
+  palette?: string;
   color?: RGB;
   distortRadius?: number;
   className?: string;
@@ -109,10 +111,12 @@ function lerpPoints(
 export default function GeometricMorph({
   shapes = ["circle", "triangle", "hexagon", "star"],
   duration = 2000,
-  color = [139, 92, 246],
+  palette,
+  color,
   distortRadius = 100,
   className,
 }: GeometricMorphProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [139, 92, 246] as RGB);
   const SVG_SIZE = 300;
   const cx = SVG_SIZE / 2;
   const cy = SVG_SIZE / 2;
@@ -225,7 +229,7 @@ export default function GeometricMorph({
   }, [noise2D, distortRadius]);
 
   const pointsStr = points.map(([x, y]) => `${x},${y}`).join(" ");
-  const [r_, g_, b_] = color;
+  const [r_, g_, b_] = resolvedColor;
 
   return (
     <svg

@@ -1,9 +1,11 @@
 import { useEffect, useCallback } from "react";
 import { useWebGL } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface LightRaysProps {
   rayCount?: number;
+  palette?: string;
   color?: RGB;
   mouseReactive?: boolean;
   className?: string;
@@ -88,18 +90,20 @@ void main() {
 
 export default function LightRays({
   rayCount = 12,
-  color = [255, 240, 200],
+  palette,
+  color,
   mouseReactive = true,
   className,
 }: LightRaysProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'glow', [255, 240, 200] as RGB);
   const { canvasRef, setUniform, startLoop } = useWebGL({ fragmentShader: FRAGMENT_SHADER });
 
   const updateUniforms = useCallback(() => {
     const count = Math.max(1, Math.min(24, rayCount));
     setUniform("u_rayCount", count);
-    setUniform("u_color", [color[0] / 255, color[1] / 255, color[2] / 255]);
+    setUniform("u_color", [resolvedColor[0] / 255, resolvedColor[1] / 255, resolvedColor[2] / 255]);
     setUniform("u_mouseReactive", mouseReactive ? 1 : 0);
-  }, [rayCount, color, mouseReactive, setUniform]);
+  }, [rayCount, resolvedColor, mouseReactive, setUniform]);
 
   useEffect(() => {
     updateUniforms();

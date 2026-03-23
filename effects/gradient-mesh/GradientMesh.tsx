@@ -1,9 +1,18 @@
 import { useEffect, useRef } from "react";
 import { useGradientMesh } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
+
+const DEFAULT_COLORS: RGB[] = [
+  [99, 102, 241],
+  [139, 92, 246],
+  [34, 211, 238],
+  [167, 139, 250],
+];
 
 interface GradientMeshProps {
   count?: number;
+  palette?: string;
   colors?: RGB[];
   speed?: number;
   className?: string;
@@ -11,11 +20,12 @@ interface GradientMeshProps {
 
 export default function GradientMesh({
   count = 4,
+  palette,
   colors,
   speed = 0.3,
   className,
 }: GradientMeshProps) {
-  const resolvedColors = colors ?? undefined;
+  const resolvedColors = colors ?? resolvePalette(palette, 'background', DEFAULT_COLORS);
 
   const mesh = useGradientMesh({ count, colors: resolvedColors, speed });
   const divRef = useRef<HTMLDivElement>(null);

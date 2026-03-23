@@ -1,11 +1,19 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
+
+const DEFAULT_RIPPLE_COLORS: RGB[] = [
+  [99, 102, 241],
+  [139, 92, 246],
+  [34, 211, 238],
+];
 
 interface RippleWaveProps {
   source?: "center" | "click";
   waveSpeed?: number;
   gridSize?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -14,13 +22,11 @@ export default function RippleWave({
   source = "click",
   waveSpeed = 200,
   gridSize = 40,
-  colors = [
-    [99, 102, 241],
-    [139, 92, 246],
-    [34, 211, 238],
-  ],
+  palette,
+  colors,
   className,
 }: RippleWaveProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_RIPPLE_COLORS);
   const { canvasRef, startLoop, size } = useCanvasSetup();
 
   // Grid state: current height, previous height
@@ -132,10 +138,10 @@ export default function RippleWave({
 
           // Pick color based on val
           const t = (val + 1) / 2;
-          const ci = Math.floor(t * (colors.length - 1));
-          const cf = t * (colors.length - 1) - ci;
-          const c0 = colors[Math.min(ci, colors.length - 1)];
-          const c1 = colors[Math.min(ci + 1, colors.length - 1)];
+          const ci = Math.floor(t * (resolvedColors.length - 1));
+          const cf = t * (resolvedColors.length - 1) - ci;
+          const c0 = resolvedColors[Math.min(ci, resolvedColors.length - 1)];
+          const c1 = resolvedColors[Math.min(ci + 1, resolvedColors.length - 1)];
           const [rr, gg, bb] = [
             c0[0] + (c1[0] - c0[0]) * cf,
             c0[1] + (c1[1] - c0[1]) * cf,
@@ -152,7 +158,7 @@ export default function RippleWave({
         }
       }
     });
-  }, [startLoop, waveSpeed, gridSize, colors, source]);
+  }, [startLoop, waveSpeed, gridSize, resolvedColors, source]);
 
   return (
     <canvas

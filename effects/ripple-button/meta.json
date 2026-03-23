@@ -1,28 +1,66 @@
 {
   "name": "Ripple Button",
   "description": "Material Design-style ripple effect button with multiple concurrent ripples expanding from click point.",
-  "category": ["interactive", "button"],
+  "category": [
+    "interactive",
+    "button",
+    "feedback",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["css-animations", "pointer-events"],
+  "runtime": [
+    "css-animations",
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["ripple is decorative — button remains a standard interactive element", "preserves native button semantics"],
+  "accessibility_notes": [
+    "ripple is decorative — button remains a standard interactive element",
+    "preserves native button semantics"
+  ],
   "dependencies": [],
-  "files": ["RippleButton.tsx"],
-  "imports": ["../../presets/colors"],
+  "files": [
+    "RippleButton.tsx"
+  ],
+  "imports": [
+    "../../presets/colors",
+    "../../presets/resolve"
+  ],
   "hooks": [],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
     "rippleColor": {
-      "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
-      "description": "Ripple color as RGB tuple or palette name"
+      "type": "array",
+      "description": "Ripple color as RGB tuple [r, g, b]"
     },
-    "onClick": { "type": "function", "description": "Click handler passed through to the button" },
-    "className": { "type": "string", "default": "", "description": "CSS class for the button element" }
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "onClick": {
+      "type": "function",
+      "description": "Click handler passed through to the button"
+    },
+    "className": {
+      "type": "string",
+      "default": "",
+      "description": "CSS class for the button element"
+    }
   },
-  "use_cases": ["primary CTA button", "Material Design style interactions", "form submit button", "navigation action button"],
-  "conflicts": ["overflow:hidden clips content outside button bounds", "inline keyframes style tag added per component instance"]
+  "use_cases": [
+    "primary CTA button",
+    "Material Design style interactions",
+    "form submit button",
+    "navigation action button"
+  ],
+  "conflicts": [
+    "overflow:hidden clips content outside button bounds",
+    "inline keyframes style tag added per component instance"
+  ],
+  "usage_tip": "Best for Material Design style CTAs and form submit buttons."
 }

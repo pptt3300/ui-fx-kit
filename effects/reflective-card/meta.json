@@ -1,23 +1,74 @@
 {
   "name": "Reflective Card",
   "description": "Card with mouse-tracking reflection overlay in glass (frosted blur + radial highlight) or metallic (iridescent angle shift) mode.",
-  "category": ["card", "interactive", "3d"],
+  "category": [
+    "card",
+    "interactive",
+    "3d",
+    "emphasis",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events", "css-animations"],
+  "runtime": [
+    "pointer-events",
+    "css-animations"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["reflection is decorative — content inside remains accessible", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "reflection is decorative — content inside remains accessible",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["ReflectiveCard.tsx"],
-  "imports": ["../../hooks", "../../css/iridescent.css"],
-  "hooks": ["useMousePosition", "useTilt3D"],
-  "css": ["iridescent.css"],
+  "files": [
+    "ReflectiveCard.tsx"
+  ],
+  "imports": [
+    "../../hooks",
+    "../../css/iridescent.css"
+  ],
+  "hooks": [
+    "useMousePosition",
+    "useTilt3D"
+  ],
+  "css": [
+    "iridescent.css"
+  ],
   "props_schema": {
-    "type": { "type": "enum", "options": ["glass", "metallic"], "default": "glass", "description": "Reflection style — glass uses frosted blur, metallic uses iridescent gradient" },
-    "tiltMax": { "type": "number", "default": 10, "range": [0, 30], "description": "Maximum tilt rotation in degrees" },
-    "className": { "type": "string", "default": "", "description": "CSS class for the card container" }
+    "type": {
+      "type": "enum",
+      "options": [
+        "glass",
+        "metallic"
+      ],
+      "default": "glass",
+      "description": "Reflection style — glass uses frosted blur, metallic uses iridescent gradient"
+    },
+    "tiltMax": {
+      "type": "number",
+      "default": 10,
+      "range": [
+        0,
+        30
+      ],
+      "description": "Maximum tilt rotation in degrees"
+    },
+    "className": {
+      "type": "string",
+      "default": "",
+      "description": "CSS class for the card container"
+    }
   },
-  "use_cases": ["premium pricing card", "product feature card", "glassmorphism UI element", "portfolio project card"],
-  "conflicts": ["glass mode uses backdrop-filter — not supported in all browsers", "mouse-dependent — no effect on touch devices"]
+  "use_cases": [
+    "premium pricing card",
+    "product feature card",
+    "glassmorphism UI element",
+    "portfolio project card"
+  ],
+  "conflicts": [
+    "glass mode uses backdrop-filter — not supported in all browsers",
+    "mouse-dependent — no effect on touch devices"
+  ],
+  "usage_tip": "Best for premium pricing or product cards; desktop hover required."
 }

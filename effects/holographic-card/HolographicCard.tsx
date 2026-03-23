@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useTilt3D, useMousePosition, useCanvasSetup, useParticles } from "../../hooks";
 import "../../css/holographic.css";
+import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface HolographicCardProps {
   children: React.ReactNode;
   sparkles?: boolean;
   tiltMax?: number;
+  palette?: string;
   className?: string;
 }
 
@@ -22,8 +25,10 @@ export default function HolographicCard({
   children,
   sparkles = true,
   tiltMax = 15,
+  palette,
   className = "",
 }: HolographicCardProps) {
+  const glowColor = resolvePalette(palette, 'glow', [255, 255, 255] as RGB);
   const { ref, shineRef, handlers: tiltHandlers } = useTilt3D({ maxRotation: tiltMax });
   const { position, handlers: mouseHandlers } = useMousePosition({ scope: "element", mode: "state" });
   const [dims, setDims] = useState({ w: 1, h: 1 });
@@ -80,7 +85,7 @@ export default function HolographicCard({
       particles.forEach(ctx, (c, p) => {
         c.save();
         c.globalAlpha = p.alpha * 0.9;
-        c.fillStyle = "#ffffff";
+        c.fillStyle = `rgb(${glowColor[0]},${glowColor[1]},${glowColor[2]})`;
         c.beginPath();
         c.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         c.fill();

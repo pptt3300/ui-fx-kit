@@ -1,23 +1,101 @@
 {
   "name": "Liquid Chrome",
   "description": "Metallic chrome surface simulation via WebGL with FBM-based normal mapping, environment reflection, and mouse ripple distortion.",
-  "category": ["background", "shader", "interactive"],
+  "category": [
+    "background",
+    "shader",
+    "interactive",
+    "decoration",
+    "ambient"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["highly reflective surface may be distracting", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "highly reflective surface may be distracting",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["LiquidChrome.tsx"],
-  "imports": ["react", "../../hooks"],
-  "hooks": ["useWebGL"],
+  "files": [
+    "LiquidChrome.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks",
+    "../../presets/colors",
+    "../../presets/resolve"
+  ],
+  "hooks": [
+    "useWebGL"
+  ],
   "css": [],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "speed": { "type": "number", "default": 0.5, "range": [0.05, 2], "description": "Animation speed for chrome surface deformation" },
-    "mouseStrength": { "type": "number", "default": 0.3, "range": [0, 1], "description": "Mouse ripple distortion intensity" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "speed": {
+      "type": "number",
+      "default": 0.5,
+      "range": [
+        0.05,
+        2
+      ],
+      "description": "Animation speed for chrome surface deformation"
+    },
+    "mouseStrength": {
+      "type": "number",
+      "default": 0.3,
+      "range": [
+        0,
+        1
+      ],
+      "description": "Mouse ripple distortion intensity"
+    },
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "baseColor": {
+      "type": "string",
+      "default": "[140,140,153]",
+      "description": "Base metal color as RGB tuple"
+    },
+    "highlightColor": {
+      "type": "string",
+      "default": "[230,235,255]",
+      "description": "Highlight reflection color as RGB tuple"
+    },
+    "shadowColor": {
+      "type": "string",
+      "default": "[26,26,38]",
+      "description": "Shadow color as RGB tuple"
+    },
+    "accentColor": {
+      "type": "string",
+      "default": "[115,128,204]",
+      "description": "Accent reflection tint as RGB tuple"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["premium product landing page background", "creative agency hero section", "music or fashion site backdrop", "futuristic dashboard decoration"],
-  "conflicts": ["WebGL required — no fallback for unsupported browsers", "GPU-intensive on large viewports", "mouse reactivity has no touch equivalent"]
+  "use_cases": [
+    "premium product landing page background",
+    "creative agency hero section",
+    "music or fashion site backdrop",
+    "futuristic dashboard decoration"
+  ],
+  "conflicts": [
+    "WebGL required — no fallback for unsupported browsers",
+    "GPU-intensive on large viewports",
+    "mouse reactivity has no touch equivalent"
+  ],
+  "usage_tip": "Best for premium or futuristic hero backgrounds; GPU-intensive, desktop only."
 }

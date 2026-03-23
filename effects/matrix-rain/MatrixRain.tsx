@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 const CHARSETS = {
   katakana:
@@ -13,6 +14,7 @@ interface MatrixRainProps {
   charset?: "katakana" | "latin" | "binary" | string;
   speed?: number;
   density?: number;
+  palette?: string;
   color?: RGB;
   className?: string;
 }
@@ -27,9 +29,11 @@ export default function MatrixRain({
   charset = "katakana",
   speed = 1,
   density = 0.7,
-  color = [34, 211, 153],
+  palette,
+  color,
   className,
 }: MatrixRainProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [34, 211, 153] as RGB);
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const columnsRef = useRef<Column[]>([]);
   const charsetStr =
@@ -60,7 +64,7 @@ export default function MatrixRain({
       const fontSize = 14;
       ctx.font = `${fontSize}px monospace`;
 
-      const [r, g, b] = color;
+      const [r, g, b] = resolvedColor;
       const columns = columnsRef.current;
 
       for (let i = 0; i < columns.length; i++) {
@@ -108,7 +112,7 @@ export default function MatrixRain({
         }
       }
     });
-  }, [startLoop, color, charsetStr, density, speed]);
+  }, [startLoop, resolvedColor, charsetStr, density, speed]);
 
   return (
     <canvas

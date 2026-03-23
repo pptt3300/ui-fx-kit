@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useParticles, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface SplashParticle {
   x: number;
@@ -16,6 +17,7 @@ interface SplashParticle {
 interface SplashCursorProps {
   particleCount?: number;
   spread?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -31,14 +33,16 @@ const DEFAULT_COLORS: RGB[] = [
 export default function SplashCursor({
   particleCount = 15,
   spread = 360,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className = "",
 }: SplashCursorProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, startLoop } = useCanvasSetup();
   const { position } = useMousePosition({ scope: "window" });
   const prevPos = useRef({ x: -9999, y: -9999 });
-  const colorsRef = useRef(colors);
-  useEffect(() => { colorsRef.current = colors; });
+  const colorsRef = useRef(resolvedColors);
+  useEffect(() => { colorsRef.current = resolvedColors; });
 
   const particles = useParticles<SplashParticle>({
     spawn: () => {

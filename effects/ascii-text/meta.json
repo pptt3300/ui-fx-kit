@@ -1,31 +1,87 @@
 {
   "name": "ASCII Text",
   "description": "Renders text as ASCII character art on canvas. Mouse hover within a radius reveals solid text, with a smooth transition at the boundary.",
-  "category": ["text", "interactive", "canvas"],
+  "category": [
+    "text",
+    "interactive",
+    "canvas",
+    "decoration",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": false,
-  "accessibility_notes": ["text is rendered to canvas — not accessible to screen readers", "provide an aria-label on the container"],
+  "accessibility_notes": [
+    "text is rendered to canvas — not accessible to screen readers",
+    "provide an aria-label on the container"
+  ],
   "dependencies": [],
   "files": [
     "ASCIIText.tsx"
   ],
-  "imports": ["../../hooks"],
+  "imports": [
+    "../../hooks"
+  ],
   "hooks": [
     "useCanvasSetup",
     "useMousePosition"
   ],
   "css": [],
   "props_schema": {
-    "text": { "type": "string", "description": "The text to render as ASCII art" },
-    "fontSize": { "type": "number", "default": 10, "range": [6, 24], "description": "Font size of each ASCII character in pixels" },
-    "charset": { "type": "string", "default": " .,:;i1tfLCG08@", "description": "Characters used for brightness mapping, darkest to brightest" },
-    "revealRadius": { "type": "number", "default": 80, "range": [30, 200], "description": "Radius of the mouse reveal zone in pixels" },
-    "color": { "type": "object", "description": "RGB color for the ASCII text, e.g. { r: 100, g: 220, b: 100 }" },
-    "className": { "type": "string", "description": "CSS class for the wrapper div" }
+    "text": {
+      "type": "string",
+      "description": "The text to render as ASCII art"
+    },
+    "fontSize": {
+      "type": "number",
+      "default": 10,
+      "range": [
+        6,
+        24
+      ],
+      "description": "Font size of each ASCII character in pixels"
+    },
+    "charset": {
+      "type": "string",
+      "default": " .,:;i1tfLCG08@",
+      "description": "Characters used for brightness mapping, darkest to brightest"
+    },
+    "revealRadius": {
+      "type": "number",
+      "default": 80,
+      "range": [
+        30,
+        200
+      ],
+      "description": "Radius of the mouse reveal zone in pixels"
+    },
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "color": {
+      "type": "object",
+      "description": "RGB color for the ASCII text, e.g. { r: 100, g: 220, b: 100 }"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the wrapper div"
+    }
   },
-  "use_cases": ["hero text effect", "creative portfolio heading", "retro-themed landing page"],
-  "conflicts": ["canvas re-renders every frame — avoid multiple instances on one page", "mouse-dependent reveal does not work on touch devices"]
+  "use_cases": [
+    "hero text effect",
+    "creative portfolio heading",
+    "retro-themed landing page"
+  ],
+  "conflicts": [
+    "canvas re-renders every frame — avoid multiple instances on one page",
+    "mouse-dependent reveal does not work on touch devices"
+  ],
+  "usage_tip": "Best for single hero heading; avoid on mobile or touch-only devices."
 }

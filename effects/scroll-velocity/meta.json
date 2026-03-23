@@ -1,19 +1,47 @@
 {
   "name": "Scroll Velocity Text",
   "description": "Marquee text that accelerates with scroll velocity, plus animated number counters that count up as they scroll into view.",
-  "category": ["text", "scroll", "animation"],
+  "category": [
+    "text",
+    "scroll",
+    "animation",
+    "decoration",
+    "ambient"
+  ],
   "framework": "react",
-  "runtime": ["css-animations", "pointer-events"],
+  "runtime": [
+    "css-animations",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["needs reduced-motion fallback", "decorative text may confuse screen readers"],
-  "dependencies": ["framer-motion"],
-  "files": ["ScrollVelocity.tsx"],
-  "imports": ["react", "framer-motion"],
+  "accessibility_notes": [
+    "needs reduced-motion fallback",
+    "decorative text may confuse screen readers"
+  ],
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "ScrollVelocity.tsx"
+  ],
+  "imports": [
+    "react",
+    "framer-motion"
+  ],
   "hooks": [],
   "css": [],
   "props_schema": {},
-  "use_cases": ["hero section marquee", "scroll-driven storytelling", "landing page kinetic typography", "portfolio scroll effects"],
-  "conflicts": ["no tunable props — component is self-contained demo", "heavy framer-motion dependency for simple scroll effect"]
+  "use_cases": [
+    "hero section marquee",
+    "scroll-driven storytelling",
+    "landing page kinetic typography",
+    "portfolio scroll effects"
+  ],
+  "conflicts": [
+    "no tunable props — component is self-contained demo",
+    "heavy framer-motion dependency for simple scroll effect"
+  ],
+  "usage_tip": "Good for kinetic typography marquees; no configurable props in current build."
 }

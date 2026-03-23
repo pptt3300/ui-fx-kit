@@ -1,29 +1,82 @@
 {
   "name": "Cursor Glow Trail",
   "description": "Full-page canvas overlay that renders a glowing cursor with colored particle trails. Trail density scales with movement speed, particles have gravity and fade out.",
-  "category": ["cursor", "particles", "global"],
+  "category": [
+    "cursor",
+    "particles",
+    "global",
+    "decoration",
+    "ambient"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative overlay — pointer-events-none", "uses mix-blend-mode:screen — may look odd on light backgrounds"],
+  "accessibility_notes": [
+    "decorative overlay — pointer-events-none",
+    "uses mix-blend-mode:screen — may look odd on light backgrounds"
+  ],
   "dependencies": [],
   "files": [
     "CursorGlow.tsx"
   ],
-  "imports": ["../../hooks", "../../presets"],
-  "hooks": ["useMousePosition", "useCanvasSetup", "useParticles"],
+  "imports": [
+    "../../hooks",
+    "../../presets"
+  ],
+  "hooks": [
+    "useMousePosition",
+    "useCanvasSetup",
+    "useParticles"
+  ],
   "css": [],
   "props_schema": {
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "maxParticles": { "type": "number", "default": 500, "range": [100, 1000], "description": "Maximum number of trail particles alive at once" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "maxParticles": {
+      "type": "number",
+      "default": 500,
+      "range": [
+        100,
+        1000
+      ],
+      "description": "Maximum number of trail particles alive at once"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["dark-mode cursor enhancement", "creative portfolio ambient effect", "interactive art background", "gaming UI cursor trail"],
-  "conflicts": ["mix-blend-mode:screen looks washed out on light backgrounds", "high maxParticles can lag on integrated GPUs"]
+  "use_cases": [
+    "dark-mode cursor enhancement",
+    "creative portfolio ambient effect",
+    "interactive art background",
+    "gaming UI cursor trail"
+  ],
+  "conflicts": [
+    "mix-blend-mode:screen looks washed out on light backgrounds",
+    "high maxParticles can lag on integrated GPUs"
+  ],
+  "usage_tip": "Best for dark-mode creative sites; looks washed out on light backgrounds."
 }

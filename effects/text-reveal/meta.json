@@ -1,19 +1,47 @@
 {
   "name": "Scroll Text Reveal",
   "description": "Text that progressively reveals as you scroll. Word-by-word fade+deblur and character-by-character color transition driven by scroll position.",
-  "category": ["text", "scroll", "animation"],
+  "category": [
+    "text",
+    "scroll",
+    "animation",
+    "transition",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["css-animations", "intersection-observer"],
+  "runtime": [
+    "css-animations",
+    "intersection-observer"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["text is always in DOM — accessible to screen readers", "needs reduced-motion fallback"],
-  "dependencies": ["framer-motion"],
-  "files": ["TextReveal.tsx"],
-  "imports": ["react", "framer-motion"],
+  "accessibility_notes": [
+    "text is always in DOM — accessible to screen readers",
+    "needs reduced-motion fallback"
+  ],
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "TextReveal.tsx"
+  ],
+  "imports": [
+    "react",
+    "framer-motion"
+  ],
   "hooks": [],
   "css": [],
   "props_schema": {},
-  "use_cases": ["long-form storytelling page", "about section scroll reveal", "manifesto or mission statement", "case study narrative"],
-  "conflicts": ["no tunable props — text and layout are hardcoded", "many motion.span nodes for character-level reveal"]
+  "use_cases": [
+    "long-form storytelling page",
+    "about section scroll reveal",
+    "manifesto or mission statement",
+    "case study narrative"
+  ],
+  "conflicts": [
+    "no tunable props — text and layout are hardcoded",
+    "many motion.span nodes for character-level reveal"
+  ],
+  "usage_tip": "Best for long-form storytelling or mission statement scroll reveals."
 }

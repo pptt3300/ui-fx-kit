@@ -1,24 +1,71 @@
 {
   "name": "Shimmer Skeleton",
   "description": "Loading skeleton with shimmer animation — cursor proximity accelerates the shimmer speed.",
-  "category": ["loading", "placeholder", "interactive"],
+  "category": [
+    "loading",
+    "placeholder",
+    "interactive"
+  ],
   "framework": "react",
-  "runtime": ["css-animations", "pointer-events"],
+  "runtime": [
+    "css-animations",
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["announce loading state via aria-busy", "shimmer is decorative"],
+  "accessibility_notes": [
+    "announce loading state via aria-busy",
+    "shimmer is decorative"
+  ],
   "dependencies": [],
-  "files": ["ShimmerSkeleton.tsx"],
-  "imports": ["../../hooks", "../../css/shimmer.css"],
-  "hooks": ["proximity", "useMousePosition"],
-  "css": ["shimmer.css"],
+  "files": [
+    "ShimmerSkeleton.tsx"
+  ],
+  "imports": [
+    "../../hooks",
+    "../../css/shimmer.css"
+  ],
+  "hooks": [
+    "proximity",
+    "useMousePosition"
+  ],
+  "css": [
+    "shimmer.css"
+  ],
   "props_schema": {
-    "layout": { "type": "array", "description": "Custom array of ShapeConfig objects ({type, width?, height?})" },
-    "preset": { "type": "enum", "options": ["card", "list-item", "profile", "paragraph"], "description": "Predefined skeleton layout" },
-    "dark": { "type": "boolean", "default": true, "description": "Dark or light shimmer theme" },
-    "className": { "type": "string", "description": "CSS class for the container" }
+    "layout": {
+      "type": "array",
+      "description": "Custom array of ShapeConfig objects ({type, width?, height?})"
+    },
+    "preset": {
+      "type": "enum",
+      "options": [
+        "card",
+        "list-item",
+        "profile",
+        "paragraph"
+      ],
+      "description": "Predefined skeleton layout"
+    },
+    "dark": {
+      "type": "boolean",
+      "default": true,
+      "description": "Dark or light shimmer theme"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container"
+    }
   },
-  "use_cases": ["content loading placeholder", "feed skeleton screen", "profile page loading state", "card grid placeholder"],
-  "conflicts": ["proximity-based speed change not visible on touch devices"]
+  "use_cases": [
+    "content loading placeholder",
+    "feed skeleton screen",
+    "profile page loading state",
+    "card grid placeholder"
+  ],
+  "conflicts": [
+    "proximity-based speed change not visible on touch devices"
+  ],
+  "usage_tip": "Best for content loading placeholders; use preset layouts for quick setup."
 }

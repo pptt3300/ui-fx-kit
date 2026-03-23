@@ -1,11 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
 import { proximity } from "../../hooks";
+import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface InteractiveDotGridProps {
   gap?: number;
   influenceRadius?: number;
   maxDisplacement?: number;
+  palette?: string;
   className?: string;
 }
 
@@ -13,20 +16,22 @@ export default function InteractiveDotGrid({
   gap = 28,
   influenceRadius = 120,
   maxDisplacement = 14,
+  palette,
   className,
 }: InteractiveDotGridProps) {
+  const baseColor = resolvePalette(palette, 'primary', [99, 130, 241] as RGB);
   const { canvasRef, startLoop, size } = useCanvasSetup({ dpr: 2 });
   const { position, handlers } = useMousePosition({ scope: "element" });
 
   const dotRadius = 1.5;
-  const propsRef = useRef({ gap, influenceRadius, maxDisplacement });
+  const propsRef = useRef({ gap, influenceRadius, maxDisplacement, baseColor });
   useEffect(() => {
-    propsRef.current = { gap, influenceRadius, maxDisplacement };
+    propsRef.current = { gap, influenceRadius, maxDisplacement, baseColor };
   });
 
   useEffect(() => {
     return startLoop((ctx) => {
-      const { gap: g, influenceRadius: ir, maxDisplacement: md } = propsRef.current;
+      const { gap: g, influenceRadius: ir, maxDisplacement: md, baseColor: bc } = propsRef.current;
       const w = size.width || ctx.canvas.width / 2;
       const h = size.height || ctx.canvas.height / 2;
       ctx.clearRect(0, 0, w, h);
@@ -56,11 +61,9 @@ export default function InteractiveDotGrid({
             alpha = 0.2 + result.force * 0.8;
           }
 
-          const hue = 240 + (col / cols) * 40 + (row / rows) * 20;
-
           ctx.beginPath();
           ctx.arc(drawX, drawY, dotRadius * scale, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(${hue}, 70%, 60%, ${alpha})`;
+          ctx.fillStyle = `rgba(${bc[0]},${bc[1]},${bc[2]},${alpha})`;
           ctx.fill();
 
           if (result.inRange && col < cols - 1) {
@@ -72,7 +75,7 @@ export default function InteractiveDotGrid({
               ctx.beginPath();
               ctx.moveTo(drawX, drawY);
               ctx.lineTo(nnx, nny);
-              ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${Math.min(alpha, 0.15)})`;
+              ctx.strokeStyle = `rgba(${bc[0]},${bc[1]},${bc[2]},${Math.min(alpha, 0.15)})`;
               ctx.lineWidth = 0.5;
               ctx.stroke();
             }

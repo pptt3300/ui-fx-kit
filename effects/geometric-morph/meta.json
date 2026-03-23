@@ -1,18 +1,32 @@
 {
   "name": "Geometric Morph",
   "description": "SVG polygon that morphs between shapes using spring physics. Perlin noise and mouse proximity distort vertices in real time.",
-  "category": ["svg", "interactive", "animation"],
+  "category": [
+    "svg",
+    "interactive",
+    "animation",
+    "decoration",
+    "ambient"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "high",
   "performance_cost": "medium",
   "mobile_safe": true,
-  "accessibility_notes": ["decorative SVG — add aria-hidden=\"true\"", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "decorative SVG — add aria-hidden=\"true\"",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
   "files": [
     "GeometricMorph.tsx"
   ],
-  "imports": ["../../hooks", "../../presets"],
+  "imports": [
+    "../../hooks",
+    "../../presets"
+  ],
   "hooks": [
     "useMousePosition",
     "usePerlinNoise",
@@ -20,16 +34,67 @@
   ],
   "css": [],
   "props_schema": {
-    "shapes": { "type": "array", "default": ["circle", "triangle", "hexagon", "star"], "description": "Shape names to cycle through" },
-    "duration": { "type": "number", "default": 2000, "range": [500, 8000], "description": "Time between shape transitions in milliseconds" },
+    "shapes": {
+      "type": "array",
+      "default": [
+        "circle",
+        "triangle",
+        "hexagon",
+        "star"
+      ],
+      "description": "Shape names to cycle through"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2000,
+      "range": [
+        500,
+        8000
+      ],
+      "description": "Time between shape transitions in milliseconds"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "distortRadius": { "type": "number", "default": 100, "range": [30, 250], "description": "Mouse proximity distortion radius in pixels" },
-    "className": { "type": "string", "description": "CSS class for the SVG element" }
+    "distortRadius": {
+      "type": "number",
+      "default": 100,
+      "range": [
+        30,
+        250
+      ],
+      "description": "Mouse proximity distortion radius in pixels"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the SVG element"
+    }
   },
-  "use_cases": ["hero section decorative element", "loading state visual", "interactive background accent", "brand identity animation"],
-  "conflicts": ["Perlin noise + spring + mouse distortion all run every frame — may lag with many instances", "SVG filter glow adds GPU compositing cost"]
+  "use_cases": [
+    "hero section decorative element",
+    "loading state visual",
+    "interactive background accent",
+    "brand identity animation"
+  ],
+  "conflicts": [
+    "Perlin noise + spring + mouse distortion all run every frame — may lag with many instances",
+    "SVG filter glow adds GPU compositing cost"
+  ],
+  "usage_tip": "Best for hero section decorative accents; avoid multiple instances per page."
 }

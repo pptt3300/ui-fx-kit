@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface MetallicPaintProps {
+  palette?: string;
   color?: RGB;
   brushAngle?: number;
   specular?: number;
@@ -92,11 +94,13 @@ void main() {
 `;
 
 export default function MetallicPaint({
-  color = DEFAULT_COLOR,
+  palette,
+  color,
   brushAngle = 0,
   specular = 0.8,
   className,
 }: MetallicPaintProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', DEFAULT_COLOR);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -144,7 +148,7 @@ export default function MetallicPaint({
     const uBrush = gl.getUniformLocation(prog, "u_brush_angle");
     const uSpec = gl.getUniformLocation(prog, "u_specular");
 
-    gl.uniform3f(uColor, color[0] / 255, color[1] / 255, color[2] / 255);
+    gl.uniform3f(uColor, resolvedColor[0] / 255, resolvedColor[1] / 255, resolvedColor[2] / 255);
     gl.uniform1f(uBrush, brushAngle);
     gl.uniform1f(uSpec, specular);
 
@@ -185,7 +189,7 @@ export default function MetallicPaint({
       gl.deleteShader(vs);
       gl.deleteShader(fs);
     };
-  }, [color, brushAngle, specular]);
+  }, [resolvedColor, brushAngle, specular]);
 
   return (
     <canvas

@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface SilkWavesProps {
   strandCount?: number;
   amplitude?: number;
   mouseReactive?: boolean;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -107,9 +109,11 @@ export default function SilkWaves({
   strandCount = 5,
   amplitude = 50,
   mouseReactive = true,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className,
 }: SilkWavesProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -173,7 +177,7 @@ export default function SilkWaves({
     gl.uniform1f(uAmp, amplitude / 600);
     gl.uniform1f(uMouseR, mouseReactive ? 1 : 0);
     for (let i = 0; i < 5; i++) {
-      const c = colors[i % colors.length];
+      const c = resolvedColors[i % resolvedColors.length];
       gl.uniform3f(uColors[i], c[0] / 255, c[1] / 255, c[2] / 255);
     }
 
@@ -218,7 +222,7 @@ export default function SilkWaves({
       gl.deleteShader(vs);
       gl.deleteShader(fs);
     };
-  }, [strandCount, amplitude, mouseReactive, colors]);
+  }, [strandCount, amplitude, mouseReactive, resolvedColors]);
 
   return (
     <canvas

@@ -1,29 +1,93 @@
 {
   "name": "Plasma Shader",
   "description": "Classic plasma effect via WebGL fragment shader with sine-wave interference patterns mapped to a color gradient palette.",
-  "category": ["background", "shader", "generative"],
+  "category": [
+    "background",
+    "shader",
+    "generative",
+    "ambient",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "decorative only — no content conveyed",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["PlasmaShader.tsx"],
-  "imports": ["../../hooks", "../../presets"],
-  "hooks": ["useWebGL"],
+  "files": [
+    "PlasmaShader.tsx"
+  ],
+  "imports": [
+    "../../hooks",
+    "../../presets"
+  ],
+  "hooks": [
+    "useWebGL"
+  ],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "speed": { "type": "number", "default": 1, "range": [0.1, 5], "description": "Animation speed multiplier" },
-    "intensity": { "type": "number", "default": 0.5, "range": [0, 1], "description": "Plasma pattern intensity — 0 is flat, 1 is full contrast" },
+    "speed": {
+      "type": "number",
+      "default": 1,
+      "range": [
+        0.1,
+        5
+      ],
+      "description": "Animation speed multiplier"
+    },
+    "intensity": {
+      "type": "number",
+      "default": 0.5,
+      "range": [
+        0,
+        1
+      ],
+      "description": "Plasma pattern intensity — 0 is flat, 1 is full contrast"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["psychedelic hero background", "creative agency landing page", "music/event site backdrop", "generative art display"],
-  "conflicts": ["WebGL required — no fallback for unsupported browsers", "heavy GPU usage on mobile", "mouse influence subtle — mainly decorative"]
+  "use_cases": [
+    "psychedelic hero background",
+    "creative agency landing page",
+    "music/event site backdrop",
+    "generative art display"
+  ],
+  "conflicts": [
+    "WebGL required — no fallback for unsupported browsers",
+    "heavy GPU usage on mobile",
+    "mouse influence subtle — mainly decorative"
+  ],
+  "usage_tip": "Good for psychedelic or creative agency hero backgrounds; GPU-intensive."
 }

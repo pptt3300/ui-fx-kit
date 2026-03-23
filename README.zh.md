@@ -33,6 +33,14 @@
 "首页标题加个打字机效果"
 ```
 
+**按意图：**
+
+```
+"我需要一个 SaaS 仪表盘的背景效果——低性能消耗，mobile safe"
+"给定价卡片加个强调效果，但要高级感不要花哨"
+"内容加载时需要一个 loading 反馈效果"
+```
+
 **带约束条件：**
 
 ```
@@ -65,11 +73,11 @@ MCP 服务器提供 16 个工具。你不需要直接调用——AI 会根据你
 
 | 工具 | AI 用它来做什么 |
 |------|---------------|
-| `find_effects` | 按分类、移动端兼容、性能消耗、复杂度、运行时筛选 |
+| `find_effects` | 按意图+目标筛选（如 `'button emphasis'`、`'background ambient'`），返回 usage_tip 辅助决策 |
 | `get_effect_bundle` | 一次拿到效果源码 + 全部 hook/CSS/preset 依赖 |
 | `suggest_combination` | 描述意图 → 返回 hook 组合建议 + 源码 |
 | `check_performance_budget` | 检查多个效果能否在同一页面共存 |
-| `list_effects` | 浏览所有效果（紧凑摘要） |
+| `list_effects` | 浏览所有效果，带 usage_tip 指引，支持多分类 AND 筛选 |
 | `search` | 跨效果、hooks、CSS 的关键词搜索 |
 | `list_css` | 浏览 CSS 片段（加个 class 就生效） |
 | `get_css` | 获取 CSS 片段源码 |
@@ -92,6 +100,7 @@ MCP 服务器提供 16 个工具。你不需要直接调用——AI 会根据你
 | 性能 | "当前页面已经有 3 个 canvas 效果了，还能加吗？" | AI 调用 `check_performance_budget` |
 | 自定义 | "用粒子 + 鼠标跟踪 + canvas 组合一个自定义效果" | AI 调用 `suggest_combination` |
 | 主题 | "所有效果统一用 spotify 配色" | AI 给每个效果传 `palette="spotify"` |
+| 按意图 | "CTA 按钮需要吸引注意力" | AI 查询 `find_effects(category="button emphasis")` → 返回 magnetic-button、ripple-button 及 usage_tip |
 
 **避免模糊 prompt**，比如"加点效果"或"用 ui-fx-kit"——AI 需要知道要什么效果、放在哪里。
 

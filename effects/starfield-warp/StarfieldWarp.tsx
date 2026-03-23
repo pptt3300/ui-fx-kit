@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface StarfieldWarpProps {
   count?: number;
   speed?: number;
   mouseReactive?: boolean;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -29,15 +31,17 @@ export default function StarfieldWarp({
   count = 800,
   speed = 2,
   mouseReactive = true,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className,
 }: StarfieldWarpProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const { position: mousePos } = useMousePosition({ scope: "window" });
   const starsRef = useRef<Star[]>([]);
 
   const spawnStar = (w: number, h: number): Star => {
-    const color = colors[Math.floor(Math.random() * colors.length)];
+    const color = resolvedColors[Math.floor(Math.random() * resolvedColors.length)];
     return {
       x: (Math.random() - 0.5) * w * 2,
       y: (Math.random() - 0.5) * h * 2,
@@ -129,7 +133,7 @@ export default function StarfieldWarp({
       }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startLoop, speed, mouseReactive, colors]);
+  }, [startLoop, speed, mouseReactive, resolvedColors]);
 
   return (
     <canvas

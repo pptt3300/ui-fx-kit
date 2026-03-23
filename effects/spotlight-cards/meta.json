@@ -1,21 +1,56 @@
 {
   "name": "Spotlight Cards",
   "description": "Dark cards with cursor-tracking spotlight effect, border glow using CSS mask compositing, and scroll-triggered entrance animations.",
-  "category": ["card", "interactive", "spotlight"],
+  "category": [
+    "card",
+    "interactive",
+    "spotlight",
+    "emphasis",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events", "intersection-observer", "css-animations"],
+  "runtime": [
+    "pointer-events",
+    "intersection-observer",
+    "css-animations"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["cards are decorative — ensure content is accessible", "needs reduced-motion fallback for entrance animations"],
-  "dependencies": ["framer-motion"],
-  "files": ["SpotlightCards.tsx"],
-  "imports": ["framer-motion", "../../hooks"],
-  "hooks": ["useSpotlight"],
+  "accessibility_notes": [
+    "cards are decorative — ensure content is accessible",
+    "needs reduced-motion fallback for entrance animations"
+  ],
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "SpotlightCards.tsx"
+  ],
+  "imports": [
+    "framer-motion",
+    "../../hooks"
+  ],
+  "hooks": [
+    "useSpotlight"
+  ],
   "css": [],
   "props_schema": {
-    "embedded": { "type": "boolean", "default": false, "description": "Render only the card grid without the section wrapper" }
+    "embedded": {
+      "type": "boolean",
+      "default": false,
+      "description": "Render only the card grid without the section wrapper"
+    }
   },
-  "use_cases": ["feature showcase section", "pricing cards", "dark-themed dashboard widgets", "SaaS product highlights"],
-  "conflicts": ["spotlight effect invisible on touch devices without hover", "CSS mask compositing not supported in all browsers"]
+  "use_cases": [
+    "feature showcase section",
+    "pricing cards",
+    "dark-themed dashboard widgets",
+    "SaaS product highlights"
+  ],
+  "conflicts": [
+    "spotlight effect invisible on touch devices without hover",
+    "CSS mask compositing not supported in all browsers"
+  ],
+  "usage_tip": "Best for dark-themed feature or pricing cards; desktop hover required."
 }

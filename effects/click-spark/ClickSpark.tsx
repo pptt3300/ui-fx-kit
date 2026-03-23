@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useParticles } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface SparkParticle {
   x: number;
@@ -15,6 +16,7 @@ interface SparkParticle {
 
 interface ClickSparkProps {
   count?: number;
+  palette?: string;
   color?: RGB;
   length?: number;
   className?: string;
@@ -22,16 +24,18 @@ interface ClickSparkProps {
 
 export default function ClickSpark({
   count = 8,
-  color = [255, 200, 50],
+  palette,
+  color,
   length = 15,
   className = "",
 }: ClickSparkProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [255, 200, 50] as RGB);
   const { canvasRef, startLoop } = useCanvasSetup();
-  const colorRef = useRef(color);
+  const colorRef = useRef(resolvedColor);
   const countRef = useRef(count);
   const lengthRef = useRef(length);
   useEffect(() => {
-    colorRef.current = color;
+    colorRef.current = resolvedColor;
     countRef.current = count;
     lengthRef.current = length;
   });

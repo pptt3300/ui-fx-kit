@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
+import type { RGB as RGBTuple } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface RGB {
   r: number;
@@ -12,6 +14,7 @@ interface ASCIITextProps {
   fontSize?: number;
   charset?: string;
   revealRadius?: number;
+  palette?: string;
   color?: RGB;
   className?: string;
 }
@@ -24,9 +27,15 @@ export default function ASCIIText({
   fontSize = 10,
   charset = DEFAULT_CHARSET,
   revealRadius = 80,
-  color = DEFAULT_COLOR,
+  palette,
+  color,
   className,
 }: ASCIITextProps) {
+  const resolvedColor = (() => {
+    if (color) return color;
+    const tuple = resolvePalette(palette, 'accent', [100, 220, 100] as RGBTuple);
+    return { r: tuple[0], g: tuple[1], b: tuple[2] };
+  })();
   const { canvasRef, startLoop } = useCanvasSetup({ dpr: 1 });
   const { position, handlers } = useMousePosition({ scope: "element" });
   const containerRef = useRef<HTMLDivElement>(null);
@@ -103,21 +112,21 @@ export default function ASCIIText({
             const edgeBlend = t > 0.8 ? (t - 0.8) / 0.2 : 0;
             if (edgeBlend < 0.5) {
               // Solid colored text in reveal zone
-              ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${brightness})`;
+              ctx.fillStyle = `rgba(${resolvedColor.r},${resolvedColor.g},${resolvedColor.b},${brightness})`;
               // Render a filled block
               ctx.fillRect(charX, charY, charW, charH);
             } else {
               // ASCII near edge
               const charIdx = Math.floor(brightness * (charset.length - 1));
               const ch2 = charset[charIdx] ?? " ";
-              ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${brightness * (1 - edgeBlend + 0.3)})`;
+              ctx.fillStyle = `rgba(${resolvedColor.r},${resolvedColor.g},${resolvedColor.b},${brightness * (1 - edgeBlend + 0.3)})`;
               ctx.fillText(ch2, charX, charY);
             }
           } else {
             // ASCII mode
             const charIdx = Math.floor(brightness * (charset.length - 1));
             const ch2 = charset[charIdx] ?? " ";
-            ctx.fillStyle = `rgba(${color.r},${color.g},${color.b},${brightness * 0.85})`;
+            ctx.fillStyle = `rgba(${resolvedColor.r},${resolvedColor.g},${resolvedColor.b},${brightness * 0.85})`;
             ctx.fillText(ch2, charX, charY);
           }
         }
@@ -125,7 +134,7 @@ export default function ASCIIText({
     });
 
     return cleanup;
-  }, [text, fontSize, charset, revealRadius, color, startLoop, position, canvasRef]);
+  }, [text, fontSize, charset, revealRadius, resolvedColor, startLoop, position, canvasRef]);
 
   return (
     <div

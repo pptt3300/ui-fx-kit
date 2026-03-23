@@ -1,29 +1,70 @@
 {
   "name": "Drag Reorder",
   "description": "Drag-to-reorder list with spring-based layout transitions and elevation shadow on the dragged item.",
-  "category": ["interactive", "list", "gesture"],
+  "category": [
+    "interactive",
+    "list",
+    "gesture",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["needs keyboard reorder support for accessibility", "dragged item z-index change may confuse screen readers"],
+  "accessibility_notes": [
+    "needs keyboard reorder support for accessibility",
+    "dragged item z-index change may confuse screen readers"
+  ],
   "dependencies": [],
   "files": [
     "DragReorder.tsx"
   ],
-  "imports": ["../../hooks"],
+  "imports": [
+    "../../hooks"
+  ],
   "hooks": [
     "useGesture"
   ],
   "css": [],
   "props_schema": {
-    "items": { "type": "array", "description": "Array of items to render and reorder" },
-    "renderItem": { "type": "function", "description": "Render function (item, index) => ReactNode" },
-    "onReorder": { "type": "function", "description": "Callback with the new reordered array" },
-    "itemHeight": { "type": "number", "default": 60, "range": [30, 120], "description": "Fixed height of each list item in pixels" },
-    "className": { "type": "string", "description": "CSS class for the list container" }
+    "items": {
+      "type": "array",
+      "description": "Array of items to render and reorder"
+    },
+    "renderItem": {
+      "type": "function",
+      "description": "Render function (item, index) => ReactNode"
+    },
+    "onReorder": {
+      "type": "function",
+      "description": "Callback with the new reordered array"
+    },
+    "itemHeight": {
+      "type": "number",
+      "default": 60,
+      "range": [
+        30,
+        120
+      ],
+      "description": "Fixed height of each list item in pixels"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the list container"
+    }
   },
-  "use_cases": ["task list reordering", "playlist management", "priority queue editor", "kanban column sorting"],
-  "conflicts": ["fixed itemHeight — all items must be the same height", "no keyboard drag support"]
+  "use_cases": [
+    "task list reordering",
+    "playlist management",
+    "priority queue editor",
+    "kanban column sorting"
+  ],
+  "conflicts": [
+    "fixed itemHeight — all items must be the same height",
+    "no keyboard drag support"
+  ],
+  "usage_tip": "Best for task lists or playlist reordering; needs keyboard fallback for a11y."
 }

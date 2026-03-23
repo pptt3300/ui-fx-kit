@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface GridDistortionProps {
   gridSize?: number;
   radius?: number;
   strength?: number;
+  palette?: string;
   color?: RGB;
   className?: string;
 }
@@ -33,9 +35,11 @@ export default function GridDistortion({
   gridSize = 20,
   radius = 150,
   strength = 30,
-  color = [255, 255, 255],
+  palette,
+  color,
   className,
 }: GridDistortionProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [255, 255, 255] as RGB);
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const { position: mousePos, handlers } = useMousePosition({ scope: "element" });
   const gridRef = useRef<GridPoint[]>([]);
@@ -81,7 +85,7 @@ export default function GridDistortion({
       const { cols, rows } = gridDimsRef.current;
       const mouse = (mousePos as React.MutableRefObject<{ x: number; y: number }>).current;
       const mouseActive = mouse.x !== -9999;
-      const [r, g, b] = color;
+      const [r, g, b] = resolvedColor;
 
       // Update spring targets and tick physics
       for (const pt of grid) {
@@ -145,7 +149,7 @@ export default function GridDistortion({
         }
       }
     });
-  }, [startLoop, mousePos, gridSize, radius, strength, color]);
+  }, [startLoop, mousePos, gridSize, radius, strength, resolvedColor]);
 
   return (
     <canvas

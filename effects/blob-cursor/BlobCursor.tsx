@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface BlobCursorProps {
   radius?: number;
   stiffness?: number;
+  palette?: string;
   color?: RGB;
   className?: string;
 }
@@ -54,9 +56,11 @@ const FRAGMENT = `
 export default function BlobCursor({
   radius = 40,
   stiffness = 120,
-  color = [99, 102, 241],
+  palette,
+  color,
   className = "",
 }: BlobCursorProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [99, 102, 241] as RGB);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { position } = useMousePosition({ scope: "window" });
 
@@ -157,7 +161,7 @@ export default function BlobCursor({
       gl.uniform2f(uMouse, mx, my);
       gl.uniform2f(uTarget, lagPos.current.x, lagPos.current.y);
       gl.uniform1f(uRadius, radius * dpr);
-      gl.uniform3f(uColor, color[0], color[1], color[2]);
+      gl.uniform3f(uColor, resolvedColor[0], resolvedColor[1], resolvedColor[2]);
       gl.uniform1f(uSquish, squish.current);
 
       gl.clear(gl.COLOR_BUFFER_BIT);
@@ -176,7 +180,7 @@ export default function BlobCursor({
       gl.deleteShader(vs);
       gl.deleteShader(fs);
     };
-  }, [radius, stiffness, color, position]);
+  }, [radius, stiffness, resolvedColor, position]);
 
   return (
     <canvas

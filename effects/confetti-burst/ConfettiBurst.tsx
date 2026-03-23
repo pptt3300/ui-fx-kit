@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useCanvasSetup, useParticles } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface ConfettiParticle {
   x: number;
@@ -21,6 +22,7 @@ interface ConfettiBurstProps {
   autoTrigger?: boolean;
   count?: number;
   spread?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -39,15 +41,17 @@ export default function ConfettiBurst({
   autoTrigger = false,
   count = 100,
   spread = 90,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className = "",
 }: ConfettiBurstProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, startLoop } = useCanvasSetup();
-  const colorsRef = useRef(colors);
+  const colorsRef = useRef(resolvedColors);
   const spreadRef = useRef(spread);
   const countRef = useRef(count);
   useEffect(() => {
-    colorsRef.current = colors;
+    colorsRef.current = resolvedColors;
     spreadRef.current = spread;
     countRef.current = count;
   });

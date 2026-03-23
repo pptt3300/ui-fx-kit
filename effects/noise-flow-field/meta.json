@@ -1,31 +1,111 @@
 {
   "name": "Noise Flow Field",
   "description": "Perlin noise flow field with thousands of particles. Each particle follows noise-derived angles, leaving semi-transparent streaks.",
-  "category": ["background", "particles", "generative"],
+  "category": [
+    "background",
+    "particles",
+    "generative",
+    "ambient",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["canvas"],
+  "runtime": [
+    "canvas"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": true,
-  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "decorative only — no content conveyed",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["NoiseFlowField.tsx"],
-  "imports": ["../../hooks", "../../presets"],
-  "hooks": ["useCanvasSetup", "useParticles", "usePerlinNoise"],
+  "files": [
+    "NoiseFlowField.tsx"
+  ],
+  "imports": [
+    "../../hooks",
+    "../../presets"
+  ],
+  "hooks": [
+    "useCanvasSetup",
+    "useParticles",
+    "usePerlinNoise"
+  ],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "count": { "type": "number", "default": 2000, "range": [100, 10000], "description": "Number of flow particles" },
-    "noiseScale": { "type": "number", "default": 0.005, "range": [0.001, 0.05], "description": "Perlin noise sampling scale — smaller = smoother" },
-    "speed": { "type": "number", "default": 1, "range": [0.1, 5], "description": "Particle movement speed multiplier" },
-    "turbulence": { "type": "number", "default": 3, "range": [0.5, 10], "description": "Noise angle multiplier — higher = more chaotic" },
+    "count": {
+      "type": "number",
+      "default": 2000,
+      "range": [
+        100,
+        10000
+      ],
+      "description": "Number of flow particles"
+    },
+    "noiseScale": {
+      "type": "number",
+      "default": 0.005,
+      "range": [
+        0.001,
+        0.05
+      ],
+      "description": "Perlin noise sampling scale — smaller = smoother"
+    },
+    "speed": {
+      "type": "number",
+      "default": 1,
+      "range": [
+        0.1,
+        5
+      ],
+      "description": "Particle movement speed multiplier"
+    },
+    "turbulence": {
+      "type": "number",
+      "default": 3,
+      "range": [
+        0.5,
+        10
+      ],
+      "description": "Noise angle multiplier — higher = more chaotic"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["generative art background", "ambient dashboard decoration", "creative portfolio hero", "music visualizer backdrop"],
-  "conflicts": ["performance drops with count > 5000 on low-end devices", "trail effect requires dark background"]
+  "use_cases": [
+    "generative art background",
+    "ambient dashboard decoration",
+    "creative portfolio hero",
+    "music visualizer backdrop"
+  ],
+  "conflicts": [
+    "performance drops with count > 5000 on low-end devices",
+    "trail effect requires dark background"
+  ],
+  "usage_tip": "Best for generative art backgrounds; requires dark background for trail visibility."
 }

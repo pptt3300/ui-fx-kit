@@ -1,24 +1,69 @@
 {
   "name": "Morphing Text",
   "description": "Cycles through an array of words using blur-fade morph transitions. Text blurs out, swaps at midpoint, then sharpens into the next word.",
-  "category": ["text", "animation"],
+  "category": [
+    "text",
+    "animation",
+    "transition",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["css-animations"],
+  "runtime": [
+    "css-animations"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["ensure sufficient contrast during morph", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "ensure sufficient contrast during morph",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["MorphingText.tsx"],
-  "imports": ["../../hooks"],
-  "hooks": ["useMorphText"],
+  "files": [
+    "MorphingText.tsx"
+  ],
+  "imports": [
+    "../../hooks"
+  ],
+  "hooks": [
+    "useMorphText"
+  ],
   "css": [],
   "props_schema": {
-    "texts": { "type": "string[]", "description": "Array of words to cycle through" },
-    "holdDuration": { "type": "number", "default": 2000, "range": [500, 10000], "description": "Milliseconds to hold each word before morphing" },
-    "morphDuration": { "type": "number", "default": 600, "range": [200, 2000], "description": "Milliseconds for the blur-fade morph transition" },
-    "className": { "type": "string", "description": "CSS class for the span element" }
+    "texts": {
+      "type": "string[]",
+      "description": "Array of words to cycle through"
+    },
+    "holdDuration": {
+      "type": "number",
+      "default": 2000,
+      "range": [
+        500,
+        10000
+      ],
+      "description": "Milliseconds to hold each word before morphing"
+    },
+    "morphDuration": {
+      "type": "number",
+      "default": 600,
+      "range": [
+        200,
+        2000
+      ],
+      "description": "Milliseconds for the blur-fade morph transition"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the span element"
+    }
   },
-  "use_cases": ["hero tagline word rotation", "landing page dynamic headlines", "portfolio role description cycling"],
-  "conflicts": ["blur filter can cause jank on low-end mobile if morphDuration is very short"]
+  "use_cases": [
+    "hero tagline word rotation",
+    "landing page dynamic headlines",
+    "portfolio role description cycling"
+  ],
+  "conflicts": [
+    "blur filter can cause jank on low-end mobile if morphDuration is very short"
+  ],
+  "usage_tip": "Best for hero tagline word rotation; keep word count under 6 for impact."
 }

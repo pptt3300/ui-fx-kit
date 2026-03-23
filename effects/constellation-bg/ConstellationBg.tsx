@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { colorAtPosition } from "../../presets/colors";
 import type { RGB } from "../../presets/colors";
-import { PALETTES } from "../../presets/palettes";
+import { resolvePalette } from "../../presets/resolve";
 
 interface Star {
   x: number;
@@ -28,10 +28,9 @@ export default function ConstellationBg({
   colors,
   className,
 }: ConstellationBgProps) {
-  const stops = colors
-    ?? (palette && PALETTES[palette]
-      ? PALETTES[palette].particles as [RGB, RGB, RGB]
-      : undefined);
+  const DEFAULT_PARTICLES: [RGB, RGB, RGB] = [[99, 102, 241], [139, 92, 246], [34, 211, 238]];
+  const resolvedParticles = colors ?? resolvePalette(palette, 'particles', DEFAULT_PARTICLES) as [RGB, RGB, RGB];
+  const stops = resolvedParticles;
   const colorAt = (x: number, y: number, w: number, h: number) =>
     colorAtPosition(x, y, w, h, stops);
   const canvasRef = useRef<HTMLCanvasElement>(null);

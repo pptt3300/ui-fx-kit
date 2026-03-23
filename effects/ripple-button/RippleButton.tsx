@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface Ripple {
   id: number;
@@ -11,6 +12,7 @@ interface Ripple {
 interface RippleButtonProps {
   children: React.ReactNode;
   rippleColor?: RGB;
+  palette?: string;
   onClick?: (e: React.MouseEvent) => void;
   className?: string;
 }
@@ -19,10 +21,12 @@ let nextId = 0;
 
 export default function RippleButton({
   children,
-  rippleColor = [255, 255, 255],
+  rippleColor,
+  palette,
   onClick,
   className = "",
 }: RippleButtonProps) {
+  const resolvedColor = rippleColor ?? resolvePalette(palette, 'accent', [255, 255, 255] as RGB);
   const [ripples, setRipples] = useState<Ripple[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -48,7 +52,7 @@ export default function RippleButton({
     [onClick],
   );
 
-  const [r, g, b] = rippleColor;
+  const [r, g, b] = resolvedColor;
 
   return (
     <button

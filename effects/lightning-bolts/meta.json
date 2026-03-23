@@ -1,26 +1,93 @@
 {
   "name": "Lightning Bolts",
   "description": "Recursive midpoint-displacement lightning bolts with branching, glow passes, and fade-out. Spawns on interval or click.",
-  "category": ["background", "interactive", "canvas"],
+  "category": [
+    "background",
+    "interactive",
+    "canvas",
+    "decoration",
+    "feedback"
+  ],
   "framework": "react",
-  "runtime": ["canvas", "pointer-events"],
+  "runtime": [
+    "canvas",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "medium",
   "mobile_safe": true,
-  "accessibility_notes": ["sudden bright flashes may affect photosensitive users", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "sudden bright flashes may affect photosensitive users",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["LightningBolts.tsx"],
-  "imports": ["react", "../../hooks", "../../presets"],
-  "hooks": ["useCanvasSetup"],
+  "files": [
+    "LightningBolts.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks",
+    "../../presets"
+  ],
+  "hooks": [
+    "useCanvasSetup"
+  ],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "interval": { "type": "number", "default": 3000, "range": [500, 10000], "description": "Auto-spawn interval in milliseconds (0 to disable)" },
-    "branchChance": { "type": "number", "default": 0.3, "range": [0, 1], "description": "Probability of each bolt segment branching" },
-    "color": { "type": "string", "default": "[34,211,238]", "description": "RGB color array for bolt segments" },
-    "glowIntensity": { "type": "number", "default": 1, "range": [0, 3], "description": "Glow radius multiplier around bolt segments" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "interval": {
+      "type": "number",
+      "default": 3000,
+      "range": [
+        500,
+        10000
+      ],
+      "description": "Auto-spawn interval in milliseconds (0 to disable)"
+    },
+    "branchChance": {
+      "type": "number",
+      "default": 0.3,
+      "range": [
+        0,
+        1
+      ],
+      "description": "Probability of each bolt segment branching"
+    },
+    "palette": {
+      "type": "enum",
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "color": {
+      "type": "string",
+      "default": "[34,211,238]",
+      "description": "RGB color array for bolt segments"
+    },
+    "glowIntensity": {
+      "type": "number",
+      "default": 1,
+      "range": [
+        0,
+        3
+      ],
+      "description": "Glow radius multiplier around bolt segments"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["storm/weather themed background", "gaming or esports landing page", "dramatic hero section accent", "interactive click-to-strike effect"],
-  "conflicts": ["frequent spawns with high branchChance create many draw calls", "flash effect is inherently problematic for photosensitivity"]
+  "use_cases": [
+    "storm/weather themed background",
+    "gaming or esports landing page",
+    "dramatic hero section accent",
+    "interactive click-to-strike effect"
+  ],
+  "conflicts": [
+    "frequent spawns with high branchChance create many draw calls",
+    "flash effect is inherently problematic for photosensitivity"
+  ],
+  "usage_tip": "Good for gaming or storm-themed pages; avoid for photosensitive users."
 }

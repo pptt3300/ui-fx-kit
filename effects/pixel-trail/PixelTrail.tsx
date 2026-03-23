@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useCanvasSetup, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets/colors";
+import { resolvePalette } from "../../presets/resolve";
 
 interface TrailPixel {
   x: number;
@@ -12,6 +13,7 @@ interface PixelTrailProps {
   pixelSize?: number;
   trailLength?: number;
   fadeSpeed?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -28,9 +30,11 @@ export default function PixelTrail({
   pixelSize = 8,
   trailLength = 50,
   fadeSpeed = 0.05,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className = "",
 }: PixelTrailProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, startLoop } = useCanvasSetup();
   const { position } = useMousePosition({ scope: "window" });
   const trail = useRef<TrailPixel[]>([]);
@@ -69,8 +73,8 @@ export default function PixelTrail({
       for (let i = 0; i < trail.current.length; i++) {
         const px = trail.current[i];
         const alpha = Math.max(0, 1 - px.age);
-        const colorIndex = i % colors.length;
-        const col = colors[colorIndex];
+        const colorIndex = i % resolvedColors.length;
+        const col = resolvedColors[colorIndex];
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`;
@@ -78,7 +82,7 @@ export default function PixelTrail({
         ctx.restore();
       }
     });
-  }, [startLoop, position, pixelSize, trailLength, fadeSpeed, colors, canvasRef]);
+  }, [startLoop, position, pixelSize, trailLength, fadeSpeed, resolvedColors, canvasRef]);
 
   return (
     <canvas

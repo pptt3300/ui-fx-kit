@@ -1,29 +1,79 @@
 {
   "name": "Metallic Paint",
   "description": "Anisotropic BRDF metallic surface shader with mouse-driven viewing angle and brush-direction highlights.",
-  "category": ["background", "shader", "interactive"],
+  "category": [
+    "background",
+    "shader",
+    "interactive",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative only — no content conveyed", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "decorative only — no content conveyed",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["MetallicPaint.tsx"],
-  "imports": ["../../presets/colors"],
+  "files": [
+    "MetallicPaint.tsx"
+  ],
+  "imports": [
+    "../../presets/colors"
+  ],
   "hooks": [],
   "css": [],
-  "presets": ["colors"],
+  "presets": [
+    "colors"
+  ],
   "props_schema": {
-    "color": {
+    "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": ["default","neon","pastel","warm","arctic","mono","stripe","vercel","linear","supabase","figma","discord","spotify"],
+      "description": "Color theme name"
+    },
+    "color": {
+      "type": "string",
+      "default": "[192,192,200]",
       "description": "Base metal color as RGB tuple"
     },
-    "brushAngle": { "type": "number", "default": 0, "range": [0, 6.28], "description": "Brush stroke angle in radians" },
-    "specular": { "type": "number", "default": 0.8, "range": [0, 2], "description": "Specular highlight intensity" },
-    "className": { "type": "string", "description": "CSS class for the canvas element" }
+    "brushAngle": {
+      "type": "number",
+      "default": 0,
+      "range": [
+        0,
+        6.28
+      ],
+      "description": "Brush stroke angle in radians"
+    },
+    "specular": {
+      "type": "number",
+      "default": 0.8,
+      "range": [
+        0,
+        2
+      ],
+      "description": "Specular highlight intensity"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the canvas element"
+    }
   },
-  "use_cases": ["premium product hero background", "luxury brand landing page", "metallic texture backdrop", "interactive material demo"],
-  "conflicts": ["WebGL required — no fallback for unsupported browsers", "heavy GPU usage on mobile"]
+  "use_cases": [
+    "premium product hero background",
+    "luxury brand landing page",
+    "metallic texture backdrop",
+    "interactive material demo"
+  ],
+  "conflicts": [
+    "WebGL required — no fallback for unsupported browsers",
+    "heavy GPU usage on mobile"
+  ],
+  "usage_tip": "Best for luxury brand or premium product hero backgrounds."
 }

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useCanvasSetup } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface LightningBoltsProps {
   interval?: number;
   branchChance?: number;
+  palette?: string;
   color?: RGB;
   glowIntensity?: number;
   className?: string;
@@ -57,10 +59,12 @@ function generateBolt(
 export default function LightningBolts({
   interval = 3000,
   branchChance = 0.3,
-  color = [34, 211, 238],
+  palette,
+  color,
   glowIntensity = 1,
   className,
 }: LightningBoltsProps) {
+  const resolvedColor = color ?? resolvePalette(palette, 'accent', [34, 211, 238] as RGB);
   const { canvasRef, startLoop, size } = useCanvasSetup();
   const boltsRef = useRef<Bolt[]>([]);
 
@@ -112,7 +116,7 @@ export default function LightningBolts({
       ctx.clearRect(0, 0, w, h);
 
       const now = performance.now();
-      const [r, g, b] = color;
+      const [r, g, b] = resolvedColor;
 
       // Remove expired bolts
       boltsRef.current = boltsRef.current.filter(
@@ -158,7 +162,7 @@ export default function LightningBolts({
         }
       }
     });
-  }, [startLoop, color, glowIntensity]);
+  }, [startLoop, resolvedColor, glowIntensity]);
 
   return (
     <canvas

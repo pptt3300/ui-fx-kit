@@ -1,23 +1,70 @@
 {
   "name": "Prism Refraction",
   "description": "Chromatic aberration / dispersion overlay shader with mouse-controlled prism position producing rainbow edge fringing.",
-  "category": ["overlay", "shader", "interactive"],
+  "category": [
+    "overlay",
+    "shader",
+    "interactive",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["webgl", "pointer-events"],
+  "runtime": [
+    "webgl",
+    "pointer-events"
+  ],
   "complexity": "high",
   "performance_cost": "high",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative overlay — does not affect content readability at default strength", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "decorative overlay — does not affect content readability at default strength",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["PrismRefraction.tsx"],
-  "imports": ["../../hooks"],
-  "hooks": ["useMousePosition", "useWebGL"],
+  "files": [
+    "PrismRefraction.tsx"
+  ],
+  "imports": [
+    "../../hooks"
+  ],
+  "hooks": [
+    "useMousePosition",
+    "useWebGL"
+  ],
   "css": [],
   "props_schema": {
-    "strength": { "type": "number", "default": 0.1, "range": [0, 0.5], "description": "Refraction offset strength — higher = more distortion" },
-    "dispersion": { "type": "number", "default": 0.02, "range": [0, 0.1], "description": "Chromatic spread between RGB channels" },
-    "className": { "type": "string", "description": "CSS class for the container or canvas element" }
+    "strength": {
+      "type": "number",
+      "default": 0.1,
+      "range": [
+        0,
+        0.5
+      ],
+      "description": "Refraction offset strength — higher = more distortion"
+    },
+    "dispersion": {
+      "type": "number",
+      "default": 0.02,
+      "range": [
+        0,
+        0.1
+      ],
+      "description": "Chromatic spread between RGB channels"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container or canvas element"
+    }
   },
-  "use_cases": ["prismatic overlay on hero images", "artistic chromatic aberration effect", "experimental UI decoration", "interactive light refraction demo"],
-  "conflicts": ["WebGL required — no fallback for unsupported browsers", "screen blend mode may not work on all backgrounds", "mouse-dependent — static on touch devices"]
+  "use_cases": [
+    "prismatic overlay on hero images",
+    "artistic chromatic aberration effect",
+    "experimental UI decoration",
+    "interactive light refraction demo"
+  ],
+  "conflicts": [
+    "WebGL required — no fallback for unsupported browsers",
+    "screen blend mode may not work on all backgrounds",
+    "mouse-dependent — static on touch devices"
+  ],
+  "usage_tip": "Best for prismatic overlay on hero images; avoid high strength on text areas."
 }

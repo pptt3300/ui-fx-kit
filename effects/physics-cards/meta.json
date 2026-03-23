@@ -1,21 +1,54 @@
 {
   "name": "Physics Cards",
   "description": "Draggable cards with spring physics, 3D perspective tilt that follows cursor, and dynamic light reflection. Combines framer-motion drag with CSS 3D transforms.",
-  "category": ["card", "interactive", "physics"],
+  "category": [
+    "card",
+    "interactive",
+    "physics",
+    "feedback",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["drag interaction needs keyboard alternative", "needs reduced-motion fallback"],
-  "dependencies": ["framer-motion"],
-  "files": ["PhysicsCards.tsx"],
-  "imports": ["framer-motion", "../../hooks"],
-  "hooks": ["useTilt3D"],
+  "accessibility_notes": [
+    "drag interaction needs keyboard alternative",
+    "needs reduced-motion fallback"
+  ],
+  "dependencies": [
+    "framer-motion"
+  ],
+  "files": [
+    "PhysicsCards.tsx"
+  ],
+  "imports": [
+    "framer-motion",
+    "../../hooks"
+  ],
+  "hooks": [
+    "useTilt3D"
+  ],
   "css": [],
   "props_schema": {
-    "embedded": { "type": "boolean", "default": false, "description": "When true, renders only the card grid without the section wrapper" }
+    "embedded": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, renders only the card grid without the section wrapper"
+    }
   },
-  "use_cases": ["feature showcase cards", "interactive demo section", "draggable dashboard widgets", "physics-based UI playground"],
-  "conflicts": ["framer-motion required as peer dependency", "drag constraints are hardcoded — may not fit all layouts"]
+  "use_cases": [
+    "feature showcase cards",
+    "interactive demo section",
+    "draggable dashboard widgets",
+    "physics-based UI playground"
+  ],
+  "conflicts": [
+    "framer-motion required as peer dependency",
+    "drag constraints are hardcoded — may not fit all layouts"
+  ],
+  "usage_tip": "Good for draggable feature showcases; requires framer-motion dependency."
 }

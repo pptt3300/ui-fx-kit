@@ -1,11 +1,13 @@
 import { useEffect, useCallback, useRef } from "react";
 import { useWebGL, useMousePosition } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface MetaBallsProps {
   count?: number;
   radiusRange?: [number, number];
   mouseMode?: "attract" | "repel";
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -88,9 +90,11 @@ export default function MetaBalls({
   count = 6,
   radiusRange = [30, 80],
   mouseMode = "attract",
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className,
 }: MetaBallsProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'particles', DEFAULT_COLORS);
   const { canvasRef, setUniform, startLoop } = useWebGL({ fragmentShader: FRAGMENT_SHADER });
   const { position } = useMousePosition({ scope: "window" });
 
@@ -115,14 +119,14 @@ export default function MetaBalls({
 
   // Update color uniforms
   const updateColors = useCallback(() => {
-    const c1 = colors[0] ?? DEFAULT_COLORS[0];
-    const c2 = colors[1] ?? DEFAULT_COLORS[1];
-    const c3 = colors[2] ?? DEFAULT_COLORS[2];
+    const c1 = resolvedColors[0] ?? DEFAULT_COLORS[0];
+    const c2 = resolvedColors[1] ?? DEFAULT_COLORS[1];
+    const c3 = resolvedColors[2] ?? DEFAULT_COLORS[2];
     setUniform("u_color1", [c1[0] / 255, c1[1] / 255, c1[2] / 255]);
     setUniform("u_color2", [c2[0] / 255, c2[1] / 255, c2[2] / 255]);
     setUniform("u_color3", [c3[0] / 255, c3[1] / 255, c3[2] / 255]);
     setUniform("u_count", clampedCount);
-  }, [colors, clampedCount, setUniform]);
+  }, [resolvedColors, clampedCount, setUniform]);
 
   useEffect(() => {
     updateColors();

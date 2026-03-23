@@ -1,26 +1,89 @@
 {
   "name": "Text Pressure",
   "description": "Variable font weight effect driven by mouse proximity. Characters closer to the cursor become bolder and slightly larger via font-variation-settings.",
-  "category": ["text", "interactive", "variable-font"],
+  "category": [
+    "text",
+    "interactive",
+    "variable-font",
+    "feedback",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["text remains readable — weight change is decorative", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "text remains readable — weight change is decorative",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["TextPressure.tsx"],
-  "imports": ["react", "../../hooks"],
-  "hooks": ["proximity", "useMousePosition"],
+  "files": [
+    "TextPressure.tsx"
+  ],
+  "imports": [
+    "react",
+    "../../hooks"
+  ],
+  "hooks": [
+    "proximity",
+    "useMousePosition"
+  ],
   "css": [],
   "props_schema": {
-    "text": { "type": "string", "description": "Text to render with pressure effect" },
-    "radius": { "type": "number", "default": 150, "range": [50, 400], "description": "Proximity radius in px" },
-    "minWeight": { "type": "number", "default": 100, "range": [100, 400], "description": "Font weight at maximum distance" },
-    "maxWeight": { "type": "number", "default": 900, "range": [500, 900], "description": "Font weight at cursor position" },
-    "fontFamily": { "type": "string", "default": "Inter", "description": "Variable font family name" },
-    "className": { "type": "string", "description": "CSS class for the container span" }
+    "text": {
+      "type": "string",
+      "description": "Text to render with pressure effect"
+    },
+    "radius": {
+      "type": "number",
+      "default": 150,
+      "range": [
+        50,
+        400
+      ],
+      "description": "Proximity radius in px"
+    },
+    "minWeight": {
+      "type": "number",
+      "default": 100,
+      "range": [
+        100,
+        400
+      ],
+      "description": "Font weight at maximum distance"
+    },
+    "maxWeight": {
+      "type": "number",
+      "default": 900,
+      "range": [
+        500,
+        900
+      ],
+      "description": "Font weight at cursor position"
+    },
+    "fontFamily": {
+      "type": "string",
+      "default": "Inter",
+      "description": "Variable font family name"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container span"
+    }
   },
-  "use_cases": ["interactive hero headline", "creative portfolio text", "variable font showcase", "experimental typography"],
-  "conflicts": ["requires a variable font with wght axis", "each character is a separate span — long text creates many DOM nodes", "no touch/hover equivalent on mobile"]
+  "use_cases": [
+    "interactive hero headline",
+    "creative portfolio text",
+    "variable font showcase",
+    "experimental typography"
+  ],
+  "conflicts": [
+    "requires a variable font with wght axis",
+    "each character is a separate span — long text creates many DOM nodes",
+    "no touch/hover equivalent on mobile"
+  ],
+  "usage_tip": "Best for interactive hero headlines; requires variable font with wght axis."
 }

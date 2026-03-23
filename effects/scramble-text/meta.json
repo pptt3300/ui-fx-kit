@@ -1,25 +1,77 @@
 {
   "name": "Scramble Text",
   "description": "Text decodes from random characters one position at a time. Supports mount, hover, and scroll-into-view triggers.",
-  "category": ["text", "animation"],
+  "category": [
+    "text",
+    "animation",
+    "transition",
+    "emphasis"
+  ],
   "framework": "react",
-  "runtime": ["intersection-observer"],
+  "runtime": [
+    "intersection-observer"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["final text is readable — scramble is decorative transition", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "final text is readable — scramble is decorative transition",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["ScrambleText.tsx"],
-  "imports": ["../../hooks"],
-  "hooks": ["useInView", "useScramble"],
+  "files": [
+    "ScrambleText.tsx"
+  ],
+  "imports": [
+    "../../hooks"
+  ],
+  "hooks": [
+    "useInView",
+    "useScramble"
+  ],
   "css": [],
   "props_schema": {
-    "text": { "type": "string", "description": "The target text to decode into" },
-    "trigger": { "type": "enum", "options": ["mount", "hover", "inView"], "default": "mount", "description": "When to start the scramble animation" },
-    "speed": { "type": "number", "default": 50, "range": [10, 200], "description": "Milliseconds between each character reveal" },
-    "charset": { "type": "string", "description": "Custom character set for the scramble noise — defaults to alphanumeric" },
-    "className": { "type": "string", "description": "CSS class for the span element" }
+    "text": {
+      "type": "string",
+      "description": "The target text to decode into"
+    },
+    "trigger": {
+      "type": "enum",
+      "options": [
+        "mount",
+        "hover",
+        "inView"
+      ],
+      "default": "mount",
+      "description": "When to start the scramble animation"
+    },
+    "speed": {
+      "type": "number",
+      "default": 50,
+      "range": [
+        10,
+        200
+      ],
+      "description": "Milliseconds between each character reveal"
+    },
+    "charset": {
+      "type": "string",
+      "description": "Custom character set for the scramble noise — defaults to alphanumeric"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the span element"
+    }
   },
-  "use_cases": ["hacker/cyberpunk themed headings", "loading state text reveal", "scroll-triggered section titles", "interactive hover label effect"],
-  "conflicts": ["monospace font forced via inline style — may clash with design system typography", "inView trigger uses IntersectionObserver — requires polyfill for older browsers"]
+  "use_cases": [
+    "hacker/cyberpunk themed headings",
+    "loading state text reveal",
+    "scroll-triggered section titles",
+    "interactive hover label effect"
+  ],
+  "conflicts": [
+    "monospace font forced via inline style — may clash with design system typography",
+    "inView trigger uses IntersectionObserver — requires polyfill for older browsers"
+  ],
+  "usage_tip": "Best for hacker-themed headings or scroll-triggered section titles."
 }

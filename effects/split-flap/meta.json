@@ -1,25 +1,79 @@
 {
   "name": "Split-Flap Display",
   "description": "Mechanical split-flap (Solari) board effect — each character flips through the alphabet to reveal the target text.",
-  "category": ["text", "retro", "animation"],
+  "category": [
+    "text",
+    "retro",
+    "animation",
+    "transition",
+    "data-display"
+  ],
   "framework": "react",
-  "runtime": ["css-animations"],
+  "runtime": [
+    "css-animations"
+  ],
   "complexity": "medium",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["final text should be in aria-label for screen readers", "rapid DOM updates during flip — use aria-live cautiously"],
+  "accessibility_notes": [
+    "final text should be in aria-label for screen readers",
+    "rapid DOM updates during flip — use aria-live cautiously"
+  ],
   "dependencies": [],
-  "files": ["SplitFlap.tsx"],
-  "imports": ["../../css/split-flap.css", "../../hooks"],
-  "hooks": ["useSplitFlap"],
-  "css": ["split-flap.css"],
+  "files": [
+    "SplitFlap.tsx"
+  ],
+  "imports": [
+    "../../css/split-flap.css",
+    "../../hooks"
+  ],
+  "hooks": [
+    "useSplitFlap"
+  ],
+  "css": [
+    "split-flap.css"
+  ],
   "props_schema": {
-    "text": { "type": "string", "description": "Target text to display" },
-    "flipSpeed": { "type": "number", "default": 60, "range": [20, 200], "description": "Flip interval in ms per character step" },
-    "stagger": { "type": "number", "default": 30, "range": [0, 100], "description": "Delay between each character starting to flip (ms)" },
-    "dark": { "type": "boolean", "default": true, "description": "Dark or light color scheme" },
-    "className": { "type": "string", "description": "CSS class for the container" }
+    "text": {
+      "type": "string",
+      "description": "Target text to display"
+    },
+    "flipSpeed": {
+      "type": "number",
+      "default": 60,
+      "range": [
+        20,
+        200
+      ],
+      "description": "Flip interval in ms per character step"
+    },
+    "stagger": {
+      "type": "number",
+      "default": 30,
+      "range": [
+        0,
+        100
+      ],
+      "description": "Delay between each character starting to flip (ms)"
+    },
+    "dark": {
+      "type": "boolean",
+      "default": true,
+      "description": "Dark or light color scheme"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the container"
+    }
   },
-  "use_cases": ["departure board display", "retro counter or scoreboard", "headline text reveal", "countdown timer"],
-  "conflicts": ["long text with fast flipSpeed causes many simultaneous DOM updates"]
+  "use_cases": [
+    "departure board display",
+    "retro counter or scoreboard",
+    "headline text reveal",
+    "countdown timer"
+  ],
+  "conflicts": [
+    "long text with fast flipSpeed causes many simultaneous DOM updates"
+  ],
+  "usage_tip": "Best for departure boards, scoreboards, or countdown timers."
 }

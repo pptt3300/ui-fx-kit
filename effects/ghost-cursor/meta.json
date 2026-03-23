@@ -1,34 +1,97 @@
 {
   "name": "Ghost Cursor",
   "description": "Spring-chained DOM ghost trail where each circle lazily follows the previous one.",
-  "category": ["cursor", "interactive", "global"],
+  "category": [
+    "cursor",
+    "interactive",
+    "global",
+    "decoration"
+  ],
   "framework": "react",
-  "runtime": ["pointer-events"],
+  "runtime": [
+    "pointer-events"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": false,
-  "accessibility_notes": ["decorative overlay — pointer-events-none", "no impact on content accessibility"],
+  "accessibility_notes": [
+    "decorative overlay — pointer-events-none",
+    "no impact on content accessibility"
+  ],
   "dependencies": [],
   "files": [
     "GhostCursor.tsx"
   ],
-  "imports": ["../../hooks", "../../presets/colors"],
+  "imports": [
+    "../../hooks",
+    "../../presets/colors"
+  ],
   "hooks": [
     "useMousePosition",
     "useSpring"
   ],
   "css": [],
   "props_schema": {
-    "count": { "type": "number", "default": 5, "range": [2, 12], "description": "Number of ghost circles in the trail" },
-    "stiffness": { "type": "number", "default": 100, "range": [20, 400], "description": "Spring stiffness — higher means tighter follow" },
+    "count": {
+      "type": "number",
+      "default": 5,
+      "range": [
+        2,
+        12
+      ],
+      "description": "Number of ghost circles in the trail"
+    },
+    "stiffness": {
+      "type": "number",
+      "default": 100,
+      "range": [
+        20,
+        400
+      ],
+      "description": "Spring stiffness — higher means tighter follow"
+    },
     "palette": {
       "type": "enum",
-      "options": ["default", "neon", "pastel", "warm", "arctic", "mono", "stripe", "vercel", "linear", "supabase", "figma", "discord", "spotify"],
+      "options": [
+        "default",
+        "neon",
+        "pastel",
+        "warm",
+        "arctic",
+        "mono",
+        "stripe",
+        "vercel",
+        "linear",
+        "supabase",
+        "figma",
+        "discord",
+        "spotify"
+      ],
       "description": "Color theme name from presets"
     },
-    "size": { "type": "number", "default": 20, "range": [8, 60], "description": "Size of the largest ghost circle in pixels" },
-    "className": { "type": "string", "description": "CSS class for the overlay container" }
+    "size": {
+      "type": "number",
+      "default": 20,
+      "range": [
+        8,
+        60
+      ],
+      "description": "Size of the largest ghost circle in pixels"
+    },
+    "className": {
+      "type": "string",
+      "description": "CSS class for the overlay container"
+    }
   },
-  "use_cases": ["creative portfolio cursor trail", "playful landing page effect", "gaming UI cursor", "interactive art piece"],
-  "conflicts": ["each ghost is a DOM element — count > 12 adds noticeable layout cost", "z-index 50 may overlap modals"]
+  "use_cases": [
+    "creative portfolio cursor trail",
+    "playful landing page effect",
+    "gaming UI cursor",
+    "interactive art piece"
+  ],
+  "conflicts": [
+    "each ghost is a DOM element — count > 12 adds noticeable layout cost",
+    "z-index 50 may overlap modals"
+  ],
+  "usage_tip": "Good for playful landing pages; keep count under 8 to avoid DOM overhead."
 }

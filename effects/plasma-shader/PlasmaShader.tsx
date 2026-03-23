@@ -1,10 +1,12 @@
 import { useEffect, useCallback } from "react";
 import { useWebGL } from "../../hooks";
 import type { RGB } from "../../presets";
+import { resolvePalette } from "../../presets/resolve";
 
 interface PlasmaShaderProps {
   speed?: number;
   intensity?: number;
+  palette?: string;
   colors?: RGB[];
   className?: string;
 }
@@ -69,22 +71,24 @@ void main() {
 export default function PlasmaShader({
   speed = 1,
   intensity = 0.5,
-  colors = DEFAULT_COLORS,
+  palette,
+  colors,
   className,
 }: PlasmaShaderProps) {
+  const resolvedColors = colors ?? resolvePalette(palette, 'background', DEFAULT_COLORS);
   const { canvasRef, setUniform, startLoop } = useWebGL({ fragmentShader: FRAGMENT_SHADER });
 
   const updateUniforms = useCallback(() => {
     setUniform("u_speed", speed);
     setUniform("u_intensity", intensity);
 
-    const c0 = colors[0] ?? DEFAULT_COLORS[0];
-    const c1 = colors[1] ?? DEFAULT_COLORS[1];
-    const c2 = colors[2] ?? DEFAULT_COLORS[2];
+    const c0 = resolvedColors[0] ?? DEFAULT_COLORS[0];
+    const c1 = resolvedColors[1] ?? DEFAULT_COLORS[1];
+    const c2 = resolvedColors[2] ?? DEFAULT_COLORS[2];
     setUniform("u_color0", [c0[0] / 255, c0[1] / 255, c0[2] / 255]);
     setUniform("u_color1", [c1[0] / 255, c1[1] / 255, c1[2] / 255]);
     setUniform("u_color2", [c2[0] / 255, c2[1] / 255, c2[2] / 255]);
-  }, [speed, intensity, colors, setUniform]);
+  }, [speed, intensity, resolvedColors, setUniform]);
 
   useEffect(() => {
     updateUniforms();

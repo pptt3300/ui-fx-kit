@@ -44,5 +44,8 @@
     "type": "git",
     "url": "git+https://github.com/pptt3300/ui-fx-kit.git"
   },
-  "homepage": "https://pptt3300.github.io/ui-fx-kit/"
+  "homepage": "https://pptt3300.github.io/ui-fx-kit/",
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
 }

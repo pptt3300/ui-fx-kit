@@ -1,23 +1,59 @@
 {
   "name": "Parallax Hero",
   "description": "Multi-layer parallax scroll effect — each layer moves at a different speed creating depth.",
-  "category": ["scroll", "hero", "parallax"],
+  "category": [
+    "scroll",
+    "hero",
+    "parallax",
+    "ambient",
+    "transition"
+  ],
   "framework": "react",
-  "runtime": ["intersection-observer"],
+  "runtime": [
+    "intersection-observer"
+  ],
   "complexity": "low",
   "performance_cost": "low",
   "mobile_safe": true,
-  "accessibility_notes": ["parallax is decorative — all content should be readable without scroll effect", "needs reduced-motion fallback"],
+  "accessibility_notes": [
+    "parallax is decorative — all content should be readable without scroll effect",
+    "needs reduced-motion fallback"
+  ],
   "dependencies": [],
-  "files": ["ParallaxHero.tsx"],
-  "imports": ["../../hooks"],
-  "hooks": ["useScrollProgress"],
+  "files": [
+    "ParallaxHero.tsx"
+  ],
+  "imports": [
+    "../../hooks"
+  ],
+  "hooks": [
+    "useScrollProgress"
+  ],
   "css": [],
   "props_schema": {
-    "layers": { "type": "Array<{ content: ReactNode; speed: number }>", "description": "Array of layer objects with content and scroll speed multiplier" },
-    "height": { "type": "string", "default": "200vh", "description": "Total scrollable height of the parallax container" },
-    "className": { "type": "string", "default": "", "description": "CSS class for the outer container" }
+    "layers": {
+      "type": "Array<{ content: ReactNode; speed: number }>",
+      "description": "Array of layer objects with content and scroll speed multiplier"
+    },
+    "height": {
+      "type": "string",
+      "default": "200vh",
+      "description": "Total scrollable height of the parallax container"
+    },
+    "className": {
+      "type": "string",
+      "default": "",
+      "description": "CSS class for the outer container"
+    }
   },
-  "use_cases": ["landing page hero section", "storytelling scroll experience", "product marketing page", "portfolio intro section"],
-  "conflicts": ["tall height values increase scroll distance — may feel sluggish on trackpad"]
+  "use_cases": [
+    "landing page hero section",
+    "storytelling scroll experience",
+    "product marketing page",
+    "portfolio intro section"
+  ],
+  "conflicts": [
+    "tall height values increase scroll distance — may feel sluggish on trackpad"
+  ],
+  "usage_tip": "Best for storytelling landing pages; avoid excessive scroll height values."
 }
