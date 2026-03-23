@@ -140,7 +140,7 @@ async function cmdList(tag) {
   }
 }
 
-async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {}) {
+async function cmdAdd(effectId, targetDir, { dryRun = false, force = false, alias } = {}) {
   // Validate effect exists
   let meta;
   try {
@@ -301,13 +301,14 @@ async function cmdAdd(effectId, targetDir, { dryRun = false, force = false } = {
   // 8. Fix import paths in copied effect files
   if (dryRun) {
     console.log(`\n${BOLD}Imports:${RESET}`);
-    console.log(`  ${GREEN}✓${RESET} Import paths ${DIM}(would adjust)${RESET}`);
+    console.log(`  ${GREEN}✓${RESET} Import paths ${DIM}(would adjust${alias ? ` → ${alias}/...` : ""})${RESET}`);
   } else {
     console.log(`\n${BOLD}Fixing imports...${RESET}`);
-    // Compute actual relative paths from effect dir to hooks/presets/css dirs
-    const relHooks = relative(effectsTarget, hooksTarget).replace(/\\/g, "/");
-    const relPresets = relative(effectsTarget, presetsTarget).replace(/\\/g, "/");
-    const relCss = relative(effectsTarget, cssTarget).replace(/\\/g, "/");
+    // Compute import paths: use --alias prefix if provided, otherwise relative paths
+    const base = alias?.replace(/\/+$/, "");
+    const relHooks = base ? `${base}/hooks` : relative(effectsTarget, hooksTarget).replace(/\\/g, "/");
+    const relPresets = base ? `${base}/presets` : relative(effectsTarget, presetsTarget).replace(/\\/g, "/");
+    const relCss = base ? `${base}/css` : relative(effectsTarget, cssTarget).replace(/\\/g, "/");
     for (const file of effectFiles) {
       const destPath = join(effectsTarget, file);
       let code = await readFile(destPath, "utf-8");
@@ -629,7 +630,7 @@ ${BOLD}ui-fx-kit${RESET} — 64 composable React UI effects
 
 ${BOLD}Commands:${RESET}
   ${CYAN}list${RESET} [tag]                    List all effects (optionally filter by tag)
-  ${CYAN}add${RESET} <name> [--target dir] [--force] [--dry-run]  Add an effect to your project
+  ${CYAN}add${RESET} <name> [--target dir] [--alias prefix] [--force] [--dry-run]  Add an effect to your project
   ${CYAN}remove${RESET} <name> --target dir [--dry-run]  Remove an effect from your project
   ${CYAN}info${RESET} <name>                   Show effect details and dependencies
   ${CYAN}status${RESET} [--target dir]              Show installed effects and available updates
@@ -640,6 +641,7 @@ ${BOLD}Examples:${RESET}
   npx ui-fx-kit add holographic-card
   npx ui-fx-kit add gradient-mesh --target ./src
   npx ui-fx-kit add scramble-text --target ./src --dry-run
+  npx ui-fx-kit add cursor-glow --target ./src --alias @/components/fx
   npx ui-fx-kit info silk-waves
 `);
 }
@@ -670,8 +672,9 @@ if (wantsHelp || command === "help" || !command) {
   }
   const dryRun = flags["dry-run"] === true;
   const force = flags["force"] === true;
+  const alias = typeof flags["alias"] === "string" ? flags["alias"] : undefined;
   for (const name of effectNames) {
-    await cmdAdd(name, targetDir, { dryRun, force });
+    await cmdAdd(name, targetDir, { dryRun, force, alias });
     if (effectNames.length > 1) console.log(`${DIM}${"─".repeat(50)}${RESET}\n`);
   }
 } else if (command === "remove" || command === "rm") {

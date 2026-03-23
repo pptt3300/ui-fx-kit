@@ -134,6 +134,10 @@ server.tool(
 
     const result = [`# ${meta.name}\n`, `${meta.description}\n`];
 
+    if (meta.props_schema && Object.keys(meta.props_schema).length > 0) {
+      result.push(`## Props\n\`\`\`json\n${JSON.stringify(meta.props_schema, null, 2)}\n\`\`\`\n`);
+    }
+
     if (meta.dependencies?.length > 0) {
       result.push(
         `> ⚠️ **Run:** \`npm install ${meta.dependencies.join(" ")}\`\n`,
